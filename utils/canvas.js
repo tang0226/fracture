@@ -3,20 +3,6 @@ Canvas DOM object is "canvas"
 Canvas context is "ctx"
 *************************/
 
-var load = function(files, func, i = 0) {
-	var script = document.createElement("script");
-	script.onload = function() {
-		if(files[i + 1]) {
-			load(files, func, i + 1);
-		}
-		else {
-			func();
-		}
-	};
-	script.src = files[i];
-	document.body.appendChild(script);
-};
-
 var addEvent = function(action, reaction) {
 	canvas["on" + action] = reaction;
 };
@@ -33,12 +19,6 @@ var setCanvasDim = function(w, h) {
 var STROKE = true;
 
 var COLOR_MODE = "RGB";
-
-var FRAME_DELAY = 1000 / 60;
-var frameRate = function(f) {
-	FRAME_DELAY = 1000 / f;
-	return FRAME_DELAY;
-};
 
 // Style (stroke, fill, shadow, gradient)
 {
