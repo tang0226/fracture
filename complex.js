@@ -28,7 +28,10 @@ Complex.prototype.mul = function(c) {
 	return new Complex(this.re * c.re - this.im * c.im, this.re * c.im + this.im * c.re);
 };
 Complex.prototype.div = function(c) {
-	
+	return new Complex(
+		(this.re * c.re + this.im * c.im) / (c.re ** 2 + c.im ** 2),
+		(this.im * c.re - this.re * c.im) / (c.re ** 2 + c.im ** 2)
+	);
 };
 Complex.prototype.exp = function(e) {
 	if(e == 1){
