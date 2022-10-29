@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<style>
+			#canvas {
+				border: 2px solid lightgray;
+			}
+		</style>
+
+	</head>
+	<body>
+		<canvas id="canvas" tabindex="1" width="600" height="600"></canvas>
+		<br/>
+		<div id="toolbar">
+			<div id="iterations-toolbar">
+			
+				<div id="iterations">Iterations:</div>
+				
+				<input type="button" value="+" onclick="increaseIters()"/>
+				
+				<br/>
+				
+				<div>Increment: <input id="iterationIncrement" type="text" value="100" style="display: inline"/></div>
+				<input type="button" value="-" onclick="decreaseIters()"/>
+			</div>
+			
+			<hr>
+			
+			<div id="frame-toolbar">
+				<div id="zoom" style="display: inline">Zoom:</div>
+			</div>
+		</div>
+		<script>
+			
+			var canvas = document.getElementById("canvas");
+			var ctx = canvas.getContext("2d");
+			
+			window.onload = function() {
+				var script = document.createElement("script");
+				script.src = "./main.js";
+				document.body.appendChild(script);
+			};
+		</script>
+		<script src="./utils/canvas.js"></script>
+		<script src="./utils/Math.js"></script>
+		<script src="./complex.js"></script>
+	</body>
+</html>
