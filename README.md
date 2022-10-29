@@ -18,4 +18,4 @@ Clone and open main.html
 
 ![multibrot set zoom](https://github.com/tang0226/fractal/blob/master/samples/multibrot_4_zoom.png?raw=true)
 
-![burning ship armada](https://github.com/tang0226/fractal/blob/master/samples/burning_ship_armada_10000px.png?raw=true)
+![burning ship armada](https://github.com/tang0226/fractal/blob/master/samples/burning_ship_armada.png?raw=true)
