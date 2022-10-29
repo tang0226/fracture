@@ -1,4 +1,4 @@
-#WIP fractal viewer
+WIP fractal viewer
 Can display:
 * Mandelbrot set
 * Julia sets
