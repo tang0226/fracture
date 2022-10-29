@@ -1,11 +1,14 @@
-// Custom libraries used here (canvas and Math) are imported from the HTML document
+// Custom modules/libraries used here (canvas and Math)
+// are imported from the HTML document, main.html
 
 setCanvasDim(600, 600);
 noStroke();
 
 colorMode("HSL");
 
-// Fractal prototypes
+/******************************
+FRACTAL PROTOTYPES: THEORETICAL MATHEMATICAL SETS IN THE COMPLEX PLANE
+******************************/ 
 {
 
 	var Julia = function(c) {
@@ -325,9 +328,9 @@ var defaultView = new Frame(new Complex(0, 0), 4, 4);
 	);
 }
 
-// Initial image settings
+// Initial image settings:
 
-// Try different samples imgX(X)
+// Try different samples with different image numbers imgX(X)
 var currImg = img1;
 var imgs = [];
 var mouseX = null;
@@ -337,8 +340,7 @@ var startDragY = null;
 var mouseDown = false;
 
 
-
-// Draw
+// Draw loop
 var draw = function() {
 	if(currImg.drawing) {
 		currImg.drawLayer();
@@ -346,6 +348,7 @@ var draw = function() {
 	setTimeout(draw, 0);
 };
 
+// Set an image to draw and start drawing it
 var startImage = function(img) {
 	currImg = img;
 	currImg.reset();
@@ -370,6 +373,7 @@ var increaseIters = function() {
 	displayIterations();
 	startImage(currImg);
 };
+
 var decreaseIters = function() {
 	currImg.iterations -= Number(document.getElementById("iterationIncrement").value);
 	currImg.reset();
@@ -388,6 +392,7 @@ var mousePressed = function() {
 	mouseDown = true;
 };
 
+// Based on mouse coordinates, calculate the frame for the new image and start it
 var mouseReleased = function() {
 	mouseDown = false;
 	currImg.reset();
@@ -453,7 +458,7 @@ var mouseMoved = function() {
 };
 
 
-// Initialize events
+// Initialize events (canvas library function)
 addEvent("mousedown", mousePressed);
 addEvent("mouseup", mouseReleased);
 addEvent("mousemove", mouseMoved);
