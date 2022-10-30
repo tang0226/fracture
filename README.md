@@ -9,7 +9,7 @@ Clone and open main.html
   * Burning Ship Julia sets
   * Multiship fractals (Burning Ships with an exponent other than 2)
 * Adjustable iterations
-* Zoom by dragging and releasing
+* Zoom by clicking (focus on a point), or by dragging and releasing (focus on a region)
 
 ## Samples:
 ![mandelbrot set](https://github.com/tang0226/fractal/blob/master/samples/mandelbrot_set.png?raw=true)
