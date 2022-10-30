@@ -1,16 +1,14 @@
 /******************************
 IMAGE PROTOTYPE: RENDERING OF A FRACTAL WITH ITERATIONS, REGION, AND CANVAS SIZE
 ******************************/
-var Image = function(fractal, iterations, frame, width, height) {
+var Image = function(fractal, iterations, frame) {
 	this.fractal = fractal;
 	this.iterations = iterations;
 	
 	this.frame = frame;
 	
-	this.width = width;
-	this.height = height;
-	this.reIter = frame.reWidth / width;
-	this.imIter = frame.imHeight / height;
+	this.reIter = frame.reWidth / WIDTH;
+	this.imIter = frame.imHeight / HEIGHT;
 	
 	this.currY = 0;
 	this.currIm = frame.imMin;
@@ -19,7 +17,7 @@ var Image = function(fractal, iterations, frame, width, height) {
 	
 	this.drawLayer = function() {
 		let currRe = this.frame.reMin;
-		for(var currX = 0; currX < this.width; currX++) {
+		for(var currX = 0; currX < WIDTH; currX++) {
 			let complex = new Complex(currRe, this.currIm);
 			let val = this.fractal.iterate(complex, this.iterations);
 			

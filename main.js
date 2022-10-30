@@ -31,7 +31,6 @@ var defaultView = new Frame(new Complex(0, 0), 4, 4);
 			new Complex(-0.5, 0),
 			4, 4
 		),
-		WIDTH, HEIGHT
 	);
 	// Minibrot, deep zoom into Mandelbrot
 	var img2 = new Image(
@@ -41,7 +40,6 @@ var defaultView = new Frame(new Complex(0, 0), 4, 4);
 				0.00000001,
 				0.00000001
 		),
-		WIDTH, HEIGHT
 	);
 	// Deep zoom into Burning Ship
 	var img3 = new Image(
@@ -51,13 +49,11 @@ var defaultView = new Frame(new Complex(0, 0), 4, 4);
 				0.000000000001,
 				0.000000000001
 		),
-		WIDTH, HEIGHT
 	);
 	// Sample Julia set
 	var img4 = new Image(
 		julia1, 100,
 		defaultView,
-		WIDTH, HEIGHT
 	);
 	// Deep zoom into Mandelbrot
 	var img5 = new Image(
@@ -67,25 +63,21 @@ var defaultView = new Frame(new Complex(0, 0), 4, 4);
 			0.00000000001,
 			0.00000000001
 		),
-		WIDTH, HEIGHT
 	);
 	// Multibrot set
 	var img6 = new Image(
 		multi3, 100,
 		defaultView,
-		WIDTH, HEIGHT
 	);
 	// MultiJulia set
 	var img7 = new Image(
 		multiJulia5, 100,
 		defaultView,
-		WIDTH, HEIGHT
 	);
 	// Multi-Burning Ship
 	var img8 = new Image(
 		multiShip, 100,
 		defaultView,
-		WIDTH, HEIGHT
 	);
 	//Burning Ship Armada
 	var img9 = new Image(
@@ -95,25 +87,21 @@ var defaultView = new Frame(new Complex(0, 0), 4, 4);
 			0.3,
 			0.3
 		),
-		WIDTH, HEIGHT
 	);
 	// Burning Ship Julia Set
 	var img10 = new Image(
 		BSjulia, 100,
 		defaultView,
-		WIDTH, HEIGHT
 	);
 	// Burning Ship
 	var img11 = new Image(
 		ship, 300,
 		defaultView,
-		WIDTH, HEIGHT
 	);
 	// MultiShip 4
 	var img12 = new Image(
 		multiShip2, 100,
 		defaultView,
-		WIDTH, HEIGHT
 	);
 	var img13 = new Image(
 		ship, 1000,
@@ -122,7 +110,6 @@ var defaultView = new Frame(new Complex(0, 0), 4, 4);
 			1/42836028053,
 			1/42836028053,
 		),
-		WIDTH, HEIGHT
 	);
 }
 
