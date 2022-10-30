@@ -401,6 +401,8 @@ var mouseReleased = function() {
 	let topCornerY = null;
 	let bottomCornerX = null;
 	let bottomCornerY = null;
+	let sameX = false;
+	let sameY = false;
 	if(startDragX < mouseX) {
 		topCornerX = startDragX;
 		bottomCornerX = mouseX;
@@ -408,6 +410,9 @@ var mouseReleased = function() {
 	else if(mouseX < startDragX) {
 		topCornerX = mouseX;
 		bottomCornerX = startDragX;
+	}
+	else {
+		sameX = true;
 	}
 	if(startDragY < mouseY) {
 		topCornerY = startDragY;
@@ -417,8 +422,24 @@ var mouseReleased = function() {
 		topCornerY = mouseY;
 		bottomCornerY = startDragY;
 	}
+	else {
+		sameY = true;
+	}
 	let imgToSet = {};
-	if(topCornerX && topCornerY) {
+	if(sameX && sameY) {
+		let center = new Complex(
+			currImg.frame.reMin + (mouseX * currImg.reIter),
+			currImg.frame.imMin + (mouseY * currImg.imIter)
+		);
+		let zoomFactor = Number(document.getElementById("clickZoomFactor").value);
+		imgToSet = new Image(
+			currImg.fractal,
+			currImg.iterations,
+			new Frame(center, currImg.frame.reWidth / zoomFactor, currImg.frame.imHeight / zoomFactor),
+			WIDTH, HEIGHT
+		);
+	}
+	else {
 		let windowWidth = bottomCornerX - topCornerX;
 		let windowHeight = bottomCornerY - topCornerY;
 		let centerX = (topCornerX + bottomCornerX) / 2;
@@ -445,9 +466,9 @@ var mouseReleased = function() {
 				WIDTH, HEIGHT
 			);
 		}
-		startImage(imgToSet);
 	}
-	
+	startImage(imgToSet);
+
 	startDragX = null;
 	startDragY = null;
 };
