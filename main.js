@@ -116,7 +116,7 @@ var defaultView = new Frame(new Complex(0, 0), 4, 4);
 // Initial image settings:
 
 // Try different samples with different image numbers imgX(X)
-var currImg = img1;
+var currImg = img6;
 var imgs = [];
 var mouseX = null;
 var mouseY = null;
@@ -261,13 +261,24 @@ var mouseReleased = function() {
 var mouseMoved = function() {
 	mouseX = event.offsetX;
 	mouseY = event.offsetY;
+	let complexCoords = currImg.frame.toComplexCoords(mouseX, mouseY);
+	let complexRe = complexCoords.re.toString();
+	let complexIm = complexCoords.im.toString();
+	if(Number(complexIm) >= 0) {
+		complexIm = "+" + complexIm;
+	}
+	document.getElementById("mouse-complex-coords").innerHTML = "Mouse coordinates: " + complexRe + complexIm + "i";
 };
 
+var mouseOut = function() {
+	document.getElementById("mouse-complex-coords").innerHTML = "Mouse coordinates: N/A";
+};
 
 // Initialize events (canvas library function)
 addEvent("mousedown", mousePressed);
 addEvent("mouseup", mouseReleased);
 addEvent("mousemove", mouseMoved);
+addEvent("mouseout", mouseOut);
 
 
 // Run:
