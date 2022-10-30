@@ -368,14 +368,14 @@ var displayZoom = function() {
 };
 
 var increaseIters = function() {
-	currImg.iterations += Number(document.getElementById("iterationIncrement").value);
+	currImg.iterations += Number(document.getElementById("iteration-increment").value);
 	currImg.reset();
 	displayIterations();
 	startImage(currImg);
 };
 
 var decreaseIters = function() {
-	currImg.iterations -= Number(document.getElementById("iterationIncrement").value);
+	currImg.iterations -= Number(document.getElementById("iteration-increment").value);
 	currImg.reset();
 	displayIterations();
 	startImage(currImg);
@@ -431,7 +431,7 @@ var mouseReleased = function() {
 			currImg.frame.reMin + (mouseX * currImg.reIter),
 			currImg.frame.imMin + (mouseY * currImg.imIter)
 		);
-		let zoomFactor = Number(document.getElementById("clickZoomFactor").value);
+		let zoomFactor = Number(document.getElementById("click-zoom-factor").value);
 		imgToSet = new Image(
 			currImg.fractal,
 			currImg.iterations,
