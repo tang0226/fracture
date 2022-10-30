@@ -116,7 +116,7 @@ var defaultView = new Frame(new Complex(0, 0), 4, 4);
 // Initial image settings:
 
 // Try different samples with different image numbers imgX(X)
-var currImg = img6;
+var currImg = img1;
 var imgs = [];
 var mouseX = null;
 var mouseY = null;
