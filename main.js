@@ -19,8 +19,12 @@ var multi3 = new Multibrot(4);
 var multiJulia5 = new MultiJulia(new Complex(0.667, 0.512), 5);
 var BSjulia = new BSJulia(new Complex(0.675, -1.15));
 
+
+
 // Frames
 var defaultView = new Frame(new Complex(0, 0), 4, 4);
+
+
 
 // Test image catalog
 {
@@ -113,34 +117,6 @@ var defaultView = new Frame(new Complex(0, 0), 4, 4);
 	);
 }
 
-// Initial image settings:
-
-// Try different samples with different image numbers imgX(X)
-var currImg = img1;
-var imgs = [];
-var mouseX = null;
-var mouseY = null;
-var startDragX = null;
-var startDragY = null;
-var mouseDown = false;
-
-
-// Draw loop
-var draw = function() {
-	if(currImg.drawing) {
-		currImg.drawLayer();
-	};
-	setTimeout(draw, 0);
-};
-
-// Set an image to draw and start drawing it
-var startImage = function(img) {
-	currImg = img;
-	currImg.reset();
-	displayIterations();
-	displayZoom();
-};
-
 
 
 // Toolbar functions
@@ -165,6 +141,15 @@ var decreaseIters = function() {
 	displayIterations();
 	startImage(currImg);
 };
+
+
+
+// Mouse variables
+var mouseX = null;
+var mouseY = null;
+var startDragX = null;
+var startDragY = null;
+var mouseDown = false;
 
 
 // Mouse Events
@@ -279,6 +264,30 @@ addEvent("mousedown", mousePressed);
 addEvent("mouseup", mouseReleased);
 addEvent("mousemove", mouseMoved);
 addEvent("mouseout", mouseOut);
+
+
+
+// Initial image settings:
+// Try different samples with different image numbers imgX(X)
+var currImg = img1;
+var imgs = [];
+
+// Select an image to draw and start drawing it
+var startImage = function(img) {
+	currImg = img;
+	currImg.reset();
+	displayIterations();
+	displayZoom();
+};
+
+
+// Draw loop
+var draw = function() {
+	if(currImg.drawing) {
+		currImg.drawLayer();
+	};
+	setTimeout(draw, 0);
+};
 
 
 // Run:
