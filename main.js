@@ -238,15 +238,22 @@ var mouseReleased = function() {
 	}
 	let imgToSet = {};
 	if(sameX && sameY) {
-		let center = new Complex(
-			currImg.frame.reMin + (mouseX * currImg.reIter),
-			currImg.frame.imMin + (mouseY * currImg.imIter)
-		);
 		let zoomFactor = toolbar.getClickZoomFactor();
+		let xOffset = mouseX - (WIDTH / 2);
+		let yOffset = mouseY - (HEIGHT / 2);
+		let newReWidth = currImg.frame.reWidth / zoomFactor;
+		let newImHeight = currImg.frame.imHeight / zoomFactor;
+		let newReIter = newReWidth / WIDTH;
+		let newImIter = newImHeight / HEIGHT;
+		let focus = currImg.frame.toComplexCoords(mouseX, mouseY);
+		let center = new Complex(
+			focus.re - (xOffset * newReIter),
+			focus.im - (yOffset * newImIter)
+		);
 		imgToSet = new Image(
 			currImg.fractal,
 			currImg.iterations,
-			new Frame(center, currImg.frame.reWidth / zoomFactor, currImg.frame.imHeight / zoomFactor),
+			new Frame(center, newReWidth, newImHeight),
 			WIDTH, HEIGHT
 		);
 	}
