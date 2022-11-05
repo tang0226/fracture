@@ -208,36 +208,9 @@ var mouseReleased = function() {
 	mouseDown = false;
 	currImg.reset();
 	imgs.push(currImg);
-	let topCornerX = null;
-	let topCornerY = null;
-	let bottomCornerX = null;
-	let bottomCornerY = null;
-	let sameX = false;
-	let sameY = false;
-	if(startDragX < mouseX) {
-		topCornerX = startDragX;
-		bottomCornerX = mouseX;
-	}
-	else if(mouseX < startDragX) {
-		topCornerX = mouseX;
-		bottomCornerX = startDragX;
-	}
-	else {
-		sameX = true;
-	}
-	if(startDragY < mouseY) {
-		topCornerY = startDragY;
-		bottomCornerY = mouseY;
-	}
-	else if(mouseY < startDragY) {
-		topCornerY = mouseY;
-		bottomCornerY = startDragY;
-	}
-	else {
-		sameY = true;
-	}
+
 	let imgToSet = {};
-	if(sameX && sameY) {
+	if(mouseX == startDragX && mouseY == startDragY) {
 		let zoomFactor = toolbar.getClickZoomFactor();
 		let xOffset = mouseX - (WIDTH / 2);
 		let yOffset = mouseY - (HEIGHT / 2);
@@ -258,6 +231,26 @@ var mouseReleased = function() {
 		);
 	}
 	else {
+		let topCornerX = null;
+		let topCornerY = null;
+		let bottomCornerX = null;
+		let bottomCornerY = null;
+		if(startDragX < mouseX) {
+			topCornerX = startDragX;
+			bottomCornerX = mouseX;
+		}
+		else {
+			topCornerX = mouseX;
+			bottomCornerX = startDragX;
+		}
+		if(startDragY < mouseY) {
+			topCornerY = startDragY;
+			bottomCornerY = mouseY;
+		}
+		else {
+			topCornerY = mouseY;
+			bottomCornerY = startDragY;
+		}
 		let windowWidth = bottomCornerX - topCornerX;
 		let windowHeight = bottomCornerY - topCornerY;
 		let centerX = (topCornerX + bottomCornerX) / 2;
