@@ -118,28 +118,69 @@ var defaultView = new Frame(new Complex(0, 0), 4, 4);
 }
 
 
+var toolbar = {
+	mouseComplexCoordsId: "mouse-complex-coords",
+	iterationsId: "iterations",
+	iterationIncrementId: "iteration-increment",
+	zoomId: "zoom",
+	clickZoomFactorId: "click-zoom-factor",
 
-// Toolbar functions
-var displayIterations = function() {
-	document.getElementById("iterations").innerHTML = "Iterations: " + currImg.iterations.toString();
-};
+	// For currently undefined variables
+	init: function() {
+		this.iterations = currImg.iterations;
+		this.zoom = Number.parseFloat(1 / currImg.frame.reWidth).toExponential(10);
+	},
 
-var displayZoom = function() {
-	document.getElementById("zoom").innerHTML = "Zoom: " + Number.parseFloat(1 / currImg.frame.reWidth).toExponential(10).toString();
-};
 
-var increaseIters = function() {
-	currImg.iterations += Number(document.getElementById("iteration-increment").value);
-	currImg.reset();
-	displayIterations();
-	startImage(currImg);
-};
+	getIterationIncrement: function() {
+		return Number(document.getElementById(this.iterationIncrementId).value);
+	},
 
-var decreaseIters = function() {
-	currImg.iterations -= Number(document.getElementById("iteration-increment").value);
-	currImg.reset();
-	displayIterations();
-	startImage(currImg);
+	getClickZoomFactor: function() {
+		return Number(document.getElementById(this.clickZoomFactorId).value);
+	},
+
+
+	displayMouseComplexCoords: function() {
+		let toSet = "";
+		if(mouseX == null && mouseY == null) {
+			toSet = "N/A";
+		}
+		else {
+			let complexCoords = currImg.frame.toComplexCoords(mouseX, mouseY);
+			let complexRe = complexCoords.re.toString();
+			let complexIm = complexCoords.im.toString();
+			if(Number(complexIm) >= 0) {
+				complexIm = "+" + complexIm;
+			}
+			toSet = complexRe + complexIm + "i";
+		}
+		document.getElementById(this.mouseComplexCoordsId).innerHTML = "Mouse coordinates: " + toSet;
+	},
+
+	displayIterations: function() {
+		document.getElementById(this.iterationsId).innerHTML = "Iterations: " + this.iterations.toString();
+	},
+	
+	displayZoom: function() {
+		document.getElementById(this.zoomId).innerHTML = "Zoom: " + this.zoom.toString();
+	},
+
+	increaseIters: function() {
+		this.iterations += this.getIterationIncrement()
+		currImg.iterations = this.iterations;
+		currImg.reset();
+		this.displayIterations();
+		startImage(currImg);
+	},
+
+	decreaseIters: function() {
+		this.iterations -= this.getIterationIncrement()
+		currImg.iterations = this.iterations;
+		currImg.reset();
+		this.displayIterations();
+		startImage(currImg);
+	}
 };
 
 
@@ -201,7 +242,7 @@ var mouseReleased = function() {
 			currImg.frame.reMin + (mouseX * currImg.reIter),
 			currImg.frame.imMin + (mouseY * currImg.imIter)
 		);
-		let zoomFactor = Number(document.getElementById("click-zoom-factor").value);
+		let zoomFactor = toolbar.getClickZoomFactor();
 		imgToSet = new Image(
 			currImg.fractal,
 			currImg.iterations,
@@ -237,6 +278,9 @@ var mouseReleased = function() {
 			);
 		}
 	}
+	currImg = imgToSet;
+	toolbar.zoom = Number.parseFloat(1 / currImg.frame.reWidth).toExponential(10);
+	toolbar.displayZoom();
 	startImage(imgToSet);
 
 	startDragX = null;
@@ -246,13 +290,7 @@ var mouseReleased = function() {
 var mouseMoved = function() {
 	mouseX = event.offsetX;
 	mouseY = event.offsetY;
-	let complexCoords = currImg.frame.toComplexCoords(mouseX, mouseY);
-	let complexRe = complexCoords.re.toString();
-	let complexIm = complexCoords.im.toString();
-	if(Number(complexIm) >= 0) {
-		complexIm = "+" + complexIm;
-	}
-	document.getElementById("mouse-complex-coords").innerHTML = "Mouse coordinates: " + complexRe + complexIm + "i";
+	toolbar.displayMouseComplexCoords();
 };
 
 var mouseOut = function() {
@@ -276,8 +314,8 @@ var imgs = [];
 var startImage = function(img) {
 	currImg = img;
 	currImg.reset();
-	displayIterations();
-	displayZoom();
+	toolbar.displayIterations();
+	toolbar.displayZoom();
 };
 
 
@@ -291,5 +329,7 @@ var draw = function() {
 
 
 // Run:
+toolbar.init();
+toolbar.displayMouseComplexCoords();
 startImage(currImg);
 draw();
