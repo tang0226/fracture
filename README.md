@@ -11,6 +11,36 @@ Clone and open main.html
 * Adjustable iterations
 * Zoom by clicking (focus on a point), or by dragging and releasing (focus on a region)
 
+## Coding todo list:
+* Add more toolbar options:
+  * All fractal parameters should be able to be modified in the toolbar:
+    * No code modification should be required
+    * Dropdown to select fractal type (like usefuljs.net)
+    * Set window
+    * Set zoom
+    * Set iterations
+    * Set canvas size
+  * Image quality:
+    * Anti-aliasing
+    * Smoothed coloring
+    * More color options (aka premade palettes / coloring functions)
+    * (harder) Custom palettes?
+  * Reset button for several changes at once
+  * (as more toolbar features are added): input sanitization (maybe separate module for tests?)
+* Add new fractals:
+  * Rational maps
+  * Phoenix fractal
+  * Newtonian fractals if you can figure out the math :P
+  * Collatz fractal!
+  * Build-your-own fractal
+    * Equation
+    * Misc. math functions (abs, log, trigonometric)
+* Add CSS styling
+* Prevent scientific notation for complex coordinates (especially close to im = 0).
+* Add informative comments to code
+* (maybe) For optimum performance, hardcode canvas functions instead of using module
+* (very useful, but not sure how to implement) Draw bounding box for drag zooming
+
 ## Samples:
 ![mandelbrot set](https://github.com/tang0226/fractal/blob/master/samples/mandelbrot_set.png?raw=true)
 
