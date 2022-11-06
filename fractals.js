@@ -13,7 +13,7 @@ var Julia = function(c) {
 		var z = Z;
 		var n = 0;
 		z = this.f(z);
-		while(hypot(z.re, z.im) <= 2 && n < iterations) {
+		while(z.abs() <= 2 && n < iterations) {
 			z = this.f(z);
 			n++;
 		}
@@ -33,7 +33,7 @@ var MultiJulia = function(c, e) {
 		var z = Z;
 		var n = 0;
 		z = this.f(z);
-		while(hypot(z.re, z.im) <= 2 && n < iterations) {
+		while(z.abs() <= 2 && n < iterations) {
 			z = this.f(z);
 			n++;
 		}
@@ -49,7 +49,7 @@ var Mandelbrot = function() {
 	this.iterate = function(c, iterations) {
 		var z = new Complex(0, 0);
 		var n = 0;
-		while(hypot(z.re, z.im) <= 2 && n < iterations) {
+		while(z.abs() <= 2 && n < iterations) {
 			z = this.f(z, c);
 			n++;
 		}
@@ -67,7 +67,7 @@ var Multibrot = function(e) {
 	this.iterate = function(c, iterations) {
 		var z = new Complex(0, 0);
 		var n = 0;
-		while(hypot(z.re, z.im) <= 2 && n < iterations) {
+		while(z.abs() <= 2 && n < iterations) {
 			z = this.f(z, c);
 			n++;
 		}
@@ -83,7 +83,7 @@ var BurningShip = function() {
 	this.iterate = function(c, iterations) {
 		var z = new Complex(0, 0);
 		var n = 0;
-		while(hypot(z.re, z.im) <= 2 && n < iterations) {
+		while(z.abs() <= 2 && n < iterations) {
 			z = this.f(z, c);
 			n++;
 		}
@@ -101,7 +101,7 @@ var MultiShip = function(e) {
 	this.iterate = function(c, iterations) {
 		var z = new Complex(0, 0);
 		var n = 0;
-		while(hypot(z.re, z.im) <= 2 && n < iterations) {
+		while(z.abs() <= 2 && n < iterations) {
 			z = this.f(z, c);
 			n++;
 		}
@@ -120,7 +120,7 @@ var BSJulia = function(c) {
 		var z = Z;
 		var n = 0;
 		z = this.f(z);
-		while(hypot(z.re, z.im) <= 2 && n < iterations) {
+		while(z.abs() <= 2 && n < iterations) {
 			z = this.f(z);
 			n++;
 		}

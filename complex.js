@@ -23,4 +23,7 @@ var Complex = function(re, im) {
 		}
 		return this.mul(this.exp(e - 1));
 	};
+	this.abs = function() {
+		return hypot(this.re, this.im);
+	};
 }
