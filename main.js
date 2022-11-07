@@ -30,7 +30,7 @@ var defaultView = new Frame(new Complex(0, 0), 4, 4);
 {
 	// Mandelbrot set
 	var img1 = new Image(
-		mandel, 10, true,
+		mandel, 100, true,
 		new Frame(
 			new Complex(-0.5, 0),
 			4, 4
@@ -70,7 +70,7 @@ var defaultView = new Frame(new Complex(0, 0), 4, 4);
 	);
 	// Multibrot set
 	var img6 = new Image(
-		multi3, 10, true,
+		multi3, 100, true,
 		defaultView,
 	);
 	// MultiJulia set
@@ -209,7 +209,7 @@ var mouseReleased = function() {
 	currImg.reset();
 	imgs.push(currImg);
 
-	let imgToSet = {};
+	let newFrame;
 	if(mouseX == startDragX && mouseY == startDragY) {
 		let zoomFactor = toolbar.getClickZoomFactor();
 		let xOffset = mouseX - (WIDTH / 2);
@@ -219,72 +219,41 @@ var mouseReleased = function() {
 		let newReIter = newReWidth / WIDTH;
 		let newImIter = newImHeight / HEIGHT;
 		let focus = currImg.frame.toComplexCoords(mouseX, mouseY);
-		let center = new Complex(
-			focus.re - (xOffset * newReIter),
-			focus.im - (yOffset * newImIter)
-		);
-		imgToSet = new Image(
-			currImg.fractal,
-			currImg.iterations,
-			currImg.smoothColoring,
-			new Frame(center, newReWidth, newImHeight),
-			WIDTH, HEIGHT
+		newFrame = new Frame(
+			new Complex(
+				focus.re - (xOffset * newReIter),
+				focus.im - (yOffset * newImIter)
+			),
+			newReWidth, newImHeight
 		);
 	}
-	else {
-		let topCornerX = null;
-		let topCornerY = null;
-		let bottomCornerX = null;
-		let bottomCornerY = null;
-		if(startDragX < mouseX) {
-			topCornerX = startDragX;
-			bottomCornerX = mouseX;
-		}
-		else {
-			topCornerX = mouseX;
-			bottomCornerX = startDragX;
-		}
-		if(startDragY < mouseY) {
-			topCornerY = startDragY;
-			bottomCornerY = mouseY;
-		}
-		else {
-			topCornerY = mouseY;
-			bottomCornerY = startDragY;
-		}
-		let windowWidth = bottomCornerX - topCornerX;
-		let windowHeight = bottomCornerY - topCornerY;
-		let centerX = (topCornerX + bottomCornerX) / 2;
-		let centerY = (topCornerY + bottomCornerY) / 2;
+	else if(mouseX != startDragX && mouseY != startDragY) {
+		let windowWidth = abs(mouseX - startDragX);
+		let windowHeight = abs(mouseY - startDragY);
+		let centerX = (mouseX + startDragX) / 2;
+		let centerY = (mouseY + startDragY) / 2;
 		let center = new Complex(
 			currImg.frame.reMin + (centerX * currImg.reIter),
-			currImg.frame.imMin + (centerY * currImg.imIter)
+			currImg.frame.imMin + (centerY * currImg.reIter)
 		);
-		let newReWidth = windowWidth * currImg.reIter;
-		let newImHeight = windowHeight * currImg.imIter;
 		if(windowWidth > windowHeight) {
-			imgToSet = new Image(
-				currImg.fractal,
-				currImg.iterations,
-				currImg.smoothColoring,
-				new Frame(center, newReWidth, newReWidth),
-				WIDTH, HEIGHT
-			);
+			let newReWidth = windowWidth * currImg.reIter;
+			newFrame = new Frame(center, newReWidth, newReWidth);
 		}
 		else {
-			imgToSet = new Image(
-				currImg.fractal,
-				currImg.iterations,
-				currImg.smoothColoring,
-				new Frame(center, newImHeight, newImHeight),
-				WIDTH, HEIGHT
-			);
+			let newImHeight = windowHeight * currImg.imIter;
+			newFrame = new Frame(center, newImHeight, newImHeight);
 		}
 	}
-	currImg = imgToSet;
+	currImg = new Image(
+		currImg.fractal,
+		currImg.iterations,
+		currImg.smoothColoring,
+		newFrame
+	);
 	toolbar.zoom = Number.parseFloat(1 / currImg.frame.reWidth).toExponential(10);
 	toolbar.displayZoom();
-	startImage(imgToSet);
+	startImage(currImg);
 
 	startDragX = null;
 	startDragY = null;
@@ -311,10 +280,6 @@ addEvent("mouseout", mouseOut);
 // Initial image settings:
 // Try different samples with different image numbers imgX(X)
 var currImg = img1;
-var currImg = new Image(new Multibrot(3), 10, true,
-	defaultView
-);
-console.log(defaultView);
 var imgs = [];
 
 // Select an image to draw and start drawing it
