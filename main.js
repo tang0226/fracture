@@ -30,7 +30,7 @@ var defaultView = new Frame(new Complex(0, 0), 4, 4);
 {
 	// Mandelbrot set
 	var img1 = new Image(
-		mandel, 100,
+		mandel, 10, true,
 		new Frame(
 			new Complex(-0.5, 0),
 			4, 4
@@ -38,7 +38,7 @@ var defaultView = new Frame(new Complex(0, 0), 4, 4);
 	);
 	// Minibrot, deep zoom into Mandelbrot
 	var img2 = new Image(
-		mandel, 1000,
+		mandel, 1000, true,
 		new Frame(
 			new Complex(0.4422127499646909, 0.23935098947264477),
 				0.00000001,
@@ -47,7 +47,7 @@ var defaultView = new Frame(new Complex(0, 0), 4, 4);
 	);
 	// Deep zoom into Burning Ship
 	var img3 = new Image(
-		ship, 6000,
+		ship, 6000, true,
 		new Frame(
 			new Complex(1.144563047301867, -1.2797276570058733),
 				0.000000000001,
@@ -56,12 +56,12 @@ var defaultView = new Frame(new Complex(0, 0), 4, 4);
 	);
 	// Sample Julia set
 	var img4 = new Image(
-		julia1, 100,
+		julia1, 100, true,
 		defaultView,
 	);
 	// Deep zoom into Mandelbrot
 	var img5 = new Image(
-		mandel, 2500,
+		mandel, 2500, true,
 		new Frame(
 			new Complex(-1.4746396689670118, -0.0000000065964943055555555),
 			0.00000000001,
@@ -70,22 +70,22 @@ var defaultView = new Frame(new Complex(0, 0), 4, 4);
 	);
 	// Multibrot set
 	var img6 = new Image(
-		multi3, 100,
+		multi3, 10, true,
 		defaultView,
 	);
 	// MultiJulia set
 	var img7 = new Image(
-		multiJulia5, 100,
+		multiJulia5, 100, true,
 		defaultView,
 	);
 	// Multi-Burning Ship
 	var img8 = new Image(
-		multiShip, 100,
+		multiShip, 100, true,
 		defaultView,
 	);
 	//Burning Ship Armada
 	var img9 = new Image(
-		ship, 200,
+		ship, 200, true,
 		new Frame(
 			new Complex(-1.757413194, -0.00657118056),
 			0.3,
@@ -94,21 +94,21 @@ var defaultView = new Frame(new Complex(0, 0), 4, 4);
 	);
 	// Burning Ship Julia Set
 	var img10 = new Image(
-		BSjulia, 100,
+		BSjulia, 100, true,
 		defaultView,
 	);
 	// Burning Ship
 	var img11 = new Image(
-		ship, 300,
+		ship, 300, true,
 		defaultView,
 	);
 	// MultiShip 4
 	var img12 = new Image(
-		multiShip2, 100,
+		multiShip2, 100, true,
 		defaultView,
 	);
 	var img13 = new Image(
-		ship, 1000,
+		ship, 1000, true,
 		new Frame(
 			new Complex(-1.770848103815, -0.02849221687),
 			1/42836028053,
@@ -226,6 +226,7 @@ var mouseReleased = function() {
 		imgToSet = new Image(
 			currImg.fractal,
 			currImg.iterations,
+			currImg.smoothColoring,
 			new Frame(center, newReWidth, newImHeight),
 			WIDTH, HEIGHT
 		);
@@ -265,6 +266,7 @@ var mouseReleased = function() {
 			imgToSet = new Image(
 				currImg.fractal,
 				currImg.iterations,
+				currImg.smoothColoring,
 				new Frame(center, newReWidth, newReWidth),
 				WIDTH, HEIGHT
 			);
@@ -273,6 +275,7 @@ var mouseReleased = function() {
 			imgToSet = new Image(
 				currImg.fractal,
 				currImg.iterations,
+				currImg.smoothColoring,
 				new Frame(center, newImHeight, newImHeight),
 				WIDTH, HEIGHT
 			);
@@ -308,6 +311,10 @@ addEvent("mouseout", mouseOut);
 // Initial image settings:
 // Try different samples with different image numbers imgX(X)
 var currImg = img1;
+var currImg = new Image(new Multibrot(3), 10, true,
+	defaultView
+);
+console.log(defaultView);
 var imgs = [];
 
 // Select an image to draw and start drawing it

@@ -9,13 +9,16 @@ var Julia = function(c) {
 		return z.mul(z).add(this.c);
 	};
 	
-	this.iterate = function(Z, iterations) {
+	this.iterate = function(Z, iterations, smoothColoring) {
 		var z = Z;
 		var n = 0;
 		z = this.f(z);
 		while(z.abs() <= 2 && n < iterations) {
 			z = this.f(z);
 			n++;
+		}
+		if(n < iterations && smoothColoring) {
+			return n + 1 - log(log(z.abs())) / log(2);
 		}
 		return n;
 	};
@@ -29,13 +32,16 @@ var MultiJulia = function(c, e) {
 		return z.exp(e).add(this.c);
 	};
 	
-	this.iterate = function(Z, iterations) {
+	this.iterate = function(Z, iterations, smoothColoring) {
 		var z = Z;
 		var n = 0;
 		z = this.f(z);
 		while(z.abs() <= 2 && n < iterations) {
 			z = this.f(z);
 			n++;
+		}
+		if(n < iterations && smoothColoring) {
+			return n + 1 - log(log(z.abs())) / log(this.e);
 		}
 		return n;
 	};
@@ -46,12 +52,15 @@ var Mandelbrot = function() {
 		return z.exp(2).add(c);
 	};
 	
-	this.iterate = function(c, iterations) {
+	this.iterate = function(c, iterations, smoothColoring) {
 		var z = new Complex(0, 0);
 		var n = 0;
 		while(z.abs() <= 2 && n < iterations) {
 			z = this.f(z, c);
 			n++;
+		}
+		if(n < iterations && smoothColoring) {
+			return n + 1 - log(log(z.abs())) / log(2);
 		}
 		return n;
 	};
@@ -64,12 +73,15 @@ var Multibrot = function(e) {
 		return z.exp(this.e).add(c);
 	};
 	
-	this.iterate = function(c, iterations) {
+	this.iterate = function(c, iterations, smoothColoring) {
 		var z = new Complex(0, 0);
 		var n = 0;
 		while(z.abs() <= 2 && n < iterations) {
 			z = this.f(z, c);
 			n++;
+		}
+		if(n < iterations && smoothColoring) {
+			return n + 1 - log(log(z.abs())) / log(this.e);
 		}
 		return n;
 	};
@@ -80,12 +92,15 @@ var BurningShip = function() {
 		return (new Complex(abs(z.re), abs(z.im))).exp(2).add(c);
 	};
 
-	this.iterate = function(c, iterations) {
+	this.iterate = function(c, iterations, smoothColoring) {
 		var z = new Complex(0, 0);
 		var n = 0;
 		while(z.abs() <= 2 && n < iterations) {
 			z = this.f(z, c);
 			n++;
+		}
+		if(n < iterations && smoothColoring) {
+			return n + 1 - log(log(z.abs())) / log(2);
 		}
 		return n;
 	};
@@ -98,12 +113,15 @@ var MultiShip = function(e) {
 		return (new Complex(abs(z.re), abs(z.im))).exp(this.e).add(c);
 	};
 
-	this.iterate = function(c, iterations) {
+	this.iterate = function(c, iterations, smoothColoring) {
 		var z = new Complex(0, 0);
 		var n = 0;
 		while(z.abs() <= 2 && n < iterations) {
 			z = this.f(z, c);
 			n++;
+		}
+		if(n < iterations && smoothColoring) {
+			return n + 1 - log(log(z.abs())) / log(this.e);
 		}
 		return n;
 	};
@@ -116,13 +134,16 @@ var BSJulia = function(c) {
 		return (new Complex(abs(z.re), abs(z.im))).exp(2).add(this.c);
 	};
 	
-	this.iterate = function(Z, iterations) {
+	this.iterate = function(Z, iterations, smoothColoring) {
 		var z = Z;
 		var n = 0;
 		z = this.f(z);
 		while(z.abs() <= 2 && n < iterations) {
 			z = this.f(z);
 			n++;
+		}
+		if(n < iterations && smoothColoring) {
+			return n + 1 - log(log(z.abs())) / log(2);
 		}
 		return n;
 	};
