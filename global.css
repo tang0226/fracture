@@ -1,7 +1,14 @@
 #canvas {
     border: 1px solid black;
 }
-#toolbar div {
-    font-family: "Helvetica", "Verdana", "Arial";
+#toolbar {
+    width: 50%;
+    border: 1px solid black;
+    padding: 10px;
+}
+#toolbar div, #toolbar input[type="button"] {
     margin-top: 5px;
+}
+hr {
+    margin-top: 10px;
 }

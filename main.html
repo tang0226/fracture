@@ -8,23 +8,16 @@
 		<br/>
 		<div id="toolbar">
 			<div id="mouse-complex-coords"></div>
+			<hr>
 			<div id="iterations-toolbar">
-				
 				<input type="button" value="+" onclick="toolbar.increaseIters()"/>
 				<div id="iterations">Iterations:</div>
 				<input type="button" value="-" onclick="toolbar.decreaseIters()"/>
-
-				<br/>
-				
 				<div>Increment: <input id="iteration-increment" type="text" value="100" style="display: inline"/></div>
-				
 			</div>
-			
 			<hr>
-			
 			<div id="frame-toolbar">
-				<div id="zoom" style="display: inline">Zoom:</div>
-				<br/>
+				<div id="zoom">Zoom:</div>
 				<div>Click zoom factor: <input id="click-zoom-factor" value="4"/></div>
 			</div>
 		</div>
@@ -39,7 +32,7 @@
 				document.body.appendChild(script);
 			};
 		</script>
-		
+
 		<!--Scripts import here-->
 		<script src="./canvas/canvas.js"></script>
 		<script src="./math/math.js"></script>
