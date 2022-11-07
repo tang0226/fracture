@@ -1,0 +1,7 @@
+#canvas {
+    border: 1px solid black;
+}
+#toolbar div {
+    font-family: "Helvetica", "Verdana", "Arial";
+    margin-top: 5px;
+}
