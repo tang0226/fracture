@@ -2,12 +2,14 @@
     border: 1px solid black;
 }
 #toolbar {
-    width: 50%;
+    width: 600px;
     border: 1px solid black;
+    margin-top: 10px;
     padding: 10px;
 }
 #toolbar div, #toolbar input[type="button"] {
     margin-top: 5px;
+    font-family: "Arial";
 }
 hr {
     margin-top: 10px;
