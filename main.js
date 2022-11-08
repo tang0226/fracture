@@ -166,6 +166,11 @@ var toolbar = {
 		document.getElementById(this.zoomId).innerHTML = "Zoom: " + this.zoom.toString();
 	},
 
+	setZoom: function(zoom) {
+		this.zoom = zoom;
+		this.displayZoom();
+	},
+
 	increaseIters: function() {
 		this.iterations += this.getIterationIncrement();
 		currImg.iterations = this.iterations;
@@ -251,8 +256,7 @@ var mouseReleased = function() {
 		currImg.smoothColoring,
 		newFrame
 	);
-	toolbar.zoom = Number.parseFloat(1 / currImg.frame.reWidth).toExponential(10);
-	toolbar.displayZoom();
+	toolbar.setZoom(Number.parseFloat(1 / currImg.frame.reWidth).toExponential(10));
 	startImage(currImg);
 
 	startDragX = null;
