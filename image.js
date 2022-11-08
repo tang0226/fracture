@@ -20,7 +20,7 @@ var Image = function(fractal, iterations, smoothColoring, frame) {
 		let currRe = this.frame.reMin;
 		for(var currX = 0; currX < WIDTH; currX++) {
 			let complex = new Complex(currRe, this.currIm);
-			let val = this.fractal.iterate(complex, this.iterations, smoothColoring);
+			let val = this.fractal.iterate(complex, this.iterations, this.smoothColoring);
 			
 			if(val == this.iterations) {
 				fill(0, 0, 0);
