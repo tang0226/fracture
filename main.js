@@ -167,7 +167,7 @@ var toolbar = {
 	},
 
 	increaseIters: function() {
-		this.iterations += this.getIterationIncrement()
+		this.iterations += this.getIterationIncrement();
 		currImg.iterations = this.iterations;
 		currImg.reset();
 		this.displayIterations();
@@ -175,7 +175,7 @@ var toolbar = {
 	},
 
 	decreaseIters: function() {
-		this.iterations -= this.getIterationIncrement()
+		this.iterations -= this.getIterationIncrement();
 		currImg.iterations = this.iterations;
 		currImg.reset();
 		this.displayIterations();
