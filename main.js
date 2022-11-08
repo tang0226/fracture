@@ -129,7 +129,7 @@ var toolbar = {
 	init: function() {
 		this.iterations = currImg.iterations;
 		this.zoom = Number.parseFloat(1 / currImg.frame.reWidth).toExponential(10);
-		toolbar.displayMouseComplexCoords();
+		this.displayMouseComplexCoords();
 	},
 
 
