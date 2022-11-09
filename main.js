@@ -201,70 +201,75 @@ var mouseDown = false;
 
 // Mouse Events
 
-var mousePressed = function() {
-	if(!mouseDown) {
-		startDragX = mouseX;
-		startDragY = mouseY;
+var mousePressed = function(event) {
+	if(event.buttons == 1) {
+		console.log(event.buttons);
+		if(!mouseDown) {
+			startDragX = mouseX;
+			startDragY = mouseY;
+		}
+		mouseDown = true;
 	}
-	mouseDown = true;
 };
 
 // Based on mouse coordinates, calculate the frame for the new image and start it
 var mouseReleased = function() {
-	mouseDown = false;
-	currImg.reset();
-	imgs.push(currImg);
+	if(mouseDown) {
+		mouseDown = false;
+		currImg.reset();
+		imgs.push(currImg);
 
-	let newFrame;
-	if(mouseX == startDragX && mouseY == startDragY) {
-		let zoomFactor = toolbar.getClickZoomFactor();
-		let xOffset = mouseX - (WIDTH / 2);
-		let yOffset = mouseY - (HEIGHT / 2);
-		let newReWidth = currImg.frame.reWidth / zoomFactor;
-		let newImHeight = currImg.frame.imHeight / zoomFactor;
-		let newReIter = newReWidth / WIDTH;
-		let newImIter = newImHeight / HEIGHT;
-		let focus = currImg.frame.toComplexCoords(mouseX, mouseY);
-		newFrame = new Frame(
-			new Complex(
-				focus.re - (xOffset * newReIter),
-				focus.im - (yOffset * newImIter)
-			),
-			newReWidth, newImHeight
-		);
-	}
-	else if(mouseX != startDragX && mouseY != startDragY) {
-		let windowWidth = abs(mouseX - startDragX);
-		let windowHeight = abs(mouseY - startDragY);
-		let centerX = (mouseX + startDragX) / 2;
-		let centerY = (mouseY + startDragY) / 2;
-		let center = new Complex(
-			currImg.frame.reMin + (centerX * currImg.reIter),
-			currImg.frame.imMin + (centerY * currImg.reIter)
-		);
-		if(windowWidth > windowHeight) {
-			let newReWidth = windowWidth * currImg.reIter;
-			newFrame = new Frame(center, newReWidth, newReWidth);
+		let newFrame;
+		if(mouseX == startDragX && mouseY == startDragY) {
+			let zoomFactor = toolbar.getClickZoomFactor();
+			let xOffset = mouseX - (WIDTH / 2);
+			let yOffset = mouseY - (HEIGHT / 2);
+			let newReWidth = currImg.frame.reWidth / zoomFactor;
+			let newImHeight = currImg.frame.imHeight / zoomFactor;
+			let newReIter = newReWidth / WIDTH;
+			let newImIter = newImHeight / HEIGHT;
+			let focus = currImg.frame.toComplexCoords(mouseX, mouseY);
+			newFrame = new Frame(
+				new Complex(
+					focus.re - (xOffset * newReIter),
+					focus.im - (yOffset * newImIter)
+				),
+				newReWidth, newImHeight
+			);
 		}
-		else {
-			let newImHeight = windowHeight * currImg.imIter;
-			newFrame = new Frame(center, newImHeight, newImHeight);
+		else if(mouseX != startDragX && mouseY != startDragY) {
+			let windowWidth = abs(mouseX - startDragX);
+			let windowHeight = abs(mouseY - startDragY);
+			let centerX = (mouseX + startDragX) / 2;
+			let centerY = (mouseY + startDragY) / 2;
+			let center = new Complex(
+				currImg.frame.reMin + (centerX * currImg.reIter),
+				currImg.frame.imMin + (centerY * currImg.reIter)
+			);
+			if(windowWidth > windowHeight) {
+				let newReWidth = windowWidth * currImg.reIter;
+				newFrame = new Frame(center, newReWidth, newReWidth);
+			}
+			else {
+				let newImHeight = windowHeight * currImg.imIter;
+				newFrame = new Frame(center, newImHeight, newImHeight);
+			}
 		}
-	}
-	currImg = new Image(
-		currImg.fractal,
-		currImg.iterations,
-		currImg.smoothColoring,
-		newFrame
-	);
-	toolbar.setZoom(Number.parseFloat(1 / currImg.frame.reWidth).toExponential(10));
-	startImage(currImg);
+		currImg = new Image(
+			currImg.fractal,
+			currImg.iterations,
+			currImg.smoothColoring,
+			newFrame
+		);
+		toolbar.setZoom(Number.parseFloat(1 / currImg.frame.reWidth).toExponential(10));
+		startImage(currImg);
 
-	startDragX = null;
-	startDragY = null;
+		startDragX = null;
+		startDragY = null;
+	}
 };
 
-var mouseMoved = function() {
+var mouseMoved = function(event) {
 	mouseX = event.offsetX;
 	mouseY = event.offsetY;
 	toolbar.displayMouseComplexCoords();
