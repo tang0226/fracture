@@ -203,7 +203,6 @@ var mouseDown = false;
 
 var mousePressed = function(event) {
 	if(event.buttons == 1) {
-		console.log(event.buttons);
 		if(!mouseDown) {
 			startDragX = mouseX;
 			startDragY = mouseY;
@@ -242,10 +241,12 @@ var mouseReleased = function() {
 			let windowHeight = abs(mouseY - startDragY);
 			let centerX = (mouseX + startDragX) / 2;
 			let centerY = (mouseY + startDragY) / 2;
+
 			let center = new Complex(
 				currImg.frame.reMin + (centerX * currImg.reIter),
 				currImg.frame.imMin + (centerY * currImg.reIter)
 			);
+
 			if(windowWidth > windowHeight) {
 				let newReWidth = windowWidth * currImg.reIter;
 				newFrame = new Frame(center, newReWidth, newReWidth);
@@ -255,13 +256,16 @@ var mouseReleased = function() {
 				newFrame = new Frame(center, newImHeight, newImHeight);
 			}
 		}
+
 		currImg = new Image(
 			currImg.fractal,
 			currImg.iterations,
 			currImg.smoothColoring,
 			newFrame
 		);
+
 		toolbar.setZoom(Number.parseFloat(1 / currImg.frame.reWidth).toExponential(10));
+
 		startImage(currImg);
 
 		startDragX = null;
