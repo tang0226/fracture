@@ -18,7 +18,7 @@ var Image = function(fractal, iterations, smoothColoring, frame) {
 	
 	this.drawLayer = function() {
 		let currRe = this.frame.reMin;
-		for(var currX = 0; currX < WIDTH; currX++) {
+		for(let currX = 0; currX < WIDTH; currX++) {
 			let complex = new Complex(currRe, this.currIm);
 			let val = this.fractal.iterate(complex, this.iterations, this.smoothColoring);
 			

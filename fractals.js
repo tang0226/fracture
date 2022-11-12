@@ -10,8 +10,8 @@ var Julia = function(c) {
 	};
 	
 	this.iterate = function(Z, iterations, smoothColoring) {
-		var z = Z;
-		var n = 0;
+		let z = Z;
+		let n = 0;
 		z = this.f(z);
 		while(z.abs() <= 2 && n < iterations) {
 			z = this.f(z);
@@ -33,8 +33,8 @@ var MultiJulia = function(c, e) {
 	};
 	
 	this.iterate = function(Z, iterations, smoothColoring) {
-		var z = Z;
-		var n = 0;
+		let z = Z;
+		let n = 0;
 		z = this.f(z);
 		while(z.abs() <= 2 && n < iterations) {
 			z = this.f(z);
@@ -53,8 +53,8 @@ var Mandelbrot = function() {
 	};
 	
 	this.iterate = function(c, iterations, smoothColoring) {
-		var z = new Complex(0, 0);
-		var n = 0;
+		let z = new Complex(0, 0);
+		let n = 0;
 		while(z.abs() <= 2 && n < iterations) {
 			z = this.f(z, c);
 			n++;
@@ -74,8 +74,8 @@ var Multibrot = function(e) {
 	};
 	
 	this.iterate = function(c, iterations, smoothColoring) {
-		var z = new Complex(0, 0);
-		var n = 0;
+		let z = new Complex(0, 0);
+		let n = 0;
 		while(z.abs() <= 2 && n < iterations) {
 			z = this.f(z, c);
 			n++;
@@ -93,8 +93,8 @@ var BurningShip = function() {
 	};
 
 	this.iterate = function(c, iterations, smoothColoring) {
-		var z = new Complex(0, 0);
-		var n = 0;
+		let z = new Complex(0, 0);
+		let n = 0;
 		while(z.abs() <= 2 && n < iterations) {
 			z = this.f(z, c);
 			n++;
@@ -114,8 +114,8 @@ var MultiShip = function(e) {
 	};
 
 	this.iterate = function(c, iterations, smoothColoring) {
-		var z = new Complex(0, 0);
-		var n = 0;
+		let z = new Complex(0, 0);
+		let n = 0;
 		while(z.abs() <= 2 && n < iterations) {
 			z = this.f(z, c);
 			n++;
@@ -135,8 +135,8 @@ var BSJulia = function(c) {
 	};
 	
 	this.iterate = function(Z, iterations, smoothColoring) {
-		var z = Z;
-		var n = 0;
+		let z = Z;
+		let n = 0;
 		z = this.f(z);
 		while(z.abs() <= 2 && n < iterations) {
 			z = this.f(z);
