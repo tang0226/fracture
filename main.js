@@ -119,6 +119,7 @@ var defaultView = new Frame(new Complex(0, 0), 4, 4);
 
 
 var toolbar = {
+	renderTimeId: "render-time",
 	mouseComplexCoordsId: "mouse-complex-coords",
 	iterationsId: "iterations",
 	iterationIncrementId: "iteration-increment",
@@ -132,6 +133,11 @@ var toolbar = {
 		this.displayMouseComplexCoords();
 	},
 
+	displayRenderTime: function(time) {
+		document.getElementById(this.renderTimeId).innerHTML =
+			"Render time: " +
+			(time.getUTCSeconds() * 1000 + time.getUTCMilliseconds()).toString() + " ms";
+	},
 
 	getIterationIncrement: function() {
 		return Number(document.getElementById(this.iterationIncrementId).value);

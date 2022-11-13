@@ -15,6 +15,8 @@ var Image = function(fractal, iterations, smoothColoring, frame) {
 	this.currIm = frame.imMin;
 	
 	this.drawing = true;
+	this.startTime = null;
+	this.renderTime = null;
 	
 	this.drawLayer = function() {
 		let currRe = this.frame.reMin;
@@ -45,11 +47,14 @@ var Image = function(fractal, iterations, smoothColoring, frame) {
 		if(this.currY > WIDTH) {
 			this.drawing = false;
 		}
+		this.renderTime = new Date(new Date() - this.startTime);
+		toolbar.displayRenderTime(this.renderTime);
 	};
 	
 	this.reset = function() {
 		this.currY = 0;
 		this.currIm = this.frame.imMin;
 		this.drawing = true;
+		this.startTime = new Date();
 	};
 };
