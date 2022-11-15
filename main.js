@@ -8,190 +8,94 @@ noStroke();
 colorMode("HSL");
 
 
-// Complex number prototype
-var Complex = function(re, im) {
-	this.re = re;
-	this.im = im;
-	
-	this.add = function(c) {
-		return new Complex(this.re + c.re, this.im + c.im);
-	};
+// Complex number functions
+var complex = {
+	add: function(c1, c2) {
+		return Complex(c1.re + c2.re, c1.im + c2.im);
+	},
 
-	this.sub = function(c) {
-		return new Complex(this.re - c.re, this.im - c.im);
-	};
+	sub: function(c1, c2) {
+		return Complex(c1.re - c2.re, c1.im - c2.im);
+	},
 
-	this.mul = function(c) {
-		return new Complex(this.re * c.re - this.im * c.im, this.re * c.im + this.im * c.re);
-	};
-
-	this.div = function(c) {
-		return new Complex(
-			(this.re * c.re + this.im * c.im) / (c.re ** 2 + c.im ** 2),
-			(this.im * c.re - this.re * c.im) / (c.re ** 2 + c.im ** 2)
+	mul: function(c1, c2) {
+		return Complex(
+			c1.re * c2.re - c1.im * c2.im,
+			c1.re * c2.im + c1.im * c2.re
 		);
-	};
+	},
 
-	this.exp = function(e) {
+	div: function(c1, c2) {
+		return Complex(
+			(c1.re * c2.re + c1.im * c2.im) / (c2.re ** c2.re + c2.im * c2.im),
+			(c1.im * c2.re - c1.re * c2.im) / (c2.re * c2.re + c2.im * c2.im)
+		);
+	},
+
+	exp: function(c, e) {
 		if(e == 1){
-			return this;
+			return c;
 		}
-		return this.mul(this.exp(e - 1));
+		return complex.mul(c, c.exp(e - 1));
+	},
+
+	abs: function(c) {
+		return Math.hypot(c.re, c.im);
+	}
+};
+
+var Complex = function(re, im) {
+	return {
+		re: re,
+		im: im
 	};
-	
-	this.abs = function() {
-		return hypot(this.re, this.im);
-	};
-}
+};
 
 
 
 /******************************
-FRACTAL PROTOTYPES: THEORETICAL MATHEMATICAL SETS IN THE COMPLEX PLANE
+FRACTAL PROTOTYPES: THEORETICAL MATHEMATICAL SETS IN THE COMPLEX PLANE:
+Julia
+MultiJulia
+Mandelbrot
+Multibrot
+Burning Ship
+MultiShip
+BS Julia
 ******************************/ 
 {
+	var Mandelbrot = function() {
+		this.iterate = function(c, iterations) {
+			let zRe = 0;
+			let zIm = 0;
+			let zReSq = 0;
+			let zImSq = 0;
+			let n = 0;
+			while(zReSq + zImSq <= 4 && n < iterations) {
+				zIm = 2 * zRe * zIm + c.im;
+				zRe = zReSq - zImSq + c.re;
+				zReSq = zRe * zRe;
+				zImSq = zIm * zIm;
+				n++;
+			}
+			return n;
+		};
+	};
 	var Julia = function(c) {
 		this.c = c;
-		
-		this.f = function(z) {
-			return z.mul(z).add(this.c);
-		};
-		
-		this.iterate = function(Z, iterations, smoothColoring) {
-			let z = Z;
+
+		this.iterate = function(_zRe, _zIm, iterations) {
+			let zRe = _zRe;
+			let zIm = _zIm;
+			let zReSq = 0;
+			let zImSq = 0;
 			let n = 0;
-			z = this.f(z);
-			while(z.abs() <= 2 && n < iterations) {
-				z = this.f(z);
+			while(zReSq + zImSq <= 4 && n < iterations) {
+				zIm = 2 * zRe * zIm + this.c.im;
+				zRe = zReSq - zImSq + this.c.re;
+				zReSq = zRe * zRe;
+				zImSq = zIm * zIm;
 				n++;
-			}
-			if(n < iterations && smoothColoring) {
-				return n + 1 - log(log(z.abs())) / log(2);
-			}
-			return n;
-		};
-	};
-
-	var MultiJulia = function(c, e) {
-		this.c = c;
-		this.e = e;
-		
-		this.f = function(z) {
-			return z.exp(e).add(this.c);
-		};
-		
-		this.iterate = function(Z, iterations, smoothColoring) {
-			let z = Z;
-			let n = 0;
-			z = this.f(z);
-			while(z.abs() <= 2 && n < iterations) {
-				z = this.f(z);
-				n++;
-			}
-			if(n < iterations && smoothColoring) {
-				return n + 1 - log(log(z.abs())) / log(this.e);
-			}
-			return n;
-		};
-	};
-
-	var Mandelbrot = function() {
-		this.f = function(z, c) {
-			return z.exp(2).add(c);
-		};
-		
-		this.iterate = function(c, iterations, smoothColoring) {
-			let z = new Complex(0, 0);
-			let n = 0;
-			while(z.abs() <= 2 && n < iterations) {
-				z = this.f(z, c);
-				n++;
-			}
-			if(n < iterations && smoothColoring) {
-				return n + 1 - log(log(z.abs())) / log(2);
-			}
-			return n;
-		};
-	};
-
-	var Multibrot = function(e) {
-		this.e = e;
-		
-		this.f = function(z, c) {
-			return z.exp(this.e).add(c);
-		};
-		
-		this.iterate = function(c, iterations, smoothColoring) {
-			let z = new Complex(0, 0);
-			let n = 0;
-			while(z.abs() <= 2 && n < iterations) {
-				z = this.f(z, c);
-				n++;
-			}
-			if(n < iterations && smoothColoring) {
-				return n + 1 - log(log(z.abs())) / log(this.e);
-			}
-			return n;
-		};
-	};
-
-	var BurningShip = function() {
-		this.f = function(z, c) {
-			return (new Complex(abs(z.re), abs(z.im))).exp(2).add(c);
-		};
-
-		this.iterate = function(c, iterations, smoothColoring) {
-			let z = new Complex(0, 0);
-			let n = 0;
-			while(z.abs() <= 2 && n < iterations) {
-				z = this.f(z, c);
-				n++;
-			}
-			if(n < iterations && smoothColoring) {
-				return n + 1 - log(log(z.abs())) / log(2);
-			}
-			return n;
-		};
-	};
-
-	var MultiShip = function(e) {
-		this.e = e;
-		
-		this.f = function(z, c) {
-			return (new Complex(abs(z.re), abs(z.im))).exp(this.e).add(c);
-		};
-
-		this.iterate = function(c, iterations, smoothColoring) {
-			let z = new Complex(0, 0);
-			let n = 0;
-			while(z.abs() <= 2 && n < iterations) {
-				z = this.f(z, c);
-				n++;
-			}
-			if(n < iterations && smoothColoring) {
-				return n + 1 - log(log(z.abs())) / log(this.e);
-			}
-			return n;
-		};
-	};
-
-	var BSJulia = function(c) {
-		this.c = c;
-		
-		this.f = function(z) {
-			return (new Complex(abs(z.re), abs(z.im))).exp(2).add(this.c);
-		};
-		
-		this.iterate = function(Z, iterations, smoothColoring) {
-			let z = Z;
-			let n = 0;
-			z = this.f(z);
-			while(z.abs() <= 2 && n < iterations) {
-				z = this.f(z);
-				n++;
-			}
-			if(n < iterations && smoothColoring) {
-				return n + 1 - log(log(z.abs())) / log(2);
 			}
 			return n;
 		};
@@ -207,16 +111,16 @@ var Frame = function(center, reWidth, imHeight) {
 	this.center = center;
 	this.reWidth = reWidth;
 	this.imHeight = imHeight;
-	this.reMin = center.re - reWidth / 2;
-	this.reMax = center.re + reWidth / 2;
-	this.imMin = center.im - imHeight /2;
-	this.imMax = center.im + imHeight / 2;
+	this.reMin = this.center.re - reWidth / 2;
+	this.reMax = this.center.re + reWidth / 2;
+	this.imMin = this.center.im - imHeight /2;
+	this.imMax = this.center.im + imHeight / 2;
 
 	this.toComplexCoords = function(x, y){
-		return {
-			re: this.reMin + (this.reWidth * x / WIDTH),
-			im: this.imMin + (this.imHeight * y / HEIGHT)
-		};
+		return Complex(
+			this.reMin + (this.reWidth * x / WIDTH),
+			this.imMin + (this.imHeight * y / HEIGHT)
+		);
 	};
 };
 
@@ -225,10 +129,9 @@ var Frame = function(center, reWidth, imHeight) {
 /******************************
 IMAGE PROTOTYPE: RENDERING OF A FRACTAL WITH ITERATIONS, REGION, AND CANVAS SIZE
 ******************************/
-var Image = function(fractal, iterations, smoothColoring, frame) {
+var Image = function(fractal, iterations, frame) {
 	this.fractal = fractal;
 	this.iterations = iterations;
-	this.smoothColoring = smoothColoring;
 
 	this.frame = frame;
 	
@@ -245,8 +148,8 @@ var Image = function(fractal, iterations, smoothColoring, frame) {
 	this.drawLayer = function() {
 		let currRe = this.frame.reMin;
 		for(let currX = 0; currX < WIDTH; currX++) {
-			let complex = new Complex(currRe, this.currIm);
-			let val = this.fractal.iterate(complex, this.iterations, this.smoothColoring);
+			let c = Complex(currRe, this.currIm);
+			let val = this.fractal.iterate(c, this.iterations);
 			
 			if(val == this.iterations) {
 				fill(0, 0, 0);
@@ -286,113 +189,26 @@ var Image = function(fractal, iterations, smoothColoring, frame) {
 
 
 // Fractals
-var julia1 = new Julia(new Complex(-0.778, -0.116));
-var julia2 = new Julia(new Complex(0.28, 0.008));
-var mandel = new Mandelbrot();
-var ship = new BurningShip();
-var multiShip = new MultiShip(3);
-var multiShip2 = new MultiShip(4);
-var multi3 = new Multibrot(4);
-var multiJulia5 = new MultiJulia(new Complex(0.667, 0.512), 5);
-var BSjulia = new BSJulia(new Complex(0.675, -1.15));
+var mandelbrot = new Mandelbrot();
+var julia1 = new Julia(0, 0);
 
 
 
 // Frames
-var defaultView = new Frame(new Complex(0, 0), 4, 4);
+var defaultView = new Frame(Complex(0, 0), 4, 4);
 
 
 
-// Test image catalog
-{
-	// Mandelbrot set
-	var img1 = new Image(
-		mandel, 100, false,
-		new Frame(
-			new Complex(-0.5, 0),
-			4, 4
-		),
-	);
-	// Minibrot, deep zoom into Mandelbrot
-	var img2 = new Image(
-		mandel, 1000, false,
-		new Frame(
-			new Complex(0.4422127499646909, 0.23935098947264477),
-				0.00000001,
-				0.00000001
-		),
-	);
-	// Deep zoom into Burning Ship
-	var img3 = new Image(
-		ship, 6000, false,
-		new Frame(
-			new Complex(1.144563047301867, -1.2797276570058733),
-				0.000000000001,
-				0.000000000001
-		),
-	);
-	// Sample Julia set
-	var img4 = new Image(
-		julia1, 100, false,
-		defaultView,
-	);
-	// Deep zoom into Mandelbrot
-	var img5 = new Image(
-		mandel, 2500, false,
-		new Frame(
-			new Complex(-1.4746396689670118, -0.0000000065964943055555555),
-			0.00000000001,
-			0.00000000001
-		),
-	);
-	// Multibrot set
-	var img6 = new Image(
-		multi3, 100, false,
-		defaultView,
-	);
-	// MultiJulia set
-	var img7 = new Image(
-		multiJulia5, 100, false,
-		defaultView,
-	);
-	// Multi-Burning Ship
-	var img8 = new Image(
-		multiShip, 100, false,
-		defaultView,
-	);
-	//Burning Ship Armada
-	var img9 = new Image(
-		ship, 200, false,
-		new Frame(
-			new Complex(-1.757413194, -0.00657118056),
-			0.3,
-			0.3
-		),
-	);
-	// Burning Ship Julia Set
-	var img10 = new Image(
-		BSjulia, 100, false,
-		defaultView,
-	);
-	// Burning Ship
-	var img11 = new Image(
-		ship, 300, false,
-		defaultView,
-	);
-	// MultiShip 4
-	var img12 = new Image(
-		multiShip2, 100, false,
-		defaultView,
-	);
-	var img13 = new Image(
-		ship, 1000, false,
-		new Frame(
-			new Complex(-1.770848103815, -0.02849221687),
-			1/42836028053,
-			1/42836028053,
-		),
-	);
-}
+// Images
+var img1 = new Image(mandelbrot, 100, defaultView)
+var img2 = new Image(julia1, 100, defaultView);
+
+
+// Initial image settings:
+// Try different samples with different image numbers imgX(X)
+var currImg = img1;
+var imgs = [];
+
 
 
 var toolbar = {
@@ -494,12 +310,12 @@ var mousePressed = function(event) {
 	}
 };
 
+
 // Based on mouse coordinates, calculate the frame for the new image and start it
 var mouseReleased = function() {
 	if(mouseDown) {
 		mouseDown = false;
 		currImg.reset();
-		imgs.push(currImg);
 
 		let newFrame;
 		if(mouseX == startDragX && mouseY == startDragY) {
@@ -512,7 +328,7 @@ var mouseReleased = function() {
 			let newImIter = newImHeight / HEIGHT;
 			let focus = currImg.frame.toComplexCoords(mouseX, mouseY);
 			newFrame = new Frame(
-				new Complex(
+				Complex(
 					focus.re - (xOffset * newReIter),
 					focus.im - (yOffset * newImIter)
 				),
@@ -525,7 +341,7 @@ var mouseReleased = function() {
 			let centerX = (mouseX + startDragX) / 2;
 			let centerY = (mouseY + startDragY) / 2;
 
-			let center = new Complex(
+			let center = Complex(
 				currImg.frame.reMin + (centerX * currImg.reIter),
 				currImg.frame.imMin + (centerY * currImg.reIter)
 			);
@@ -543,10 +359,8 @@ var mouseReleased = function() {
 		currImg = new Image(
 			currImg.fractal,
 			currImg.iterations,
-			currImg.smoothColoring,
 			newFrame
 		);
-
 		toolbar.setZoom(Number.parseFloat(1 / currImg.frame.reWidth).toExponential(10));
 
 		startImage(currImg);
@@ -556,15 +370,19 @@ var mouseReleased = function() {
 	}
 };
 
+
 var mouseMoved = function(event) {
 	mouseX = event.offsetX;
 	mouseY = event.offsetY;
 	toolbar.displayMouseComplexCoords();
 };
 
+
 var mouseOut = function() {
 	document.getElementById("mouse-complex-coords").innerHTML = "Mouse coordinates: N/A";
 };
+
+
 
 // Initialize events (canvas library function)
 addEvent("mousedown", mousePressed);
@@ -573,11 +391,6 @@ addEvent("mousemove", mouseMoved);
 addEvent("mouseout", mouseOut);
 
 
-
-// Initial image settings:
-// Try different samples with different image numbers imgX(X)
-var currImg = img1;
-var imgs = [];
 
 // Select an image to draw and start drawing it
 var startImage = function(img) {
@@ -588,6 +401,7 @@ var startImage = function(img) {
 };
 
 
+
 // Draw loop
 var draw = function() {
 	if(currImg.drawing) {
@@ -595,6 +409,7 @@ var draw = function() {
 	};
 	setTimeout(draw, 0);
 };
+
 
 
 // Run:
