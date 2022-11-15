@@ -47,7 +47,7 @@ Complex.exp = function(c, e) {
 },
 
 Complex.abs = function(c) {
-	return Math.hypot(c.re, c.im);
+	return (c.re * c.re + c.im * c.im) ** 0.5;
 }
 
 
@@ -65,16 +65,10 @@ BS Julia
 {
 	var Mandelbrot = function() {
 		this.iterate = function(c, iterations) {
-			let zRe = 0;
-			let zIm = 0;
-			let zReSq = 0;
-			let zImSq = 0;
+			let z = Complex(0, 0);
 			let n = 0;
-			while(zReSq + zImSq <= 4 && n < iterations) {
-				zIm = 2 * zRe * zIm + c.im;
-				zRe = zReSq - zImSq + c.re;
-				zReSq = zRe * zRe;
-				zImSq = zIm * zIm;
+			while(Complex.abs(z) <= 2 && n < iterations) {
+				z = Complex.add(Complex.mul(z, z), c);
 				n++;
 			}
 			return n;
