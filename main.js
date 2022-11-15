@@ -8,41 +8,7 @@ noStroke();
 colorMode("HSL");
 
 
-// Complex number functions
-var complex = {
-	add: function(c1, c2) {
-		return Complex(c1.re + c2.re, c1.im + c2.im);
-	},
-
-	sub: function(c1, c2) {
-		return Complex(c1.re - c2.re, c1.im - c2.im);
-	},
-
-	mul: function(c1, c2) {
-		return Complex(
-			c1.re * c2.re - c1.im * c2.im,
-			c1.re * c2.im + c1.im * c2.re
-		);
-	},
-
-	div: function(c1, c2) {
-		return Complex(
-			(c1.re * c2.re + c1.im * c2.im) / (c2.re ** c2.re + c2.im * c2.im),
-			(c1.im * c2.re - c1.re * c2.im) / (c2.re * c2.re + c2.im * c2.im)
-		);
-	},
-
-	exp: function(c, e) {
-		if(e == 1){
-			return c;
-		}
-		return complex.mul(c, c.exp(e - 1));
-	},
-
-	abs: function(c) {
-		return Math.hypot(c.re, c.im);
-	}
-};
+// Complex numbers
 
 var Complex = function(re, im) {
 	return {
@@ -50,6 +16,39 @@ var Complex = function(re, im) {
 		im: im
 	};
 };
+
+Complex.add = function(c1, c2) {
+	return Complex(c1.re + c2.re, c1.im + c2.im);
+},
+
+Complex.sub = function(c1, c2) {
+	return Complex(c1.re - c2.re, c1.im - c2.im);
+},
+
+Complex.mul = function(c1, c2) {
+	return Complex(
+		c1.re * c2.re - c1.im * c2.im,
+		c1.re * c2.im + c1.im * c2.re
+	);
+},
+
+Complex.div = function(c1, c2) {
+	return Complex(
+		(c1.re * c2.re + c1.im * c2.im) / (c2.re * c2.re + c2.im * c2.im),
+		(c1.im * c2.re - c1.re * c2.im) / (c2.re * c2.re + c2.im * c2.im)
+	);
+},
+
+Complex.exp = function(c, e) {
+	if(e == 1){
+		return c;
+	}
+	return complex.mul(c, c.exp(e - 1));
+},
+
+Complex.abs = function(c) {
+	return Math.hypot(c.re, c.im);
+}
 
 
 
@@ -74,25 +73,6 @@ BS Julia
 			while(zReSq + zImSq <= 4 && n < iterations) {
 				zIm = 2 * zRe * zIm + c.im;
 				zRe = zReSq - zImSq + c.re;
-				zReSq = zRe * zRe;
-				zImSq = zIm * zIm;
-				n++;
-			}
-			return n;
-		};
-	};
-	var Julia = function(c) {
-		this.c = c;
-
-		this.iterate = function(_zRe, _zIm, iterations) {
-			let zRe = _zRe;
-			let zIm = _zIm;
-			let zReSq = 0;
-			let zImSq = 0;
-			let n = 0;
-			while(zReSq + zImSq <= 4 && n < iterations) {
-				zIm = 2 * zRe * zIm + this.c.im;
-				zRe = zReSq - zImSq + this.c.re;
 				zReSq = zRe * zRe;
 				zImSq = zIm * zIm;
 				n++;
@@ -190,7 +170,6 @@ var Image = function(fractal, iterations, frame) {
 
 // Fractals
 var mandelbrot = new Mandelbrot();
-var julia1 = new Julia(0, 0);
 
 
 
@@ -201,7 +180,6 @@ var defaultView = new Frame(Complex(0, 0), 4, 4);
 
 // Images
 var img1 = new Image(mandelbrot, 100, defaultView)
-var img2 = new Image(julia1, 100, defaultView);
 
 
 // Initial image settings:
