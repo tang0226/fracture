@@ -91,55 +91,102 @@ Complex.abs = function(c) {
 
 /******************************
 FRACTAL PROTOTYPES: THEORETICAL MATHEMATICAL SETS IN THE COMPLEX PLANE:
-Julia
-MultiJulia
-Mandelbrot
-Multibrot
-Burning Ship
-MultiShip
-BS Julia
 ******************************/ 
-{
-	var Mandelbrot = function() {
-		this.iterate = function(c, iterations) {
-			let z = Complex(0, 0);
-			let n = 0;
-			while(Complex.abs(z) <= 2 && n < iterations) {
-				z = Complex.add(Complex.mul(z, z), c);
-				n++;
-			}
-			return n;
-		};
+var Mandelbrot = function() {
+	this.iterate = function(c, iterations) {
+		let z = Complex(0, 0);
+		let n = 0;
+		while(Complex.abs(z) <= 2 && n < iterations) {
+			z = Complex.add(Complex.mul(z, z), c);
+			n++;
+		}
+		return n;
 	};
-	
-	var Julia = function(c) {
-		this.c = c;
+};
 
-		this.iterate = function(_z, iterations) {
-			let z = _z;
-			let n = 0;
-			while(Complex.abs(z) <= 2 && n < iterations) {
-				z = Complex.add(Complex.mul(z, z), this.c);
-				n++;
-			}
-			return n;
-		};
-	}
+var Julia = function(c) {
+	this.c = c;
 
-	var Multibrot = function(e) {
-		this.e = e;
-
-		this.iterate = function(c, iterations) {
-			let z = Complex(0, 0);
-			let n = 0;
-			while(Complex.abs(z) <= 2 && n < iterations) {
-				z = Complex.add(Complex.exp(z, this.e), c);
-				n++;
-			}
-			return n;
-		};
+	this.iterate = function(_z, iterations) {
+		let z = _z;
+		let n = 0;
+		while(Complex.abs(z) <= 2 && n < iterations) {
+			z = Complex.add(Complex.mul(z, z), this.c);
+			n++;
+		}
+		return n;
 	};
 }
+
+var Multibrot = function(e) {
+	this.e = e;
+
+	this.iterate = function(c, iterations) {
+		let z = Complex(0, 0);
+		let n = 0;
+		while(Complex.abs(z) <= 2 && n < iterations) {
+			z = Complex.add(Complex.exp(z, this.e), c);
+			n++;
+		}
+		return n;
+	};
+};
+
+var Multijulia = function(e, c) {
+	this.e = e;
+	this.c = c;
+	
+	this.iterate = function(_z, iterations) {
+		let z = _z;
+		let n = 0;
+		while(Complex.abs(z) <= 2 && n < iterations) {
+			z = Complex.add(Complex.exp(z, this.e), this.c);
+			n++;
+		}
+		return n;
+	}
+};
+
+var BurningShip = function() {
+	this.iterate = function(c, iterations) {
+		let z = Complex(0, 0);
+		let n = 0;
+		while(Complex.abs(z) <= 2 && n < iterations) {
+			z = Complex.add(Complex.exp(Complex(abs(z.re), abs(z.im)), 2), c);
+			n++;
+		}
+		return n;
+	};
+};
+
+var BurningShipJulia = function(c) {
+	this.c = c;
+
+	this.iterate = function(_z, iterations) {
+		let z = _z;
+		let n = 0;
+		while(Complex.abs(z) <= 2 && n < iterations) {
+			z = Complex.add(Complex.exp(Complex(abs(z.re), abs(z.im)), 2), this.c);
+			n++;
+		}
+		return n;
+	};
+};
+
+var Multiship = function(e) {
+	this.e = e;
+
+	this.iterate = function(c, iterations) {
+		let z = Complex(0, 0);
+		let n = 0;
+		while(Complex.abs(z) <= 2 && n < iterations) {
+			z = Complex.add(Complex.exp(Complex(abs(z.re), abs(z.im)), this.e), c);
+			n++;
+		}
+		return n;
+	};
+};
+
 
 
 
@@ -226,6 +273,10 @@ var Image = function(fractal, iterations, frame) {
 var mandelbrot = new Mandelbrot();
 var julia1 = new Julia(Complex(-0.8, 0.156));
 var multibrot3 = new Multibrot(3);
+var multijulia1 = new Multijulia(3, Complex(-0.12, -0.8));
+var burningShip = new BurningShip();
+var burningShipJulia1 = new BurningShipJulia(Complex(-1.5, 0));
+var multiship3 = new Multiship(3);
 
 
 // Frames
@@ -237,12 +288,16 @@ var defaultView = new Frame(Complex(0, 0), 4, 4);
 var img1 = new Image(mandelbrot, 100, defaultView)
 var img2 = new Image(julia1, 200, defaultView);
 var img3 = new Image(multibrot3, 100, defaultView);
+var img4 = new Image(multijulia1, 100, defaultView);
+var img5 = new Image(burningShip, 100, defaultView);
+var img6 = new Image(burningShipJulia1, 100, defaultView);
+var img7 = new Image(multiship3, 100, defaultView);
 
 
 // Initial image settings:
 // Try different samples with different image numbers imgX(X)
 var currImg = img1;
-var imgs = [];
+
 
 
 
