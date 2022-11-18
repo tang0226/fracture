@@ -4,7 +4,7 @@
 		<link rel="stylesheet" href="./global.css">
 	</head>
 	<body>
-		<canvas id="canvas" tabindex="1" width="600" height="600"></canvas>
+		<canvas id="canvas" tabindex="1" width="0" height="0"></canvas>
 		<br/>
 		<div id="toolbar">
 			<div id="render-time"></div>
@@ -24,10 +24,6 @@
 			</div>
 		</div>
 		<script>
-			
-			var canvas = document.getElementById("canvas");
-			var ctx = canvas.getContext("2d");
-			
 			// Run
 			window.onload = function() {
 				var script = document.createElement("script");
@@ -35,9 +31,7 @@
 				document.body.appendChild(script);
 			};
 		</script>
-
 		<!--Scripts import here-->
-		<script src="./canvas/canvas.js"></script>
 		<script src="./math/math.js"></script>
 	</body>
 </html>

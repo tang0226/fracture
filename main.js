@@ -1,11 +1,33 @@
-// Custom modules/libraries used here (canvas and Math)
+// Custom modules/libraries used here (math)
 // are imported from the HTML document, main.html.
-// Core files (image, frame, etc.) have been imported as well
+
+
+
+var canvasElement = document.getElementById("canvas");
+var canvas = canvasElement.getContext("2d");
+
+var _width = 0;
+var _height = 0;
+
+var setCanvasDim = function(w, h) {
+	canvasElement.width = w;
+	canvasElement.height = h;
+	_width = w;
+	_height = h;
+}
 
 setCanvasDim(600, 600);
-noStroke();
 
-colorMode("HSL");
+
+
+// Color functions
+var hsl = function(h, s, l) {
+	return `hsl(${h}, ${s}%, ${l}%)`;
+}
+
+var rgb = function(r, g, b) {
+	return `rgb(${r}, ${g}, ${b})`;
+}
 
 
 // Complex numbers
@@ -130,8 +152,8 @@ var Frame = function(center, reWidth, imHeight) {
 
 	this.toComplexCoords = function(x, y){
 		return Complex(
-			this.reMin + (this.reWidth * x / WIDTH),
-			this.imMin + (this.imHeight * y / HEIGHT)
+			this.reMin + (this.reWidth * x / _width),
+			this.imMin + (this.imHeight * y / _height)
 		);
 	};
 };
@@ -147,8 +169,8 @@ var Image = function(fractal, iterations, frame) {
 
 	this.frame = frame;
 	
-	this.reIter = frame.reWidth / WIDTH;
-	this.imIter = frame.imHeight / HEIGHT;
+	this.reIter = frame.reWidth / _width;
+	this.imIter = frame.imHeight / _height;
 	
 	this.currY = 0;
 	this.currIm = frame.imMin;
@@ -159,23 +181,18 @@ var Image = function(fractal, iterations, frame) {
 	
 	this.drawLayer = function() {
 		let currRe = this.frame.reMin;
-		for(let currX = 0; currX < WIDTH; currX++) {
+		for(let currX = 0; currX < _width; currX++) {
 			let c = Complex(currRe, this.currIm);
 			let val = this.fractal.iterate(c, this.iterations);
 			
 			if(val == this.iterations) {
-				fill(0, 0, 0);
+				canvas.fillStyle = hsl(0, 0, 0);
 			}
 			else {
-				// Color pallettes; need to generalize
-				//var col = scale(val, 0, this.iterations, 0, 255)
-				// BW: fill(scale(val, 0, this.iterations, 0, 255));
-				fill(scale(val, 0, this.iterations, 0, 360), 100, scale(val, 0, this.iterations, 0, 100));
-				// HSL: fill(scale(val, 0, this.iterations, 0, 360), 100, 50);
-				// fill(scale(val, 0, this.iterations, 0, 255), scale(val, 0, this.iterations, 0, 255), scale(val, 0, this.iterations, 0, 255));
+				canvas.fillStyle = hsl(scale(val, 0, this.iterations, 0, 360), 100, scale(val, 0, this.iterations, 0, 100));
 			}
 			
-			rect(currX, this.currY, 1, 1);
+			canvas.fillRect(currX, this.currY, 1, 1);
 			
 			currRe += this.reIter;
 		};
@@ -183,7 +200,7 @@ var Image = function(fractal, iterations, frame) {
 		this.currY += 1;
 		this.currIm += this.imIter;
 		
-		if(this.currY > WIDTH) {
+		if(this.currY > _width) {
 			this.drawing = false;
 		}
 		this.renderTime = new Date(new Date() - this.startTime);
@@ -204,7 +221,6 @@ var Image = function(fractal, iterations, frame) {
 var mandelbrot = new Mandelbrot();
 var julia1 = new Julia(Complex(-0.8, 0.156));
 var multibrot3 = new Multibrot(3);
-var multiJulia1 = new MultiJulia(3, Complex(0.2, 0));
 
 
 // Frames
@@ -216,12 +232,11 @@ var defaultView = new Frame(Complex(0, 0), 4, 4);
 var img1 = new Image(mandelbrot, 100, defaultView)
 var img2 = new Image(julia1, 200, defaultView);
 var img3 = new Image(multibrot3, 100, defaultView);
-var img4 = new Image(multiJulia1, 100, defaultView);
 
 
 // Initial image settings:
 // Try different samples with different image numbers imgX(X)
-var currImg = img3;
+var currImg = img1;
 var imgs = [];
 
 
@@ -315,7 +330,7 @@ var mouseDown = false;
 
 // Mouse Events
 
-var mousePressed = function(event) {
+canvasElement.onmousedown = function(event) {
 	if(event.buttons == 1) {
 		if(!mouseDown) {
 			startDragX = mouseX;
@@ -327,7 +342,7 @@ var mousePressed = function(event) {
 
 
 // Based on mouse coordinates, calculate the frame for the new image and start it
-var mouseReleased = function() {
+canvasElement.onmouseup = function() {
 	if(mouseDown) {
 		mouseDown = false;
 		currImg.reset();
@@ -335,12 +350,12 @@ var mouseReleased = function() {
 		let newFrame;
 		if(mouseX == startDragX && mouseY == startDragY) {
 			let zoomFactor = toolbar.getClickZoomFactor();
-			let xOffset = mouseX - (WIDTH / 2);
-			let yOffset = mouseY - (HEIGHT / 2);
+			let xOffset = mouseX - (_width / 2);
+			let yOffset = mouseY - (_height / 2);
 			let newReWidth = currImg.frame.reWidth / zoomFactor;
 			let newImHeight = currImg.frame.imHeight / zoomFactor;
-			let newReIter = newReWidth / WIDTH;
-			let newImIter = newImHeight / HEIGHT;
+			let newReIter = newReWidth / _width;
+			let newImIter = newImHeight / _height;
 			let focus = currImg.frame.toComplexCoords(mouseX, mouseY);
 			newFrame = new Frame(
 				Complex(
@@ -386,24 +401,16 @@ var mouseReleased = function() {
 };
 
 
-var mouseMoved = function(event) {
+canvasElement.onmousemove = function(event) {
 	mouseX = event.offsetX;
 	mouseY = event.offsetY;
 	toolbar.displayMouseComplexCoords();
 };
 
 
-var mouseOut = function() {
+canvasElement.onmouseout = function() {
 	document.getElementById("mouse-complex-coords").innerHTML = "Mouse coordinates: N/A";
 };
-
-
-
-// Initialize events (canvas library function)
-addEvent("mousedown", mousePressed);
-addEvent("mouseup", mouseReleased);
-addEvent("mousemove", mouseMoved);
-addEvent("mouseout", mouseOut);
 
 
 
