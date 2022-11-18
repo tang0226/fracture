@@ -1,6 +1,0 @@
-[submodule "canvas"]
-	path = canvas
-	url = https://github.com/tang0226/canvas
-[submodule "math"]
-	path = math
-	url = https://github.com/tang0226/math
