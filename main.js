@@ -1,8 +1,3 @@
-// Custom modules/libraries used here (math)
-// are imported from the HTML document, main.html.
-
-
-
 var canvasElement = document.getElementById("canvas");
 var canvas = canvasElement.getContext("2d");
 
