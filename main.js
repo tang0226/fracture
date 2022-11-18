@@ -30,6 +30,16 @@ var rgb = function(r, g, b) {
 }
 
 
+
+// Math functions/aliases
+var abs = Math.abs;
+
+var scale = function(n, minFrom, maxFrom, minTo, maxTo) {
+	return ((n / (maxFrom - minFrom)) * (maxTo - minTo)) + minTo;
+};
+
+
+
 // Complex numbers
 
 var Complex = function(re, im) {
