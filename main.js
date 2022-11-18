@@ -19,36 +19,46 @@ var Complex = function(re, im) {
 
 Complex.add = function(c1, c2) {
 	return Complex(c1.re + c2.re, c1.im + c2.im);
-},
+};
 
 Complex.sub = function(c1, c2) {
 	return Complex(c1.re - c2.re, c1.im - c2.im);
-},
+};
 
 Complex.mul = function(c1, c2) {
 	return Complex(
 		c1.re * c2.re - c1.im * c2.im,
 		c1.re * c2.im + c1.im * c2.re
 	);
-},
+};
 
 Complex.div = function(c1, c2) {
 	return Complex(
 		(c1.re * c2.re + c1.im * c2.im) / (c2.re * c2.re + c2.im * c2.im),
 		(c1.im * c2.re - c1.re * c2.im) / (c2.re * c2.re + c2.im * c2.im)
 	);
-},
+};
+
+Complex.sq = function(c) {
+	return Complex(
+		c.re ** 2 - c.im ** 2,
+		2 * c.re * c.im
+	);
+};
 
 Complex.exp = function(c, e) {
-	if(e == 1){
-		return c;
+	let r = c;
+	let currE = 1;
+	while(currE < e) {
+		r = Complex.mul(r, c);
+		currE++;
 	}
-	return complex.mul(c, c.exp(e - 1));
-},
+	return r;
+};
 
 Complex.abs = function(c) {
-	return (c.re * c.re + c.im * c.im) ** 0.5;
-}
+	return (c.re ** 2 + c.im ** 2) ** 0.5;
+};
 
 
 
@@ -69,6 +79,34 @@ BS Julia
 			let n = 0;
 			while(Complex.abs(z) <= 2 && n < iterations) {
 				z = Complex.add(Complex.mul(z, z), c);
+				n++;
+			}
+			return n;
+		};
+	};
+	
+	var Julia = function(c) {
+		this.c = c;
+
+		this.iterate = function(_z, iterations) {
+			let z = _z;
+			let n = 0;
+			while(Complex.abs(z) <= 2 && n < iterations) {
+				z = Complex.add(Complex.mul(z, z), this.c);
+				n++;
+			}
+			return n;
+		};
+	}
+
+	var Multibrot = function(e) {
+		this.e = e;
+
+		this.iterate = function(c, iterations) {
+			let z = Complex(0, 0);
+			let n = 0;
+			while(Complex.abs(z) <= 2 && n < iterations) {
+				z = Complex.add(Complex.exp(z, this.e), c);
 				n++;
 			}
 			return n;
@@ -164,7 +202,9 @@ var Image = function(fractal, iterations, frame) {
 
 // Fractals
 var mandelbrot = new Mandelbrot();
-
+var julia1 = new Julia(Complex(-0.8, 0.156));
+var multibrot3 = new Multibrot(3);
+var multiJulia1 = new MultiJulia(3, Complex(0.2, 0));
 
 
 // Frames
@@ -174,11 +214,14 @@ var defaultView = new Frame(Complex(0, 0), 4, 4);
 
 // Images
 var img1 = new Image(mandelbrot, 100, defaultView)
+var img2 = new Image(julia1, 200, defaultView);
+var img3 = new Image(multibrot3, 100, defaultView);
+var img4 = new Image(multiJulia1, 100, defaultView);
 
 
 // Initial image settings:
 // Try different samples with different image numbers imgX(X)
-var currImg = img1;
+var currImg = img3;
 var imgs = [];
 
 
