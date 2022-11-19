@@ -8,6 +8,7 @@ Clone and open main.html
   * Burning Ship fractal
   * Burning Ship Julia sets
   * Multiship fractals (Burning Ships with an exponent other than 2)
+  * Multiship Julia sets (Burning Ship Julia sets with an exponent other than 2)
 * Adjustable iterations
 * Zoom by clicking (focus on a point), or by dragging and releasing (focus on a region)
 
@@ -35,10 +36,8 @@ Clone and open main.html
   * Build-your-own fractal
     * Equation
     * Misc. math functions (abs, log, trigonometric)
-* Add CSS styling
 * Prevent scientific notation for complex coordinates (especially close to im = 0).
 * Add informative comments to code
-* (maybe) For optimum performance, hardcode canvas functions instead of using module
 * (very useful, but not sure how to implement) Draw bounding box for drag zooming
 
 ## Samples:
