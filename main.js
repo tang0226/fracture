@@ -318,6 +318,7 @@ var currImg = img1;
 
 
 
+// Toolbar
 var toolbar = {
     renderTimeId: "render-time",
     mouseComplexCoordsId: "mouse-complex-coords",
@@ -337,15 +338,6 @@ var toolbar = {
         document.getElementById(this.renderTimeId).innerHTML = (time.getUTCSeconds() * 1000 + time.getUTCMilliseconds()).toString();
     },
 
-    getIterationIncrement: function() {
-        return Number(document.getElementById(this.iterationIncrementId).value);
-    },
-
-    getClickZoomFactor: function() {
-        return Number(document.getElementById(this.clickZoomFactorId).value);
-    },
-
-
     displayMouseComplexCoords: function() {
         let complexCoords = currImg.frame.toComplexCoords(mouseX, mouseY);
         let complexRe = complexCoords.re.toString();
@@ -363,7 +355,21 @@ var toolbar = {
     displayIterations: function() {
         document.getElementById(this.iterationsId).innerHTML = "Iterations: " + this.iterations.toString();
     },
-    
+
+    getIterationIncrement: function() {
+        return Number(document.getElementById(this.iterationIncrementId).value);
+    },
+
+    increaseIters: function() {
+        this.iterations += this.getIterationIncrement();
+        this.displayIterations();
+    },
+
+    decreaseIters: function() {
+        this.iterations -= this.getIterationIncrement();
+        this.displayIterations();
+    },
+
     displayZoom: function() {
         document.getElementById(this.zoomId).innerHTML = this.zoom.toString();
     },
@@ -372,20 +378,14 @@ var toolbar = {
         this.zoom = zoom;
         this.displayZoom();
     },
-
-    increaseIters: function() {
-        this.iterations += this.getIterationIncrement();
-        currImg.iterations = this.iterations;
-        currImg.reset();
-        this.displayIterations();
-        startImage(currImg);
+    
+    getClickZoomFactor: function() {
+        return Number(document.getElementById(this.clickZoomFactorId).value);
     },
 
-    decreaseIters: function() {
-        this.iterations -= this.getIterationIncrement();
+    redrawImage: function() {
         currImg.iterations = this.iterations;
         currImg.reset();
-        this.displayIterations();
         startImage(currImg);
     }
 };
