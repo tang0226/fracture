@@ -187,6 +187,21 @@ var Multiship = function(e) {
     };
 };
 
+var MultishipJulia = function(e, c) {
+    this.e = e;
+    this.c = c;
+    
+    this.iterate = function(_z, iterations) {
+        let z = _z;
+        let n = 0;
+        while(Complex.abs(z) <= 2 && n < iterations) {
+            z = Complex.add(Complex.exp(Complex(abs(z.re), abs(z.im)), this.e), this.c);
+            n++;
+        }
+        return n;
+    }
+};
+
 
 
 
@@ -277,6 +292,7 @@ var multijulia1 = new Multijulia(3, Complex(-0.12, -0.8));
 var burningShip = new BurningShip();
 var burningShipJulia1 = new BurningShipJulia(Complex(-1.5, 0));
 var multiship3 = new Multiship(3);
+var multishipJulia1 = new MultishipJulia(3, Complex(-1.326667, 0));
 
 
 // Frames
@@ -292,6 +308,7 @@ var img4 = new Image(multijulia1, 100, defaultView);
 var img5 = new Image(burningShip, 100, defaultView);
 var img6 = new Image(burningShipJulia1, 100, defaultView);
 var img7 = new Image(multiship3, 100, defaultView);
+var img8 = new Image(multishipJulia1, 100, defaultView)
 
 
 // Initial image settings:
