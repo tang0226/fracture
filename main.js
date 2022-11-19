@@ -330,13 +330,11 @@ var toolbar = {
     init: function() {
         this.iterations = currImg.iterations;
         this.zoom = Number.parseFloat(1 / currImg.frame.reWidth).toExponential(10);
-        this.displayMouseComplexCoords();
+        this.resetMouseComplexCoords();
     },
 
     displayRenderTime: function(time) {
-        document.getElementById(this.renderTimeId).innerHTML =
-            "Render time: " +
-            (time.getUTCSeconds() * 1000 + time.getUTCMilliseconds()).toString() + " ms";
+        document.getElementById(this.renderTimeId).innerHTML = (time.getUTCSeconds() * 1000 + time.getUTCMilliseconds()).toString();
     },
 
     getIterationIncrement: function() {
@@ -349,20 +347,17 @@ var toolbar = {
 
 
     displayMouseComplexCoords: function() {
-        let toSet = "";
-        if(mouseX == null && mouseY == null) {
-            toSet = "N/A";
+        let complexCoords = currImg.frame.toComplexCoords(mouseX, mouseY);
+        let complexRe = complexCoords.re.toString();
+        let complexIm = complexCoords.im.toString();
+        if(Number(complexIm) >= 0) {
+            complexIm = "+" + complexIm;
         }
-        else {
-            let complexCoords = currImg.frame.toComplexCoords(mouseX, mouseY);
-            let complexRe = complexCoords.re.toString();
-            let complexIm = complexCoords.im.toString();
-            if(Number(complexIm) >= 0) {
-                complexIm = "+" + complexIm;
-            }
-            toSet = complexRe + complexIm + "i";
-        }
-        document.getElementById(this.mouseComplexCoordsId).innerHTML = "Mouse coordinates: " + toSet;
+        document.getElementById(this.mouseComplexCoordsId).innerHTML = complexRe + complexIm + "i";
+    },
+
+    resetMouseComplexCoords: function() {
+        document.getElementById(this.mouseComplexCoordsId).innerHTML = "N/A";
     },
 
     displayIterations: function() {
@@ -370,7 +365,7 @@ var toolbar = {
     },
     
     displayZoom: function() {
-        document.getElementById(this.zoomId).innerHTML = "Zoom: " + this.zoom.toString();
+        document.getElementById(this.zoomId).innerHTML = this.zoom.toString();
     },
 
     setZoom: function(zoom) {
@@ -486,7 +481,7 @@ canvasElement.onmousemove = function(event) {
 
 
 canvasElement.onmouseout = function() {
-    document.getElementById("mouse-complex-coords").innerHTML = "Mouse coordinates: N/A";
+    toolbar.resetMouseComplexCoords();
 };
 
 

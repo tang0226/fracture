@@ -7,9 +7,13 @@
 		<canvas id="canvas" tabindex="1" width="0" height="0"></canvas>
 		<br/>
 		<div id="toolbar">
-			<div id="render-time"></div>
+			<div id="render-time-container">
+				Render time: <div id="render-time" class="inline"></div> ms
+			</div>
 			<hr>
-			<div id="mouse-complex-coords"></div>
+			<div id="mouse-coords-container">
+				Mouse coordinates: <div id="mouse-complex-coords" class="inline"></div>
+			</div>
 			<hr>
 			<div id="iterations-toolbar">
 				<input type="button" value="+" onclick="toolbar.increaseIters()"/>
@@ -19,7 +23,9 @@
 			</div>
 			<hr>
 			<div id="frame-toolbar">
-				<div id="zoom">Zoom:</div>
+				<div id="zoom-container">
+					Zoom: <div id="zoom" class="inline"></div>
+				</div>
 				<div>Click zoom factor: <input id="click-zoom-factor" value="4"/></div>
 			</div>
 		</div>
