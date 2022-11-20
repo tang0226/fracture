@@ -327,6 +327,7 @@ var toolbar = {
     zoomId: "zoom",
     clickZoomFactorId: "click-zoom-factor",
 
+    
     // For currently undefined variables
     init: function() {
         this.iterations = currImg.iterations;
@@ -334,10 +335,14 @@ var toolbar = {
         this.resetMouseComplexCoords();
     },
 
+
+    // Render time
     displayRenderTime: function(time) {
         document.getElementById(this.renderTimeId).innerHTML = (time.getUTCSeconds() * 1000 + time.getUTCMilliseconds()).toString();
     },
 
+
+    // Mouse complex coordinates
     displayMouseComplexCoords: function() {
         let complexCoords = currImg.frame.toComplexCoords(mouseX, mouseY);
         let complexRe = complexCoords.re.toString();
@@ -352,24 +357,32 @@ var toolbar = {
         document.getElementById(this.mouseComplexCoordsId).innerHTML = "N/A";
     },
 
+
+    // Iterations
     displayIterations: function() {
-        document.getElementById(this.iterationsId).innerHTML = "Iterations: " + this.iterations.toString();
+        document.getElementById(this.iterationsId).value = this.iterations.toString();
     },
 
     getIterationIncrement: function() {
         return Number(document.getElementById(this.iterationIncrementId).value);
     },
 
-    increaseIters: function() {
+    increaseIterations: function() {
         this.iterations += this.getIterationIncrement();
         this.displayIterations();
     },
 
-    decreaseIters: function() {
+    decreaseIterations: function() {
         this.iterations -= this.getIterationIncrement();
         this.displayIterations();
     },
 
+    syncIterations: function() {
+        this.iterations = Number(document.getElementById(this.iterationsId).value);
+    },
+
+
+    // Zoom
     displayZoom: function() {
         document.getElementById(this.zoomId).innerHTML = this.zoom.toString();
     },
@@ -383,6 +396,8 @@ var toolbar = {
         return Number(document.getElementById(this.clickZoomFactorId).value);
     },
 
+
+    // Redraw
     redrawImage: function() {
         currImg.iterations = this.iterations;
         currImg.reset();

@@ -19,14 +19,12 @@ Clone and open main.html
     * Dropdown to select fractal type (like usefuljs.net)
     * Set window
     * Set zoom
-    * Set iterations
     * Set canvas size
   * Image quality:
     * Anti-aliasing
     * Smoothed coloring
     * More color options (aka premade palettes / coloring functions)
     * (harder) Custom palettes?
-  * Reset button for several changes at once
   * (as more toolbar features are added): input sanitization (maybe separate module for tests?)
 * Add new fractals:
   * Rational maps
