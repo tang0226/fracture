@@ -1,38 +1,38 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<link rel="stylesheet" href="./global.css">
-	</head>
-	<body>
-		<canvas id="canvas" tabindex="1" width="0" height="0"></canvas>
-		<br/>
-		<div id="toolbar">
-			<div id="render-time-container">
-				Render time: <div id="render-time" class="inline"></div> ms
-			</div>
-			<hr>
-			<div id="mouse-coords-container">
-				Mouse coordinates: <div id="mouse-complex-coords" class="inline"></div>
-			</div>
-			<hr>
-			<div id="iterations-toolbar">
-				<input type="button" value="+" onclick="toolbar.increaseIters()"/>
-				<div id="iterations">Iterations:</div>
-				<input type="button" value="-" onclick="toolbar.decreaseIters()"/>
-				<div>Increment: <input id="iteration-increment" type="text" value="100" style="display: inline"/></div>
-			</div>
-			<hr>
-			<div id="frame-toolbar">
-				<div id="zoom-container">
-					Zoom: <div id="zoom" class="inline"></div>
-				</div>
-				<div>Click zoom factor: <input id="click-zoom-factor" value="4"/></div>
-			</div>
-			<hr>
-			<div id="redraw-button-container">
-				<input type="button" value="Redraw" onclick="toolbar.redrawImage()"/>
-			</div>
-		</div>
-		<script src="./main.js"></script>
-	</body>
+    <head>
+        <link rel="stylesheet" href="./global.css">
+    </head>
+    <body>
+        <canvas id="canvas" tabindex="1" width="0" height="0"></canvas>
+        <br/>
+        <div id="toolbar">
+            <div id="render-time-container">
+                Render time: <div id="render-time" class="inline"></div> ms
+            </div>
+            <hr>
+            <div id="mouse-coords-container">
+                Mouse coordinates: <div id="mouse-complex-coords" class="inline"></div>
+            </div>
+            <hr>
+            <div id="iterations-toolbar">
+                <input type="button" value="+" onclick="toolbar.increaseIters()"/>
+                <div id="iterations">Iterations:</div>
+                <input type="button" value="-" onclick="toolbar.decreaseIters()"/>
+                <div>Increment: <input id="iteration-increment" type="text" value="100" style="display: inline"/></div>
+            </div>
+            <hr>
+            <div id="frame-toolbar">
+                <div id="zoom-container">
+                    Zoom: <div id="zoom" class="inline"></div>
+                </div>
+                <div>Click zoom factor: <input id="click-zoom-factor" value="4"/></div>
+            </div>
+            <hr>
+            <div id="redraw-button-container">
+                <input type="button" value="Redraw" onclick="toolbar.redrawImage()"/>
+            </div>
+        </div>
+        <script src="./main.js"></script>
+    </body>
 </html>
