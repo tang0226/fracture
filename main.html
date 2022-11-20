@@ -32,17 +32,24 @@
             <div id="iterations-toolbar">
                 <input type="button" value="+" onclick="toolbar.increaseIterations()"/>
                 <div id="iterations-container">
-                    Iterations: <input type="text" id="iterations" class="inline" onblur="toolbar.syncIterations()"/>
+                    Iterations:
+                    <input type="text" id="iterations" class="inline" onblur="toolbar.syncIterations()"/>
                 </div>
                 <input type="button" value="-" onclick="toolbar.decreaseIterations()"/>
-                <div>Increment: <input id="iteration-increment" type="text" value="100" style="display: inline"/></div>
+                <div>
+                    Increment:
+                    <input id="iteration-increment" type="text" value="100" style="display: inline"/>
+                </div>
             </div>
             <hr>
             <div id="frame-toolbar">
                 <div id="zoom-container">
                     Zoom: <div id="zoom" class="inline"></div>
                 </div>
-                <div>Click zoom factor: <input id="click-zoom-factor" value="4"/></div>
+                <div>
+                    Click zoom factor:
+                    <input id="click-zoom-factor" value="4"/>
+                </div>
             </div>
             <hr>
             <div id="redraw-button-container">

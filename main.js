@@ -355,18 +355,21 @@ var toolbar = {
         document.getElementById(this.iterationsId).value = this.iterations.toString();
     },
 
+    updateIterations: function(iterations) {
+        this.iterations = iterations;
+        this.displayIterations();
+    },
+
     getIterationIncrement: function() {
         return Number(document.getElementById(this.iterationIncrementId).value);
     },
 
     increaseIterations: function() {
-        this.iterations += this.getIterationIncrement();
-        this.displayIterations();
+        this.updateIterations(this.iterations + this.getIterationIncrement());
     },
 
     decreaseIterations: function() {
-        this.iterations -= this.getIterationIncrement();
-        this.displayIterations();
+        this.updateIterations(this.iterations - this.getIterationIncrement());
     },
 
     syncIterations: function() {
@@ -395,15 +398,13 @@ var toolbar = {
         if(fractalType != this.fractalType) {
             currImg = defaultImages[document.getElementById(this.fractalTypeId).value];
             this.fractalType = fractalType;
-            this.iterations = currImg.iterations;
-            this.displayIterations();
+            this.updateIterations(currImg.iterations);
         }
         else{
             currImg.iterations = this.iterations;
         }
         currImg.reset();
         startImage(currImg);
-        this.displayingDefault = false;
     }
 };
 
