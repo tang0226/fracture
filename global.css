@@ -9,9 +9,10 @@
     padding: 10px;
 }
 
-#toolbar div, #toolbar input[type="button"] {
+#toolbar div, #toolbar input, select {
     margin-top: 5px;
     font-family: "Arial";
+    font-size: 1em;
 }
 
 .inline {

@@ -15,6 +15,20 @@
                 Mouse coordinates: <div id="mouse-complex-coords" class="inline"></div>
             </div>
             <hr>
+            <div id="fractal-toolbar">
+                Fractal: 
+                <select id="fractal-type" class="inline">
+                    <option value="mandelbrot">Mandelbrot set</option>
+                    <option value="julia">Julia set</option>
+                    <option value="multibrot">Multibrot set</option>
+                    <option value="multijulia">Multijulia set</option>
+                    <option value="burningShip">Burning Ship fractal</option>
+                    <option value="burningShipJulia">Burning Ship Julia set</option>
+                    <option value="multiship">Multiship fractal</option>
+                    <option value="multishipJulia">Multiship Julia set</option>
+                </select>
+            </div>
+            <hr>
             <div id="iterations-toolbar">
                 <input type="button" value="+" onclick="toolbar.increaseIterations()"/>
                 <div id="iterations-container">

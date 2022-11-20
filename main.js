@@ -284,36 +284,26 @@ var Image = function(fractal, iterations, frame) {
 
 
 
-// Fractals
-var mandelbrot = new Mandelbrot();
-var julia1 = new Julia(Complex(-0.8, 0.156));
-var multibrot3 = new Multibrot(3);
-var multijulia1 = new Multijulia(3, Complex(-0.12, -0.8));
-var burningShip = new BurningShip();
-var burningShipJulia1 = new BurningShipJulia(Complex(-1.5, 0));
-var multiship3 = new Multiship(3);
-var multishipJulia1 = new MultishipJulia(3, Complex(-1.326667, 0));
-
-
 // Frames
 var defaultView = new Frame(Complex(0, 0), 4, 4);
 
 
 
 // Images
-var img1 = new Image(mandelbrot, 100, defaultView)
-var img2 = new Image(julia1, 200, defaultView);
-var img3 = new Image(multibrot3, 100, defaultView);
-var img4 = new Image(multijulia1, 100, defaultView);
-var img5 = new Image(burningShip, 100, defaultView);
-var img6 = new Image(burningShipJulia1, 100, defaultView);
-var img7 = new Image(multiship3, 100, defaultView);
-var img8 = new Image(multishipJulia1, 100, defaultView)
+var defaultImages = {
+    mandelbrot: new Image(new Mandelbrot(), 100, new Frame(Complex(-0.5, 0), 4, 4)),
+    julia: new Image(new Julia(Complex(-0.8, 0.156)), 200, defaultView),
+    multibrot: new Image(new Multibrot(3), 100, defaultView),
+    multijulia: new Image(new Multijulia(3, Complex(-0.12, -0.8)), 100, defaultView),
+    burningShip: new Image(new BurningShip(), 100, new Frame(Complex(0, -0.5), 4, 4)),
+    burningShipJulia: new Image(new BurningShipJulia(Complex(-1.5, 0)), 100, defaultView),
+    multiship: new Image(new Multiship(3), 100, defaultView),
+    multishipJulia: new Image(new MultishipJulia(3, Complex(-1.326667, 0)), 100, defaultView)
+};
 
 
 // Initial image settings:
-// Try different samples with different image numbers imgX(X)
-var currImg = img1;
+var currImg = defaultImages.mandelbrot;
 
 
 
@@ -322,11 +312,13 @@ var currImg = img1;
 var toolbar = {
     renderTimeId: "render-time",
     mouseComplexCoordsId: "mouse-complex-coords",
+    fractalTypeId: "fractal-type",
     iterationsId: "iterations",
     iterationIncrementId: "iteration-increment",
     zoomId: "zoom",
     clickZoomFactorId: "click-zoom-factor",
 
+    fractalType: "mandelbrot",
     
     // For currently undefined variables
     init: function() {
@@ -399,9 +391,19 @@ var toolbar = {
 
     // Redraw
     redrawImage: function() {
-        currImg.iterations = this.iterations;
+        let fractalType = document.getElementById(this.fractalTypeId).value;
+        if(fractalType != this.fractalType) {
+            currImg = defaultImages[document.getElementById(this.fractalTypeId).value];
+            this.fractalType = fractalType;
+            this.iterations = currImg.iterations;
+            this.displayIterations();
+        }
+        else{
+            currImg.iterations = this.iterations;
+        }
         currImg.reset();
         startImage(currImg);
+        this.displayingDefault = false;
     }
 };
 
