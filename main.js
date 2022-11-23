@@ -307,16 +307,15 @@ var currImg = defaultImages.mandelbrot;
 
 
 
-
 // Toolbar
 var toolbar = {
-    renderTimeId: "render-time",
-    mouseComplexCoordsId: "mouse-complex-coords",
-    fractalTypeId: "fractal-type",
-    iterationsId: "iterations",
-    iterationIncrementId: "iteration-increment",
-    zoomId: "zoom",
-    clickZoomFactorId: "click-zoom-factor",
+    renderTimeElement: document.getElementById("render-time"),
+    mouseComplexCoordsElement: document.getElementById("mouse-complex-coords"),
+    fractalTypeElement: document.getElementById("fractal-type"),
+    iterationsElement: document.getElementById("iterations"),
+    iterationIncrementElement: document.getElementById("iteration-increment"),
+    zoomElement: document.getElementById("zoom"),
+    clickZoomFactorElement: document.getElementById("click-zoom-factor"),
 
     fractalType: "mandelbrot",
     
@@ -330,7 +329,7 @@ var toolbar = {
 
     // Render time
     displayRenderTime: function(time) {
-        document.getElementById(this.renderTimeId).innerHTML = (time.getUTCSeconds() * 1000 + time.getUTCMilliseconds()).toString();
+        this.renderTimeElement.innerHTML = (time.getUTCSeconds() * 1000 + time.getUTCMilliseconds()).toString();
     },
 
 
@@ -342,17 +341,17 @@ var toolbar = {
         if(Number(complexIm) >= 0) {
             complexIm = "+" + complexIm;
         }
-        document.getElementById(this.mouseComplexCoordsId).innerHTML = complexRe + complexIm + "i";
+        this.mouseComplexCoordsElement.innerHTML = complexRe + complexIm + "i";
     },
 
     resetMouseComplexCoords: function() {
-        document.getElementById(this.mouseComplexCoordsId).innerHTML = "N/A";
+        this.mouseComplexCoordsElement.innerHTML = "N/A";
     },
 
 
     // Iterations
     displayIterations: function() {
-        document.getElementById(this.iterationsId).value = this.iterations.toString();
+        this.iterationsElement.value = this.iterations.toString();
     },
 
     updateIterations: function(iterations) {
@@ -361,7 +360,7 @@ var toolbar = {
     },
 
     getIterationIncrement: function() {
-        return Number(document.getElementById(this.iterationIncrementId).value);
+        return Number(this.iterationIncrementElement.value);
     },
 
     increaseIterations: function() {
@@ -373,13 +372,13 @@ var toolbar = {
     },
 
     syncIterations: function() {
-        this.iterations = Number(document.getElementById(this.iterationsId).value);
+        this.iterations = Number(this.iterationsElement.value);
     },
 
 
     // Zoom
     displayZoom: function() {
-        document.getElementById(this.zoomId).innerHTML = this.zoom.toString();
+        this.zoomElement.innerHTML = this.zoom.toString();
     },
 
     setZoom: function(zoom) {
@@ -388,15 +387,15 @@ var toolbar = {
     },
     
     getClickZoomFactor: function() {
-        return Number(document.getElementById(this.clickZoomFactorId).value);
+        return Number(this.clickZoomFactorElement.value);
     },
 
 
     // Redraw
     redrawImage: function() {
-        let fractalType = document.getElementById(this.fractalTypeId).value;
+        let fractalType = this.fractalTypeElement.value;
         if(fractalType != this.fractalType) {
-            currImg = defaultImages[document.getElementById(this.fractalTypeId).value];
+            currImg = defaultImages[this.fractalTypeElement.value];
             this.fractalType = fractalType;
             this.updateIterations(currImg.iterations);
         }
