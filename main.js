@@ -44,6 +44,25 @@ var Complex = function(re, im) {
     };
 };
 
+Complex.toString = function(c) {
+    let string = c.re.toString();
+    if(c.im >= 0) {
+        string += "+";
+    }
+    return string + c.im.toString();
+};
+
+Complex.parseString = function(s) {
+    let match = s.match(/(-?\d(\.\d+)?)((\+|-)\d(\.\d+)?)i/);
+    if(match) {
+        return Complex(Number(match[1]), Number(match[3]));
+    }
+};
+
+Complex.equals = function(c1, c2) {
+    return c1.re == c2.re && c1.im == c2.im;
+};
+
 Complex.add = function(c1, c2) {
     return Complex(c1.re + c2.re, c1.im + c2.im);
 };
@@ -203,6 +222,23 @@ var MultishipJulia = function(e, c) {
 };
 
 
+var requiresExponent = function(fractalType) {
+    return [
+        "Multibrot",
+        "Multijulia",
+        "Multiship",
+        "MultishipJulia"
+    ].includes(fractalType);
+};
+
+var requiresJuliaConstant = function(fractalType) {
+    return [
+        "Julia",
+        "Multijulia",
+        "BurningShipJulia",
+        "MultishipJulia"
+    ].includes(fractalType);
+};
 
 
 /******************************
@@ -246,6 +282,16 @@ var Image = function(fractal, iterations, frame) {
     this.startTime = null;
     this.renderTime = null;
     
+    this.getFractalType = function() {
+        return this.fractal.constructor.name;
+    };
+
+    this.setFrame = function(frame) {
+        this.frame = frame;
+        this.reIter = frame.reWidth / _width;
+        this.imIter = frame.imHeight / _height;
+    };
+
     this.drawLayer = function() {
         let currRe = this.frame.reMin;
         for(let currX = 0; currX < _width; currX++) {
@@ -284,52 +330,30 @@ var Image = function(fractal, iterations, frame) {
 
 
 
-// Fractals
-var mandelbrot = new Mandelbrot();
-var julia1 = new Julia(Complex(-0.8, 0.156));
-var multibrot3 = new Multibrot(3);
-var multijulia1 = new Multijulia(3, Complex(-0.12, -0.8));
-var burningShip = new BurningShip();
-var burningShipJulia1 = new BurningShipJulia(Complex(-1.5, 0));
-var multiship3 = new Multiship(3);
-var multishipJulia1 = new MultishipJulia(3, Complex(-1.326667, 0));
-
-
-// Frames
-var defaultView = new Frame(Complex(0, 0), 4, 4);
-
-
-
-// Images
-var img1 = new Image(mandelbrot, 100, defaultView)
-var img2 = new Image(julia1, 200, defaultView);
-var img3 = new Image(multibrot3, 100, defaultView);
-var img4 = new Image(multijulia1, 100, defaultView);
-var img5 = new Image(burningShip, 100, defaultView);
-var img6 = new Image(burningShipJulia1, 100, defaultView);
-var img7 = new Image(multiship3, 100, defaultView);
-var img8 = new Image(multishipJulia1, 100, defaultView)
-
-
-// Initial image settings:
-// Try different samples with different image numbers imgX(X)
-var currImg = img1;
-
-
-
-
 // Toolbar
 var toolbar = {
-    renderTimeId: "render-time",
-    mouseComplexCoordsId: "mouse-complex-coords",
-    iterationsId: "iterations",
-    iterationIncrementId: "iteration-increment",
-    zoomId: "zoom",
-    clickZoomFactorId: "click-zoom-factor",
+    // Elements
+    renderTimeElement: document.getElementById("render-time"),
+    mouseComplexCoordsElement: document.getElementById("mouse-complex-coords"),
+    fractalTypeElement: document.getElementById("fractal-type"),
+    exponentContainer: document.getElementById("exponent-container"),
+    exponentElement: document.getElementById("exponent"),
+    juliaConstantContainer: document.getElementById("julia-constant-container"),
+    juliaConstantElement: document.getElementById("julia-constant"),
+    iterationsElement: document.getElementById("iterations"),
+    iterationIncrementElement: document.getElementById("iteration-increment"),
+    zoomElement: document.getElementById("zoom"),
+    clickZoomFactorElement: document.getElementById("click-zoom-factor"),
 
     
     // For currently undefined variables
     init: function() {
+        this.fractalType = currImg.getFractalType();
+        this.exponent = currImg.fractal.e;
+        this.juliaConstant = currImg.fractal.c;
+        this.lastFractalType = currImg.getFractalType();
+        this.lastExponent = currImg.fractal.e || null;
+        this.lastJuliaConstant = currImg.fractal.c || Complex(null, null);
         this.iterations = currImg.iterations;
         this.zoom = Number.parseFloat(1 / currImg.frame.reWidth).toExponential(10);
         this.resetMouseComplexCoords();
@@ -338,7 +362,7 @@ var toolbar = {
 
     // Render time
     displayRenderTime: function(time) {
-        document.getElementById(this.renderTimeId).innerHTML = (time.getUTCSeconds() * 1000 + time.getUTCMilliseconds()).toString();
+        this.renderTimeElement.innerHTML = (time.getUTCSeconds() * 1000 + time.getUTCMilliseconds()).toString();
     },
 
 
@@ -350,41 +374,76 @@ var toolbar = {
         if(Number(complexIm) >= 0) {
             complexIm = "+" + complexIm;
         }
-        document.getElementById(this.mouseComplexCoordsId).innerHTML = complexRe + complexIm + "i";
+        this.mouseComplexCoordsElement.innerHTML = complexRe + complexIm + "i";
     },
 
     resetMouseComplexCoords: function() {
-        document.getElementById(this.mouseComplexCoordsId).innerHTML = "N/A";
+        this.mouseComplexCoordsElement.innerHTML = "N/A";
+    },
+
+
+    // Fractal
+    updateFractal: function() {
+        this.fractalType = this.fractalTypeElement.value;
+        this.displayFractalParameters();
+    },
+
+    displayFractalParameters: function() {
+        let fractalType = this.fractalTypeElement.value;
+        if(requiresExponent(fractalType)) {
+            this.exponentContainer.className = "";
+        }
+        else {
+            this.exponentContainer.className = "hide";
+        }
+        if(requiresJuliaConstant(fractalType)) {
+            this.juliaConstantContainer.className = "";
+
+        }
+        else {
+            this.juliaConstantContainer.className = "hide";
+        }
+    },
+
+    updateInternalExponent: function() {
+        this.exponent = Number(this.exponentElement.value);
+    },
+
+    updateInternalJuliaConstant: function() {
+        this.juliaConstant = Complex.parseString(this.juliaConstantElement.value);
     },
 
 
     // Iterations
     displayIterations: function() {
-        document.getElementById(this.iterationsId).value = this.iterations.toString();
+        this.iterationsElement.value = this.iterations.toString();
+    },
+
+    updateIterations: function(iterations) {
+        this.iterations = iterations;
+        this.displayIterations();
     },
 
     getIterationIncrement: function() {
-        return Number(document.getElementById(this.iterationIncrementId).value);
+        return Number(this.iterationIncrementElement.value);
     },
 
     increaseIterations: function() {
-        this.iterations += this.getIterationIncrement();
-        this.displayIterations();
+        this.updateIterations(this.iterations + this.getIterationIncrement());
     },
 
     decreaseIterations: function() {
-        this.iterations -= this.getIterationIncrement();
-        this.displayIterations();
+        this.updateIterations(this.iterations - this.getIterationIncrement());
     },
 
-    syncIterations: function() {
-        this.iterations = Number(document.getElementById(this.iterationsId).value);
+    updateInternalIterations: function() {
+        this.iterations = Number(this.iterationsElement.value);
     },
 
 
     // Zoom
     displayZoom: function() {
-        document.getElementById(this.zoomId).innerHTML = this.zoom.toString();
+        this.zoomElement.innerHTML = this.zoom.toString();
     },
 
     setZoom: function(zoom) {
@@ -393,14 +452,31 @@ var toolbar = {
     },
     
     getClickZoomFactor: function() {
-        return Number(document.getElementById(this.clickZoomFactorId).value);
+        return Number(this.clickZoomFactorElement.value);
     },
 
 
     // Redraw
     redrawImage: function() {
+        if(this.fractalType != this.lastFractalType) {
+            currImg = defaultImages[this.fractalType];
+        }
+        if(requiresExponent(currImg.getFractalType())) {
+            currImg.fractal.e = this.exponent;
+            if(this.exponent != this.lastExponent) {
+                currImg.setFrame(defaultView);
+            }
+        }
+        if(requiresJuliaConstant(currImg.getFractalType())) {
+            currImg.fractal.c = this.juliaConstant;
+            if(!Complex.equals(this.juliaConstant, this.lastJuliaConstant)) {
+                currImg.setFrame(defaultView);
+            }
+        }
+        this.lastFractalType = this.fractalType;
+        this.lastExponent = this.exponent;
+        this.lastJuliaConstant = this.juliaConstant;
         currImg.iterations = this.iterations;
-        currImg.reset();
         startImage(currImg);
     }
 };
@@ -432,7 +508,6 @@ canvasElement.onmousedown = function(event) {
 canvasElement.onmouseup = function() {
     if(mouseDown) {
         mouseDown = false;
-        currImg.reset();
 
         let newFrame;
         if(mouseX == startDragX && mouseY == startDragY) {
@@ -473,11 +548,8 @@ canvasElement.onmouseup = function() {
             }
         }
 
-        currImg = new Image(
-            currImg.fractal,
-            currImg.iterations,
-            newFrame
-        );
+        currImg.setFrame(newFrame);
+
         toolbar.setZoom(Number.parseFloat(1 / currImg.frame.reWidth).toExponential(10));
 
         startImage(currImg);
@@ -501,9 +573,31 @@ canvasElement.onmouseout = function() {
 
 
 
+// Frames
+var defaultView = new Frame(Complex(0, 0), 4, 4);
+
+
+
+// Images
+var defaultImages = {
+    Mandelbrot: new Image(new Mandelbrot(), 100, new Frame(Complex(-0.5, 0), 4, 4)),
+    Julia: new Image(new Julia(Complex(-0.8, 0.156)), 200, defaultView),
+    Multibrot: new Image(new Multibrot(3), 100, defaultView),
+    Multijulia: new Image(new Multijulia(3, Complex(-0.12, -0.8)), 100, defaultView),
+    BurningShip: new Image(new BurningShip(), 100, new Frame(Complex(0, -0.5), 4, 4)),
+    BurningShipJulia: new Image(new BurningShipJulia(Complex(-1.5, 0)), 100, defaultView),
+    Multiship: new Image(new Multiship(3), 100, defaultView),
+    MultishipJulia: new Image(new MultishipJulia(3, Complex(-1.326667, 0)), 100, defaultView)
+};
+
+
+// Initial image settings:
+var currImg = defaultImages.Mandelbrot;
+
+
+
 // Select an image to draw and start drawing it
-var startImage = function(img) {
-    currImg = img;
+var startImage = function() {
     currImg.reset();
     toolbar.displayIterations();
     toolbar.displayZoom();
@@ -525,3 +619,13 @@ var draw = function() {
 toolbar.init();
 startImage(currImg);
 draw();
+
+
+/*
+ALL DONE, JUST CHECK FOR GLITCHES, COMMIT, AND TOUCH UP CODE AND STUFF
+currImg is the image being drawn
+"Redraw" matches currImg with external toolbar and renders anew
+    If new fractal chosen, revert to default view
+    Also revert to default view if new julia constant and/or exponent was chosen
+Clicking / dragging updates current image frame and updates toolbar accordingly  CHECK
+*/

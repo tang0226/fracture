@@ -15,20 +15,51 @@
                 Mouse coordinates: <div id="mouse-complex-coords" class="inline"></div>
             </div>
             <hr>
+            <div id="fractal-toolbar">
+                <div id="fractal-select-container">
+                    Fractal: 
+                    <select id="fractal-type" class="inline" onchange="toolbar.updateFractal()">
+                        <option value="Mandelbrot">Mandelbrot set</option>
+                        <option value="Julia">Julia set</option>
+                        <option value="Multibrot">Multibrot set</option>
+                        <option value="Multijulia">Multijulia set</option>
+                        <option value="BurningShip">Burning Ship fractal</option>
+                        <option value="BurningShipJulia">Burning Ship Julia set</option>
+                        <option value="Multiship">Multiship fractal</option>
+                        <option value="MultishipJulia">Multiship Julia set</option>
+                    </select>
+                </div>
+                <div id="exponent-container" class="hide">
+                    Exponent:
+                    <input type="text" id="exponent" class="inline" onchange="toolbar.updateInternalExponent()"/>
+                </div>
+                <div id="julia-constant-container" class="hide">
+                    Julia constant:
+                    <input type="text" id="julia-constant" class="inline" onchange="toolbar.updateInternalJuliaConstant()"/>
+                </div>
+            </div>
+            <hr>
             <div id="iterations-toolbar">
                 <input type="button" value="+" onclick="toolbar.increaseIterations()"/>
                 <div id="iterations-container">
-                    Iterations: <input type="text" id="iterations" class="inline" onblur="toolbar.syncIterations()"/>
+                    Iterations:
+                    <input type="text" id="iterations" class="inline" onblur="toolbar.updateInternalIterations()"/>
                 </div>
                 <input type="button" value="-" onclick="toolbar.decreaseIterations()"/>
-                <div>Increment: <input id="iteration-increment" type="text" value="100" style="display: inline"/></div>
+                <div>
+                    Increment:
+                    <input id="iteration-increment" type="text" value="100" class="inline"/>
+                </div>
             </div>
             <hr>
             <div id="frame-toolbar">
                 <div id="zoom-container">
                     Zoom: <div id="zoom" class="inline"></div>
                 </div>
-                <div>Click zoom factor: <input id="click-zoom-factor" value="4"/></div>
+                <div>
+                    Click zoom factor:
+                    <input id="click-zoom-factor" value="4"/>
+                </div>
             </div>
             <hr>
             <div id="redraw-button-container">
