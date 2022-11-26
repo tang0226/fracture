@@ -19,6 +19,10 @@
     display: inline;
 }
 
+.hide {
+    display: none;
+}
+
 hr {
     margin-top: 10px;
 }
