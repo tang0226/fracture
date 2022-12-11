@@ -1,6 +1,6 @@
 # WIP fractal viewer
 Clone and open main.html
-* Displays these fractals (Change/create in main.js):
+* Displays these fractals:
   * Mandelbrot set
   * Julia sets
   * Multibrot sets
@@ -14,10 +14,9 @@ Clone and open main.html
 
 ## Coding todo list:
 * Add more toolbar options:
-  * All fractal parameters should be able to be modified in the toolbar:
-    * Set window
-    * Set zoom
-    * Set canvas size
+  * Set window
+  * Set zoom
+  * Set canvas size
   * Image quality:
     * Anti-aliasing
     * Smoothed coloring

@@ -135,7 +135,7 @@ var Julia = function(c) {
         }
         return n;
     };
-}
+};
 
 var Multibrot = function(e) {
     this.e = e;
@@ -163,7 +163,7 @@ var Multijulia = function(e, c) {
             n++;
         }
         return n;
-    }
+    };
 };
 
 var BurningShip = function() {
@@ -218,7 +218,7 @@ var MultishipJulia = function(e, c) {
             n++;
         }
         return n;
-    }
+    };
 };
 
 
@@ -258,6 +258,10 @@ var Frame = function(center, reWidth, imHeight) {
             this.reMin + (this.reWidth * x / _width),
             this.imMin + (this.imHeight * y / _height)
         );
+    };
+
+    this.toZoom = function() {
+        return Number.parseFloat(1 / this.reWidth).toExponential(10)
     };
 };
 
@@ -326,6 +330,10 @@ var Image = function(fractal, iterations, frame) {
         this.drawing = true;
         this.startTime = new Date();
     };
+
+    this.copy = function() {
+        return new Image(this.fractal, this.iterations, this.frame);
+    };
 };
 
 
@@ -355,7 +363,7 @@ var toolbar = {
         this.lastExponent = currImg.fractal.e || null;
         this.lastJuliaConstant = currImg.fractal.c || Complex(null, null);
         this.iterations = currImg.iterations;
-        this.zoom = Number.parseFloat(1 / currImg.frame.reWidth).toExponential(10);
+        this.zoom = currImg.frame.toZoom();
         this.resetMouseComplexCoords();
     },
 
@@ -442,13 +450,10 @@ var toolbar = {
 
 
     // Zoom
-    displayZoom: function() {
-        this.zoomElement.innerHTML = this.zoom.toString();
-    },
-
-    setZoom: function(zoom) {
+    updateZoom: function() {
+        let zoom = currImg.frame.toZoom();
         this.zoom = zoom;
-        this.displayZoom();
+        this.zoomElement.innerHTML = this.zoom.toString();
     },
     
     getClickZoomFactor: function() {
@@ -459,7 +464,7 @@ var toolbar = {
     // Redraw
     redrawImage: function() {
         if(this.fractalType != this.lastFractalType) {
-            currImg = defaultImages[this.fractalType];
+            currImg = defaultImages[this.fractalType].copy();
         }
         if(requiresExponent(currImg.getFractalType())) {
             currImg.fractal.e = this.exponent;
@@ -477,7 +482,7 @@ var toolbar = {
         this.lastExponent = this.exponent;
         this.lastJuliaConstant = this.juliaConstant;
         currImg.iterations = this.iterations;
-        startImage(currImg);
+        restartImage(currImg);
     }
 };
 
@@ -550,9 +555,9 @@ canvasElement.onmouseup = function() {
 
         currImg.setFrame(newFrame);
 
-        toolbar.setZoom(Number.parseFloat(1 / currImg.frame.reWidth).toExponential(10));
+        toolbar.updateZoom();
 
-        startImage(currImg);
+        restartImage(currImg);
 
         startDragX = null;
         startDragY = null;
@@ -592,15 +597,15 @@ var defaultImages = {
 
 
 // Initial image settings:
-var currImg = defaultImages.Mandelbrot;
+var currImg = defaultImages.Mandelbrot.copy();
 
 
 
 // Select an image to draw and start drawing it
-var startImage = function() {
+var restartImage = function() {
     currImg.reset();
     toolbar.displayIterations();
-    toolbar.displayZoom();
+    toolbar.updateZoom();
 };
 
 
@@ -617,15 +622,5 @@ var draw = function() {
 
 // Run:
 toolbar.init();
-startImage(currImg);
+restartImage(currImg);
 draw();
-
-
-/*
-ALL DONE, JUST CHECK FOR GLITCHES, COMMIT, AND TOUCH UP CODE AND STUFF
-currImg is the image being drawn
-"Redraw" matches currImg with external toolbar and renders anew
-    If new fractal chosen, revert to default view
-    Also revert to default view if new julia constant and/or exponent was chosen
-Clicking / dragging updates current image frame and updates toolbar accordingly  CHECK
-*/
