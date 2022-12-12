@@ -570,13 +570,11 @@ canvasElement.onmouseup = function(event) {
             newFrame = new Frame(center, newImHeight, newImHeight);
         }
     }
-
-    currImg.setFrame(newFrame);
-
-    toolbar.updateZoom();
-
-    restartImage(currImg);
-
+    if(newFrame) {
+        currImg.setFrame(newFrame);
+        toolbar.updateZoom();
+        restartImage(currImg);
+    }
     startDragX = null;
     startDragY = null;
 };
