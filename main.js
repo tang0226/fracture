@@ -510,17 +510,34 @@ canvasElement.onmousedown = function(event) {
 
 
 // Based on mouse coordinates, calculate the frame for the new image and start it
-canvasElement.onmouseup = function() {
-    if(mouseDown) {
-        mouseDown = false;
-
-        let newFrame;
-        if(mouseX == startDragX && mouseY == startDragY) {
+canvasElement.onmouseup = function(event) {
+    if(!mouseDown) {
+        return;
+    }
+    mouseDown = false;
+    let newFrame;
+    if(mouseX == startDragX && mouseY == startDragY) {
+        if(keys["Control"]) {
+            let currFrame = currImg.frame;
+            newFrame = new Frame(
+                currFrame.toComplexCoords(mouseX, mouseY),
+                currFrame.reWidth,
+                currFrame.imHeight
+            );
+        }
+        else {
             let zoomFactor = toolbar.getClickZoomFactor();
             let xOffset = mouseX - (_width / 2);
             let yOffset = mouseY - (_height / 2);
-            let newReWidth = currImg.frame.reWidth / zoomFactor;
-            let newImHeight = currImg.frame.imHeight / zoomFactor;
+            let newReWidth, newImHeight;
+            if(keys["Shift"]) {
+                newReWidth = currImg.frame.reWidth * zoomFactor;
+                newImHeight = currImg.frame.imHeight * zoomFactor;
+            }
+            else {
+                newReWidth = currImg.frame.reWidth / zoomFactor;
+                newImHeight = currImg.frame.imHeight / zoomFactor;
+            }
             let newReIter = newReWidth / _width;
             let newImIter = newImHeight / _height;
             let focus = currImg.frame.toComplexCoords(mouseX, mouseY);
@@ -532,36 +549,36 @@ canvasElement.onmouseup = function() {
                 newReWidth, newImHeight
             );
         }
-        else if(mouseX != startDragX && mouseY != startDragY) {
-            let windowWidth = abs(mouseX - startDragX);
-            let windowHeight = abs(mouseY - startDragY);
-            let centerX = (mouseX + startDragX) / 2;
-            let centerY = (mouseY + startDragY) / 2;
-
-            let center = Complex(
-                currImg.frame.reMin + (centerX * currImg.reIter),
-                currImg.frame.imMin + (centerY * currImg.reIter)
-            );
-
-            if(windowWidth > windowHeight) {
-                let newReWidth = windowWidth * currImg.reIter;
-                newFrame = new Frame(center, newReWidth, newReWidth);
-            }
-            else {
-                let newImHeight = windowHeight * currImg.imIter;
-                newFrame = new Frame(center, newImHeight, newImHeight);
-            }
-        }
-
-        currImg.setFrame(newFrame);
-
-        toolbar.updateZoom();
-
-        restartImage(currImg);
-
-        startDragX = null;
-        startDragY = null;
     }
+    else if(mouseX != startDragX && mouseY != startDragY) {
+        let windowWidth = abs(mouseX - startDragX);
+        let windowHeight = abs(mouseY - startDragY);
+        let centerX = (mouseX + startDragX) / 2;
+        let centerY = (mouseY + startDragY) / 2;
+
+        let center = Complex(
+            currImg.frame.reMin + (centerX * currImg.reIter),
+            currImg.frame.imMin + (centerY * currImg.reIter)
+        );
+
+        if(windowWidth > windowHeight) {
+            let newReWidth = windowWidth * currImg.reIter;
+            newFrame = new Frame(center, newReWidth, newReWidth);
+        }
+        else {
+            let newImHeight = windowHeight * currImg.imIter;
+            newFrame = new Frame(center, newImHeight, newImHeight);
+        }
+    }
+
+    currImg.setFrame(newFrame);
+
+    toolbar.updateZoom();
+
+    restartImage(currImg);
+
+    startDragX = null;
+    startDragY = null;
 };
 
 
@@ -574,6 +591,20 @@ canvasElement.onmousemove = function(event) {
 
 canvasElement.onmouseout = function() {
     toolbar.resetMouseComplexCoords();
+};
+
+
+
+// Keys variables
+var keys = {};
+
+// Keys functions
+document.onkeydown = function(event) {
+    keys[event.key] = true;
+};
+
+document.onkeyup = function(event) {
+    keys[event.key] = false;
 };
 
 
