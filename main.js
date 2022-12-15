@@ -356,15 +356,15 @@ var toolbar = {
     
     // For currently undefined variables
     init: function() {
-        this.fractalType = currImg.getFractalType();
-        this.exponent = currImg.fractal.e;
-        this.juliaConstant = currImg.fractal.c;
-        this.lastFractalType = currImg.getFractalType();
-        this.lastExponent = currImg.fractal.e || null;
-        this.lastJuliaConstant = currImg.fractal.c || Complex(null, null);
+        this.fractalType = this.lastFractalType = currImg.getFractalType();
+        this.exponent = this.lastExponent = currImg.fractal.e || null;
+        this.juliaConstant = this.lastJuliaConstant = currImg.fractal.c || Complex(null, null);
         this.iterations = currImg.iterations;
         this.zoom = currImg.frame.toZoom();
+        this.clickZoomFactor = Number(this.clickZoomFactorElement.value);
         this.resetMouseComplexCoords();
+        this.displayIterations();
+        this.updateZoom();
     },
 
 
@@ -391,20 +391,15 @@ var toolbar = {
 
 
     // Fractal
-    updateFractal: function() {
+    updateInternalFractalType: function() {
         this.fractalType = this.fractalTypeElement.value;
-        this.displayFractalParameters();
-    },
-
-    displayFractalParameters: function() {
-        let fractalType = this.fractalTypeElement.value;
-        if(requiresExponent(fractalType)) {
+        if(requiresExponent(this.fractalType)) {
             this.exponentContainer.className = "";
         }
         else {
             this.exponentContainer.className = "hide";
         }
-        if(requiresJuliaConstant(fractalType)) {
+        if(requiresJuliaConstant(this.fractalType)) {
             this.juliaConstantContainer.className = "";
 
         }
@@ -427,7 +422,11 @@ var toolbar = {
         this.iterationsElement.value = this.iterations.toString();
     },
 
-    updateIterations: function(iterations) {
+    updateInternalIterations: function() {
+        this.iterations = Number(this.iterationsElement.value);
+    },
+
+    setIterations: function(iterations) {
         this.iterations = iterations;
         this.displayIterations();
     },
@@ -437,15 +436,11 @@ var toolbar = {
     },
 
     increaseIterations: function() {
-        this.updateIterations(this.iterations + this.getIterationIncrement());
+        this.setIterations(this.iterations + this.getIterationIncrement());
     },
 
     decreaseIterations: function() {
-        this.updateIterations(this.iterations - this.getIterationIncrement());
-    },
-
-    updateInternalIterations: function() {
-        this.iterations = Number(this.iterationsElement.value);
+        this.setIterations(this.iterations - this.getIterationIncrement());
     },
 
 
@@ -455,9 +450,9 @@ var toolbar = {
         this.zoom = zoom;
         this.zoomElement.innerHTML = this.zoom.toString();
     },
-    
-    getClickZoomFactor: function() {
-        return Number(this.clickZoomFactorElement.value);
+
+    updateInternalCZF: function() {
+        this.clickZoomFactor = Number(this.clickZoomFactorElement.value);
     },
 
 
@@ -482,7 +477,7 @@ var toolbar = {
         this.lastExponent = this.exponent;
         this.lastJuliaConstant = this.juliaConstant;
         currImg.iterations = this.iterations;
-        restartImage(currImg);
+        currImg.reset();
     }
 };
 
@@ -510,7 +505,7 @@ canvasElement.onmousedown = function(event) {
 
 
 // Based on mouse coordinates, calculate the frame for the new image and start it
-canvasElement.onmouseup = function(event) {
+canvasElement.onmouseup = function() {
     if(!mouseDown) {
         return;
     }
@@ -526,7 +521,7 @@ canvasElement.onmouseup = function(event) {
             );
         }
         else {
-            let zoomFactor = toolbar.getClickZoomFactor();
+            let zoomFactor = toolbar.clickZoomFactor;
             let xOffset = mouseX - (_width / 2);
             let yOffset = mouseY - (_height / 2);
             let newReWidth, newImHeight;
@@ -573,7 +568,7 @@ canvasElement.onmouseup = function(event) {
     if(newFrame) {
         currImg.setFrame(newFrame);
         toolbar.updateZoom();
-        restartImage(currImg);
+        currImg.reset();
     }
     startDragX = null;
     startDragY = null;
@@ -630,15 +625,6 @@ var currImg = defaultImages.Mandelbrot.copy();
 
 
 
-// Select an image to draw and start drawing it
-var restartImage = function() {
-    currImg.reset();
-    toolbar.displayIterations();
-    toolbar.updateZoom();
-};
-
-
-
 // Draw loop
 var draw = function() {
     if(currImg.drawing) {
@@ -651,5 +637,4 @@ var draw = function() {
 
 // Run:
 toolbar.init();
-restartImage(currImg);
 draw();

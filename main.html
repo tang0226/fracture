@@ -18,7 +18,7 @@
             <div id="fractal-toolbar">
                 <div id="fractal-select-container">
                     Fractal: 
-                    <select id="fractal-type" class="inline" onchange="toolbar.updateFractal()">
+                    <select id="fractal-type" class="inline" onchange="toolbar.updateInternalFractalType()">
                         <option value="Mandelbrot">Mandelbrot set</option>
                         <option value="Julia">Julia set</option>
                         <option value="Multibrot">Multibrot set</option>
@@ -58,7 +58,7 @@
                 </div>
                 <div>
                     Click zoom factor:
-                    <input id="click-zoom-factor" value="4"/>
+                    <input id="click-zoom-factor" value="4" onchange="toolbar.updateInternalCZF()"/>
                 </div>
             </div>
             <hr>
