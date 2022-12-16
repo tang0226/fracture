@@ -14,11 +14,11 @@ Complex.toString = function(c) {
     if(c.im >= 0) {
         string += "+";
     }
-    return string + c.im.toString();
+    return string + c.im.toString() + "i";
 };
 
 Complex.parseString = function(s) {
-    let match = s.match(/(-?\d(\.\d+)?)((\+|-)\d(\.\d+)?)i/);
+    let match = s.match(/(-?\d+(\.\d+)?)((\+|-)(\d+(\.\d+)?))i/);
     if(match) {
         return Complex(Number(match[1]), Number(match[3]));
     }
