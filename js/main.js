@@ -35,6 +35,31 @@ var scale = function(n, minFrom, maxFrom, minTo, maxTo) {
 
 
 
+// Frames
+var defaultView = new Frame(Complex(0, 0), 4, 4);
+
+
+
+// Images
+var defaultImages = {
+    Mandelbrot: new Image(new Mandelbrot(), 100, new Frame(Complex(-0.5, 0), 4, 4)),
+    Julia: new Image(new Julia(Complex(-0.8, 0.156)), 100, defaultView),
+    Multibrot: new Image(new Multibrot(3), 100, defaultView),
+    Multijulia: new Image(new Multijulia(3, Complex(-0.12, -0.8)), 100, defaultView),
+    BurningShip: new Image(new BurningShip(), 100, new Frame(Complex(0, -0.5), 4, 4)),
+    BurningShipJulia: new Image(new BurningShipJulia(Complex(-1.5, 0)), 100, defaultView),
+    Multiship: new Image(new Multiship(3), 100, defaultView),
+    MultishipJulia: new Image(new MultishipJulia(3, Complex(-1.326667, 0)), 100, defaultView)
+};
+
+
+// Initial image settings:
+var currImg = defaultImages.Mandelbrot.copy();
+var storedImg = null;
+var currMode = "default";
+
+
+
 // Mouse variables
 var mouseX = null;
 var mouseY = null;
@@ -56,15 +81,64 @@ canvasElement.onmousedown = function(event) {
 };
 
 
-// Based on mouse coordinates, calculate the frame for the new image and start it
+// Based on mouse coordinates, click/drag,
+// and keyboard events, draw the new image
 canvasElement.onmouseup = function() {
+
+    // Glitch-proofing
     if(!mouseDown) {
         return;
     }
+
     mouseDown = false;
+
     let newFrame;
+
+    // Click
     if(mouseX == startDragX && mouseY == startDragY) {
-        if(keys["Control"]) {
+        // Julia mode toggling
+        if(keys["Alt"]) {
+            if(currMode == "default") {
+                // Switch to Julia mode
+
+                // Confirm that Julia mode is applicable
+                if(!requiresJuliaConstant(currImg.getFractalType())) {
+                    currMode = "julia";
+
+                    // Store current image for switching back
+                    storedImg = currImg.copy();
+
+                    // Initialize new image based on Julia
+                    // equivalent of previous fractal
+                    newFractal = getJuliaEquivalent(currImg.getFractalType());
+                    currImg = defaultImages[newFractal].copy();
+
+                    // New fractal requires a julia constant,
+                    // but not necessarily an exponent
+                    currImg.fractal.c = storedImg.frame.toComplexCoords(mouseX, mouseY);
+                    if(requiresExponent(newFractal)) {
+                        currImg.fractal.e = storedImg.fractal.e;
+                    }
+
+                    // Draw the new image
+                    currImg.reset();
+                }
+            }
+
+            else {
+
+                // Return to default mode
+                currMode = "default";
+                currImg = storedImg.copy();
+                storedImg = null;
+                currImg.reset();
+            }
+
+            toolbar.syncWithImage();
+        }
+
+        // Center the frame
+        else if(keys["Control"]) {
             let currFrame = currImg.frame;
             newFrame = new Frame(
                 currFrame.toComplexCoords(mouseX, mouseY),
@@ -72,31 +146,43 @@ canvasElement.onmouseup = function() {
                 currFrame.imHeight
             );
         }
+
+        // Zoom
         else {
             let zoomFactor = toolbar.clickZoomFactor;
+
+            // Calculations to keep clicked point
+            // in the same position on canvas
             let xOffset = mouseX - (_width / 2);
             let yOffset = mouseY - (_height / 2);
+            
             let newReWidth, newImHeight;
+
+            // Zoom out
             if(keys["Shift"]) {
                 newReWidth = currImg.frame.reWidth * zoomFactor;
                 newImHeight = currImg.frame.imHeight * zoomFactor;
             }
+
+            // Zoom in
             else {
                 newReWidth = currImg.frame.reWidth / zoomFactor;
                 newImHeight = currImg.frame.imHeight / zoomFactor;
             }
-            let newReIter = newReWidth / _width;
-            let newImIter = newImHeight / _height;
+
+            // Update frame
             let focus = currImg.frame.toComplexCoords(mouseX, mouseY);
             newFrame = new Frame(
                 Complex(
-                    focus.re - (xOffset * newReIter),
-                    focus.im - (yOffset * newImIter)
+                    focus.re - (xOffset * newReWidth / _width),
+                    focus.im - (yOffset * newImHeight / _height)
                 ),
                 newReWidth, newImHeight
             );
         }
     }
+
+    // Drag
     else if(mouseX != startDragX && mouseY != startDragY) {
         let windowWidth = abs(mouseX - startDragX);
         let windowHeight = abs(mouseY - startDragY);
@@ -117,11 +203,15 @@ canvasElement.onmouseup = function() {
             newFrame = new Frame(center, newImHeight, newImHeight);
         }
     }
+
+    // Update frame
     if(newFrame) {
         currImg.setFrame(newFrame);
         toolbar.updateZoom();
         currImg.reset();
     }
+
+    // Reset drag variables
     startDragX = null;
     startDragY = null;
 };
@@ -151,29 +241,6 @@ document.onkeydown = function(event) {
 document.onkeyup = function(event) {
     keys[event.key] = false;
 };
-
-
-
-// Frames
-var defaultView = new Frame(Complex(0, 0), 4, 4);
-
-
-
-// Images
-var defaultImages = {
-    Mandelbrot: new Image(new Mandelbrot(), 100, new Frame(Complex(-0.5, 0), 4, 4)),
-    Julia: new Image(new Julia(Complex(-0.8, 0.156)), 200, defaultView),
-    Multibrot: new Image(new Multibrot(3), 100, defaultView),
-    Multijulia: new Image(new Multijulia(3, Complex(-0.12, -0.8)), 100, defaultView),
-    BurningShip: new Image(new BurningShip(), 100, new Frame(Complex(0, -0.5), 4, 4)),
-    BurningShipJulia: new Image(new BurningShipJulia(Complex(-1.5, 0)), 100, defaultView),
-    Multiship: new Image(new Multiship(3), 100, defaultView),
-    MultishipJulia: new Image(new MultishipJulia(3, Complex(-1.326667, 0)), 100, defaultView)
-};
-
-
-// Initial image settings:
-var currImg = defaultImages.Mandelbrot.copy();
 
 
 

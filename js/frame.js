@@ -11,6 +11,8 @@ var Frame = function(center, reWidth, imHeight) {
     this.imMin = this.center.im - imHeight /2;
     this.imMax = this.center.im + imHeight / 2;
 
+    // Translate xy coordinates on the canvas
+    // to coordinates on the complex plane.
     this.toComplexCoords = function(x, y){
         return Complex(
             this.reMin + (this.reWidth * x / _width),
@@ -18,6 +20,7 @@ var Frame = function(center, reWidth, imHeight) {
         );
     };
 
+    // Get zoom based on size of frame
     this.toZoom = function() {
         return Number.parseFloat(1 / this.reWidth).toExponential(10)
     };

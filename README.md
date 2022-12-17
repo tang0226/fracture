@@ -11,6 +11,8 @@ Clone and open main.html
   * Multiship Julia sets (Burning Ship Julia sets with an exponent other than 2)
 * Adjustable iterations
 * Zoom by clicking (focus on a point), or by dragging and releasing (focus on a region)
+* Center the image with Ctrl + click
+* Use Alt + click to view a point's corresponding Juila set or to switch back to the original image
 
 ## Coding todo list:
 * Add more toolbar options:
@@ -23,8 +25,6 @@ Clone and open main.html
     * More color options (aka premade palettes / coloring functions)
     * (harder) Custom palettes?
   * (as more toolbar features are added): input sanitization (maybe separate module for tests?)
-* Select Julia set by using mouse shortcut on fractal
-* Add mouse functions for Julia set selection and shifting the frame focus
 * Add new fractals:
   * Rational maps
   * Phoenix fractal
@@ -34,7 +34,6 @@ Clone and open main.html
     * Equation
     * Misc. math functions (abs, log, trig functions)
 * Prevent scientific notation for complex coordinates (especially close to im = 0).
-* Add informative comments to code
 * (very useful, but not sure how to implement) Draw bounding box for drag zooming
 
 ## Samples:

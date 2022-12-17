@@ -132,3 +132,12 @@ var requiresJuliaConstant = function(fractalType) {
         "MultishipJulia"
     ].includes(fractalType);
 };
+
+var getJuliaEquivalent = function(fractalType) {
+    return {
+        "Mandelbrot": "Julia",
+        "Multibrot": "Multijulia",
+        "BurningShip": "BurningShipJulia",
+        "Multiship": "MultishipJulia"
+    }[fractalType];
+};
