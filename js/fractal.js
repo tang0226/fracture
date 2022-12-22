@@ -71,7 +71,7 @@ BurningShip.prototype.iterate = function(c, iterations) {
     let z = Complex(0, 0);
     let n = 0;
     while(Complex.abs(z) <= 2 && n < iterations) {
-        z = Complex.add(Complex.exp(Complex(abs(z.re), abs(z.im)), 2), c);
+        z = Complex.add(Complex.exp(Complex(Math.abs(z.re), Math.abs(z.im)), 2), c);
         n++;
     }
     return n;
@@ -87,7 +87,7 @@ BurningShipJulia.prototype.iterate = function(_z, iterations) {
     let z = _z;
     let n = 0;
     while(Complex.abs(z) <= 2 && n < iterations) {
-        z = Complex.add(Complex.exp(Complex(abs(z.re), abs(z.im)), 2), this.c);
+        z = Complex.add(Complex.exp(Complex(Math.abs(z.re), Math.abs(z.im)), 2), this.c);
         n++;
     }
     return n;
@@ -102,7 +102,7 @@ Multiship.prototype.iterate = function(c, iterations) {
     let z = Complex(0, 0);
     let n = 0;
     while(Complex.abs(z) <= 2 && n < iterations) {
-        z = Complex.add(Complex.exp(Complex(abs(z.re), abs(z.im)), this.e), c);
+        z = Complex.add(Complex.exp(Complex(Math.abs(z.re), Math.abs(z.im)), this.e), c);
         n++;
     }
     return n;
@@ -119,7 +119,7 @@ MultishipJulia.prototype.iterate = function(_z, iterations) {
     let z = _z;
     let n = 0;
     while(Complex.abs(z) <= 2 && n < iterations) {
-        z = Complex.add(Complex.exp(Complex(abs(z.re), abs(z.im)), this.e), this.c);
+        z = Complex.add(Complex.exp(Complex(Math.abs(z.re), Math.abs(z.im)), this.e), this.c);
         n++;
     }
     return n;

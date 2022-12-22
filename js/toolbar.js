@@ -16,6 +16,8 @@ toolbar.iterationsElement = document.getElementById("iterations");
 toolbar.iterationIncrementElement = document.getElementById("iteration-increment");
 toolbar.zoomElement = document.getElementById("zoom");
 toolbar.clickZoomFactorElement = document.getElementById("click-zoom-factor");
+toolbar.canvasWidthElement = document.getElementById("canvas-width");
+toolbar.canvasHeightElement = document.getElementById("canvas-height");
 
 
 // For currently undefined variables
@@ -26,6 +28,10 @@ toolbar.init = function() {
     this.iterations = currImg.iterations;
     this.zoom = currImg.frame.toZoom();
     this.clickZoomFactor = Number(this.clickZoomFactorElement.value);
+    this.canvasWidthElement.value = _width;
+    this.canvasHeightElement.value = _height;
+    this.canvasWidth = _width;
+    this.canvasHeight = _height;
     this.resetMouseComplexCoords();
     this.displayIterations();
     this.updateZoom();
@@ -141,8 +147,24 @@ toolbar.updateInternalCZF = function() {
 
 
 
+// Canvas dimensions
+toolbar.updateInternalCanvasWidth = function() {
+    this.canvasWidth = Number(this.canvasWidthElement.value);
+};
+
+toolbar.updateInternalCanvasHeight = function() {
+    this.canvasHeight = Number(this.canvasHeightElement.value);
+};
+
+
+
 // Redraw
 toolbar.redrawImage = function() {
+    // Update canvas dimensions if changed
+    if(this.canvasWidth != _width || this.canvasHeight != _height) {
+        setCanvasDim(this.canvasWidth, this.canvasHeight);
+    }
+
     // For checking if any fractal parameters were changed;
     // If so, exit Julia mode
     let fractalChanged = false;
@@ -190,6 +212,7 @@ toolbar.redrawImage = function() {
     }
 
     // Prepare the image to be redrawn
+    currImg.fitToCanvas();
     currImg.reset();
 };
 

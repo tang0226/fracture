@@ -1,8 +1,8 @@
 var canvasElement = document.getElementById("canvas");
 var canvas = canvasElement.getContext("2d");
 
-var _width = 0;
-var _height = 0;
+var _width = 600;
+var _height = 600;
 
 var setCanvasDim = function(w, h) {
     canvasElement.width = w;
@@ -11,7 +11,7 @@ var setCanvasDim = function(w, h) {
     _height = h;
 }
 
-setCanvasDim(600, 600);
+setCanvasDim(_width, _height);
 
 
 
@@ -26,9 +26,7 @@ var rgb = function(r, g, b) {
 
 
 
-// Math functions/aliases
-var abs = Math.abs;
-
+// Math functions
 var scale = function(n, minFrom, maxFrom, minTo, maxTo) {
     return ((n / (maxFrom - minFrom)) * (maxTo - minTo)) + minTo;
 };
@@ -156,18 +154,19 @@ canvasElement.onmouseup = function() {
             let xOffset = mouseX - (_width / 2);
             let yOffset = mouseY - (_height / 2);
             
-            let newReWidth, newImHeight;
+            let newReWidth = currImg.frame.reWidth;
+            let newImHeight = currImg.frame.imHeight;
 
             // Zoom out
             if(keys["Shift"]) {
-                newReWidth = currImg.frame.reWidth * zoomFactor;
-                newImHeight = currImg.frame.imHeight * zoomFactor;
+                newReWidth *= zoomFactor;
+                newImHeight *= zoomFactor;
             }
 
             // Zoom in
             else {
-                newReWidth = currImg.frame.reWidth / zoomFactor;
-                newImHeight = currImg.frame.imHeight / zoomFactor;
+                newReWidth /= zoomFactor;
+                newImHeight /= zoomFactor;
             }
 
             // Update frame
@@ -184,29 +183,20 @@ canvasElement.onmouseup = function() {
 
     // Drag
     else if(mouseX != startDragX && mouseY != startDragY) {
-        let windowWidth = abs(mouseX - startDragX);
-        let windowHeight = abs(mouseY - startDragY);
-        let centerX = (mouseX + startDragX) / 2;
-        let centerY = (mouseY + startDragY) / 2;
-
-        let center = Complex(
-            currImg.frame.reMin + (centerX * currImg.reIter),
-            currImg.frame.imMin + (centerY * currImg.reIter)
+        newFrame = new Frame(
+            Complex(
+                currImg.frame.reMin + ((mouseX + startDragX) / 2 * currImg.complexIter),
+                currImg.frame.imMin + ((mouseY + startDragY) / 2 * currImg.complexIter)
+            ),
+            Math.abs(mouseX - startDragX) * currImg.complexIter,
+            Math.abs(mouseY - startDragY) * currImg.complexIter
         );
-
-        if(windowWidth > windowHeight) {
-            let newReWidth = windowWidth * currImg.reIter;
-            newFrame = new Frame(center, newReWidth, newReWidth);
-        }
-        else {
-            let newImHeight = windowHeight * currImg.imIter;
-            newFrame = new Frame(center, newImHeight, newImHeight);
-        }
     }
 
     // Update frame
     if(newFrame) {
         currImg.setFrame(newFrame);
+        currImg.fitToCanvas();
         toolbar.updateZoom();
         currImg.reset();
     }

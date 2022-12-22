@@ -3,7 +3,7 @@ COMPLEX NUMBERS
 ******************************/ 
 
 // No prototype, too tedious and unnecessary
-// to type new Complex() each time
+// to type "new Complex()" each time
 var Complex = function(re, im) {
     return {
         re: re,

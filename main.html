@@ -62,6 +62,17 @@
                 </div>
             </div>
             <hr>
+            <div id="canvas-dim-toolbar">
+                <div id="canvas-width-container">
+                    Canvas width (px):
+                    <input id="canvas-width" value="800" onchange="toolbar.updateInternalCanvasWidth()"/>
+                </div>
+                <div id="canvas-height-container">
+                    Canvas height (px):
+                    <input id="canvas-height" value="600" onchange="toolbar.updateInternalCanvasHeight()"/>
+                </div>
+            </div>
+            <hr>
             <div id="redraw-button-container">
                 <input type="button" value="Redraw" onclick="toolbar.redrawImage()"/>
             </div>

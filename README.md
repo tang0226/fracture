@@ -10,6 +10,7 @@ Clone and open main.html
   * Multiship fractals (Burning Ships with an exponent other than 2)
   * Multiship Julia sets (Burning Ship Julia sets with an exponent other than 2)
 * Adjustable iterations
+* Adjustable canvas size
 * Zoom by clicking (focus on a point), or by dragging and releasing (focus on a region)
 * Center the image with Ctrl + click
 * Use Alt + click to view a point's corresponding Juila set or to switch back to the original image
@@ -18,7 +19,6 @@ Clone and open main.html
 * Add more toolbar options:
   * Set window
   * Set zoom
-  * Set canvas size
   * Image quality:
     * Anti-aliasing
     * Smoothed coloring
@@ -27,11 +27,12 @@ Clone and open main.html
   * (as more toolbar features are added): input sanitization (maybe separate module for tests?)
 * Add new fractals:
   * Rational maps
-  * Phoenix fractal
-  * Newtonian fractals if you can figure out the math :P
-  * Collatz fractal!
-  * Build-your-own fractal
+  * Phoenix fractal (feedback from previous iterations)
+  * Newtonian fractals?
+  * Collatz fractal
+  * Custom fractal
     * Equation
+    * Iteration style: Mandelbrot or Julia
     * Misc. math functions (abs, log, trig functions)
 * Prevent scientific notation for complex coordinates (especially close to im = 0).
 * (very useful, but not sure how to implement) Draw bounding box for drag zooming

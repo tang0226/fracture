@@ -7,9 +7,7 @@ var Frame = function(center, reWidth, imHeight) {
     this.reWidth = reWidth;
     this.imHeight = imHeight;
     this.reMin = this.center.re - reWidth / 2;
-    this.reMax = this.center.re + reWidth / 2;
-    this.imMin = this.center.im - imHeight /2;
-    this.imMax = this.center.im + imHeight / 2;
+    this.imMin = this.center.im - imHeight / 2;
 };
 
 
@@ -26,4 +24,23 @@ Frame.prototype.toComplexCoords = function(x, y){
 // Get zoom based on size of frame
 Frame.prototype.toZoom = function() {
     return Number.parseFloat(1 / this.reWidth).toExponential(10);
+};
+
+
+// Return a frame that matches canvas aspect ratio
+Frame.prototype.fitToCanvas = function() {
+    if(this.reWidth / this.imHeight > _width / _height) {
+        return new Frame(
+            this.center,
+            this.reWidth,
+            this.reWidth * _height / _width
+        );
+    }
+    else {
+        return new Frame(
+            this.center,
+            this.imHeight * _width / _height,
+            this.imHeight
+        );
+    }
 };
