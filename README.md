@@ -11,7 +11,10 @@ Clone and open main.html
   * Multiship Julia sets (Burning Ship Julia sets with an exponent other than 2)
 * Adjustable iterations
 * Adjustable canvas size
-* Zoom by clicking (focus on a point), or by dragging and releasing (focus on a region)
+* Zooming:
+  * Clicking (to focus on a point)
+  * Drag and release (to focus on a region)
+    * Press Esc to cancel a drag
 * Center the image with Ctrl + click
 * Use Alt + click to view a point's corresponding Juila set or to switch back to the original image
 
@@ -35,7 +38,6 @@ Clone and open main.html
     * Iteration style: Mandelbrot or Julia
     * Misc. math functions (abs, log, trig functions)
 * Prevent scientific notation for complex coordinates (especially close to im = 0).
-* (very useful, but not sure how to implement) Draw bounding box for drag zooming
 
 ## Samples:
 ![mandelbrot set](https://github.com/tang0226/fractal/blob/master/samples/mandelbrot_set.png?raw=true)

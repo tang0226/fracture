@@ -1,5 +1,7 @@
 var canvasElement = document.getElementById("canvas");
 var canvas = canvasElement.getContext("2d");
+var controlsCanvasElement = document.getElementById("controls-canvas");
+var controlsCanvas = controlsCanvasElement.getContext("2d");
 
 var _width = 600;
 var _height = 600;
@@ -7,6 +9,8 @@ var _height = 600;
 var setCanvasDim = function(w, h) {
     canvasElement.width = w;
     canvasElement.height = h;
+    controlsCanvasElement.width = w;
+    controlsCanvasElement.height = h;
     _width = w;
     _height = h;
 }
@@ -66,9 +70,18 @@ var startDragY = null;
 var mouseDown = false;
 
 
+// Mouse functions
+var resetDrag = function() {
+    mouseDown = false;
+    startDragX = null;
+    startDragY = null;
+    controlsCanvas.clearRect(0, 0, _width, _height);
+};
+
+
 // Mouse Events
 
-canvasElement.onmousedown = function(event) {
+controlsCanvasElement.onmousedown = function(event) {
     if(event.buttons == 1) {
         if(!mouseDown) {
             startDragX = mouseX;
@@ -81,14 +94,11 @@ canvasElement.onmousedown = function(event) {
 
 // Based on mouse coordinates, click/drag,
 // and keyboard events, draw the new image
-canvasElement.onmouseup = function() {
-
+controlsCanvasElement.onmouseup = function() {
     // Glitch-proofing
     if(!mouseDown) {
         return;
     }
-
-    mouseDown = false;
 
     let newFrame;
 
@@ -201,20 +211,32 @@ canvasElement.onmouseup = function() {
         currImg.reset();
     }
 
-    // Reset drag variables
-    startDragX = null;
-    startDragY = null;
+    // Reset drag
+    resetDrag();
 };
 
 
-canvasElement.onmousemove = function(event) {
+controlsCanvasElement.onmousemove = function(event) {
     mouseX = event.offsetX;
     mouseY = event.offsetY;
     toolbar.displayMouseComplexCoords();
+    if(mouseDown) {
+        controlsCanvas.clearRect(0, 0, _width, _height);
+        controlsCanvas.strokeStyle = rgb(255, 0, 0);
+        controlsCanvas.strokeRect(
+            Math.min(startDragX, mouseX),
+            Math.min(startDragY, mouseY),
+            Math.abs(mouseX - startDragX),
+            Math.abs(mouseY - startDragY)
+        );
+    }
 };
 
 
-canvasElement.onmouseout = function() {
+controlsCanvasElement.onmouseout = function() {
+    resetDrag();
+
+    // Display N/A for mouse coordinates
     toolbar.resetMouseComplexCoords();
 };
 
@@ -226,6 +248,9 @@ var keys = {};
 // Keys functions
 document.onkeydown = function(event) {
     keys[event.key] = true;
+    if(event.key == "Escape") {
+        resetDrag();
+    }
 };
 
 document.onkeyup = function(event) {

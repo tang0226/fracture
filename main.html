@@ -4,7 +4,10 @@
         <link rel="stylesheet" href="./global.css">
     </head>
     <body>
-        <canvas id="canvas" tabindex="1" width="0" height="0"></canvas>
+        <div id="canvas-container">
+            <canvas id="canvas" width="0" height="0"></canvas>
+            <canvas id="controls-canvas" width="0" height="0"></canvas>
+        </div>
         <br/>
         <div id="toolbar">
             <div id="render-time-container">
@@ -64,11 +67,11 @@
             <hr>
             <div id="canvas-dim-toolbar">
                 <div id="canvas-width-container">
-                    Canvas width (px):
+                    Width (px):
                     <input id="canvas-width" value="800" onchange="toolbar.updateInternalCanvasWidth()"/>
                 </div>
                 <div id="canvas-height-container">
-                    Canvas height (px):
+                    Height (px):
                     <input id="canvas-height" value="600" onchange="toolbar.updateInternalCanvasHeight()"/>
                 </div>
             </div>
