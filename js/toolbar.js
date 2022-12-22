@@ -2,251 +2,252 @@
 TOOLBAR OBJECT
 ******************************/ 
 
-var toolbar = {};
+var toolbar = {
 
-// Elements
-toolbar.renderTimeElement = document.getElementById("render-time");
-toolbar.mouseComplexCoordsElement = document.getElementById("mouse-complex-coords");
-toolbar.fractalTypeElement = document.getElementById("fractal-type");
-toolbar.exponentContainer = document.getElementById("exponent-container");
-toolbar.exponentElement = document.getElementById("exponent");
-toolbar.juliaConstantContainer = document.getElementById("julia-constant-container");
-toolbar.juliaConstantElement = document.getElementById("julia-constant");
-toolbar.iterationsElement = document.getElementById("iterations");
-toolbar.iterationIncrementElement = document.getElementById("iteration-increment");
-toolbar.zoomElement = document.getElementById("zoom");
-toolbar.clickZoomFactorElement = document.getElementById("click-zoom-factor");
-toolbar.canvasWidthElement = document.getElementById("canvas-width");
-toolbar.canvasHeightElement = document.getElementById("canvas-height");
-
-
-// For currently undefined variables
-toolbar.init = function() {
-    this.fractalType = this.lastFractalType = currImg.getFractalType();
-    this.exponent = this.lastExponent = currImg.fractal.e || null;
-    this.juliaConstant = this.lastJuliaConstant = currImg.fractal.c || Complex(null, null);
-    this.iterations = currImg.iterations;
-    this.zoom = currImg.frame.toZoom();
-    this.clickZoomFactor = Number(this.clickZoomFactorElement.value);
-    this.canvasWidthElement.value = _width;
-    this.canvasHeightElement.value = _height;
-    this.canvasWidth = _width;
-    this.canvasHeight = _height;
-    this.resetMouseComplexCoords();
-    this.displayIterations();
-    this.updateZoom();
-};
+    // Elements
+    renderTimeElement: document.getElementById("render-time"),
+    mouseComplexCoordsElement: document.getElementById("mouse-complex-coords"),
+    fractalTypeElement: document.getElementById("fractal-type"),
+    exponentContainer: document.getElementById("exponent-container"),
+    exponentElement: document.getElementById("exponent"),
+    juliaConstantContainer: document.getElementById("julia-constant-container"),
+    juliaConstantElement: document.getElementById("julia-constant"),
+    iterationsElement: document.getElementById("iterations"),
+    iterationIncrementElement: document.getElementById("iteration-increment"),
+    zoomElement: document.getElementById("zoom"),
+    clickZoomFactorElement: document.getElementById("click-zoom-factor"),
+    canvasWidthElement: document.getElementById("canvas-width"),
+    canvasHeightElement: document.getElementById("canvas-height"),
 
 
-// Render time
-toolbar.displayRenderTime = function(time) {
-    this.renderTimeElement.innerHTML = (time.getUTCSeconds() * 1000 + time.getUTCMilliseconds()).toString();
-};
+    // For currently undefined variables
+    init() {
+        this.fractalType = this.lastFractalType = currImg.getFractalType();
+        this.exponent = this.lastExponent = currImg.fractal.e || null;
+        this.juliaConstant = this.lastJuliaConstant = currImg.fractal.c || Complex(null, null);
+        this.iterations = currImg.iterations;
+        this.zoom = currImg.frame.toZoom();
+        this.clickZoomFactor = Number(this.clickZoomFactorElement.value);
+        this.canvasWidthElement.value = _width;
+        this.canvasHeightElement.value = _height;
+        this.canvasWidth = _width;
+        this.canvasHeight = _height;
+        this.resetMouseComplexCoords();
+        this.displayIterations();
+        this.updateZoom();
+    },
 
 
-// Mouse complex coordinates
-toolbar.displayMouseComplexCoords = function() {
-    let complexCoords = currImg.frame.toComplexCoords(mouseX, mouseY);
-    let complexRe = complexCoords.re.toString();
-    let complexIm = complexCoords.im.toString();
-    if(Number(complexIm) >= 0) {
-        complexIm = "+" + complexIm;
-    }
-    this.mouseComplexCoordsElement.innerHTML = complexRe + complexIm + "i";
-};
-
-toolbar.resetMouseComplexCoords = function() {
-    this.mouseComplexCoordsElement.innerHTML = "N/A";
-};
+    // Render time
+    displayRenderTime(time) {
+        this.renderTimeElement.innerHTML = (time.getUTCSeconds() * 1000 + time.getUTCMilliseconds()).toString();
+    },
 
 
+    // Mouse complex coordinates
+    displayMouseComplexCoords() {
+        let complexCoords = currImg.frame.toComplexCoords(mouseX, mouseY);
+        let complexRe = complexCoords.re.toString();
+        let complexIm = complexCoords.im.toString();
+        if(Number(complexIm) >= 0) {
+            complexIm = "+" + complexIm;
+        }
+        this.mouseComplexCoordsElement.innerHTML = complexRe + complexIm + "i";
+    },
 
-// Fractal
-
-// When fractal select is changed
-toolbar.updateInternalFractalType = function() {
-    // Set internal fractal type
-    this.fractalType = this.fractalTypeElement.value;
-
-    // Show exponent and Juila constant inputs where applicable
-    if(requiresExponent(this.fractalType)) {
-        this.exponentContainer.className = "";
-    }
-    else {
-        this.exponentContainer.className = "hide";
-    }
-    if(requiresJuliaConstant(this.fractalType)) {
-        this.juliaConstantContainer.className = "";
-
-    }
-    else {
-        this.juliaConstantContainer.className = "hide";
-    }
-};
-
-// When exponent input is changed
-toolbar.updateInternalExponent = function() {
-    this.exponent = Number(this.exponentElement.value);
-};
-
-// When Julia constant input is changed
-toolbar.updateInternalJuliaConstant = function() {
-    this.juliaConstant = Complex.parseString(this.juliaConstantElement.value);
-};
+    resetMouseComplexCoords() {
+        this.mouseComplexCoordsElement.innerHTML = "N/A";
+    },
 
 
 
-// Iterations
+    // Fractal
 
-// Display internal iterations
-toolbar.displayIterations = function() {
-    this.iterationsElement.value = this.iterations.toString();
-};
+    // When fractal select is changed
+    updateInternalFractalType() {
+        // Set internal fractal type
+        this.fractalType = this.fractalTypeElement.value;
 
-// When iterations input is changed
-toolbar.updateInternalIterations = function() {
-    this.iterations = Number(this.iterationsElement.value);
-};
+        // Show exponent and Juila constant inputs where applicable
+        if(requiresExponent(this.fractalType)) {
+            this.exponentContainer.className = "";
+        }
+        else {
+            this.exponentContainer.className = "hide";
+        }
+        if(requiresJuliaConstant(this.fractalType)) {
+            this.juliaConstantContainer.className = "";
 
-// Set internal and displayed iterations 
-toolbar.setIterations = function(iterations) {
-    this.iterations = iterations;
-    this.displayIterations();
-};
+        }
+        else {
+            this.juliaConstantContainer.className = "hide";
+        }
+    },
 
-// Get iteration increment input
-toolbar.getIterationIncrement = function() {
-    return Number(this.iterationIncrementElement.value);
-};
+    // When exponent input is changed
+    updateInternalExponent() {
+        this.exponent = Number(this.exponentElement.value);
+    },
 
-// For +iterations button
-toolbar.increaseIterations = function() {
-    this.setIterations(this.iterations + this.getIterationIncrement());
-};
-
-// For -iterations button
-toolbar.decreaseIterations = function() {
-    this.setIterations(this.iterations - this.getIterationIncrement());
-};
-
-
-
-// Zoom
-
-// Sync internal and external zoom with current image
-toolbar.updateZoom = function() {
-    let zoom = currImg.frame.toZoom();
-    this.zoom = zoom;
-    this.zoomElement.innerHTML = this.zoom.toString();
-};
-
-// When click zoom factor input is changed
-toolbar.updateInternalCZF = function() {
-    this.clickZoomFactor = Number(this.clickZoomFactorElement.value);
-};
+    // When Julia constant input is changed
+    updateInternalJuliaConstant() {
+        this.juliaConstant = Complex.parseString(this.juliaConstantElement.value);
+    },
 
 
 
-// Canvas dimensions
-toolbar.updateInternalCanvasWidth = function() {
-    this.canvasWidth = Number(this.canvasWidthElement.value);
-};
+    // Iterations
 
-toolbar.updateInternalCanvasHeight = function() {
-    this.canvasHeight = Number(this.canvasHeightElement.value);
-};
+    // Display internal iterations
+    displayIterations() {
+        this.iterationsElement.value = this.iterations.toString();
+    },
+
+    // When iterations input is changed
+    updateInternalIterations() {
+        this.iterations = Number(this.iterationsElement.value);
+    },
+
+    // Set internal and displayed iterations 
+    setIterations(iterations) {
+        this.iterations = iterations;
+        this.displayIterations();
+    },
+
+    // Get iteration increment input
+    getIterationIncrement() {
+        return Number(this.iterationIncrementElement.value);
+    },
+
+    // For +iterations button
+    increaseIterations() {
+        this.setIterations(this.iterations + this.getIterationIncrement());
+    },
+
+    // For -iterations button
+    decreaseIterations() {
+        this.setIterations(this.iterations - this.getIterationIncrement());
+    },
 
 
 
-// Redraw
-toolbar.redrawImage = function() {
-    // Update canvas dimensions if changed
-    if(this.canvasWidth != _width || this.canvasHeight != _height) {
-        setCanvasDim(this.canvasWidth, this.canvasHeight);
-    }
+    // Zoom
 
-    // For checking if any fractal parameters were changed;
-    // If so, exit Julia mode
-    let fractalChanged = false;
-    
-    // Check for new fractal type
-    if(this.fractalType != this.lastFractalType) {
-        currImg = defaultImages[this.fractalType].copy();
-        fractalChanged = true;
-    }
+    // Sync internal and external zoom with current image
+    updateZoom() {
+        let zoom = currImg.frame.toZoom();
+        this.zoom = zoom;
+        this.zoomElement.innerHTML = this.zoom.toString();
+    },
 
-    // Check for new exponent
-    if(requiresExponent(currImg.getFractalType())) {
-        currImg.fractal.e = this.exponent;
+    // When click zoom factor input is changed
+    updateInternalCZF() {
+        this.clickZoomFactor = Number(this.clickZoomFactorElement.value);
+    },
 
-        // If exponent has changed, return to original frame
-        // (i.e. don't stay zoomed in, same for Julia constant below)
-        if(this.exponent != this.lastExponent) {
-            currImg.setFrame(defaultView);
+
+
+    // Canvas dimensions
+    updateInternalCanvasWidth() {
+        this.canvasWidth = Number(this.canvasWidthElement.value);
+    },
+
+    updateInternalCanvasHeight() {
+        this.canvasHeight = Number(this.canvasHeightElement.value);
+    },
+
+
+
+    // Redraw
+    redrawImage() {
+        // Update canvas dimensions if changed
+        if(this.canvasWidth != _width || this.canvasHeight != _height) {
+            setCanvasDim(this.canvasWidth, this.canvasHeight);
+        }
+
+        // For checking if any fractal parameters were changed;
+        // If so, exit Julia mode
+        let fractalChanged = false;
+        
+        // Check for new fractal type
+        if(this.fractalType != this.lastFractalType) {
+            currImg = defaultImages[this.fractalType].copy();
             fractalChanged = true;
         }
-    }
 
-    // Check for new Julia constant
-    if(requiresJuliaConstant(currImg.getFractalType())) {
-        currImg.fractal.c = this.juliaConstant;
-        if(!Complex.equals(this.juliaConstant, this.lastJuliaConstant)) {
-            currImg.setFrame(defaultView);
-            fractalChanged = true;
+        // Check for new exponent
+        if(requiresExponent(currImg.getFractalType())) {
+            currImg.fractal.e = this.exponent;
+
+            // If exponent has changed, return to original frame
+            // (i.e. don't stay zoomed in, same for Julia constant below)
+            if(this.exponent != this.lastExponent) {
+                currImg.setFrame(defaultView);
+                fractalChanged = true;
+            }
         }
+
+        // Check for new Julia constant
+        if(requiresJuliaConstant(currImg.getFractalType())) {
+            currImg.fractal.c = this.juliaConstant;
+            if(!Complex.equals(this.juliaConstant, this.lastJuliaConstant)) {
+                currImg.setFrame(defaultView);
+                fractalChanged = true;
+            }
+        }
+
+        // Update last fractal parameters for future checks
+        this.lastFractalType = this.fractalType;
+        this.lastExponent = this.exponent;
+        this.lastJuliaConstant = this.juliaConstant;
+
+        // Update image iterations
+        currImg.iterations = this.iterations;
+
+        // Exit Julia mode if the fractal was changed
+        if(fractalChanged && currMode == "julia") {
+            currMode = "default";
+            storedImg = null;
+            this.syncWithImage();
+        }
+
+        // Prepare the image to be redrawn
+        currImg.fitToCanvas();
+        currImg.reset();
+    },
+
+
+
+    // Sync
+    syncWithImage() {
+        // Sync fractal type
+
+        // Manually set fractal type input and update
+        // internals accordingly, a little dirty...
+        this.fractalTypeElement.value = currImg.getFractalType();
+        this.updateInternalFractalType();
+
+        let currFractal = currImg.fractal;
+        this.fractalType = currFractal;
+        this.lastFractalType = currFractal;
+
+        // Sync Exponent
+        if(currFractal.e) {
+            this.exponentElement.value = currFractal.e.toString();
+            this.exponent = this.lastExponent = currFractal.e;
+        }
+
+        // Sync Julia constant
+        if(currFractal.c) {
+            this.juliaConstantElement.value = Complex.toString(currImg.fractal.c);
+            this.juliaConstant = this.lastJuliaConstant = currFractal.c;
+        }
+
+        // Sync iterations
+        this.iterationsElement.value = currImg.iterations.toString();
+        this.iterations = currImg.iterations;
+        
+        // Sync zoom
+        this.updateZoom();
     }
-
-    // Update last fractal parameters for future checks
-    this.lastFractalType = this.fractalType;
-    this.lastExponent = this.exponent;
-    this.lastJuliaConstant = this.juliaConstant;
-
-    // Update image iterations
-    currImg.iterations = this.iterations;
-
-    // Exit Julia mode if the fractal was changed
-    if(fractalChanged && currMode == "julia") {
-        currMode = "default";
-        storedImg = null;
-        this.syncWithImage();
-    }
-
-    // Prepare the image to be redrawn
-    currImg.fitToCanvas();
-    currImg.reset();
-};
-
-
-
-// Sync
-toolbar.syncWithImage = function() {
-    // Sync fractal type
-
-    // Manually set fractal type input and update
-    // internals accordingly, a little dirty...
-    this.fractalTypeElement.value = currImg.getFractalType();
-    this.updateInternalFractalType();
-
-    let currFractal = currImg.fractal;
-    this.fractalType = currFractal;
-    this.lastFractalType = currFractal;
-
-    // Sync Exponent
-    if(currFractal.e) {
-        this.exponentElement.value = currFractal.e.toString();
-        this.exponent = this.lastExponent = currFractal.e;
-    }
-
-    // Sync Julia constant
-    if(currFractal.c) {
-        this.juliaConstantElement.value = Complex.toString(currImg.fractal.c);
-        this.juliaConstant = this.lastJuliaConstant = currFractal.c;
-    }
-
-    // Sync iterations
-    this.iterationsElement.value = currImg.iterations.toString();
-    this.iterations = currImg.iterations;
-    
-    // Sync zoom
-    this.updateZoom();
 };
