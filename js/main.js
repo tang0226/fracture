@@ -246,7 +246,13 @@ controlsCanvasElement.onmouseout = function() {
 var keys = {};
 
 // Keys functions
-document.onkeydown = function(event) {
+var resetKeys = function() {
+    for(let key in keys) {
+        keys[key] = false;
+    }
+};
+
+window.onkeydown = function(event) {
     keys[event.key] = true;
     if(event.key == "Escape") {
         resetDrag();
@@ -257,9 +263,13 @@ document.onkeydown = function(event) {
     }
 };
 
-document.onkeyup = function(event) {
+window.onkeyup = function(event) {
     keys[event.key] = false;
 };
+
+window.onblur = function() {
+    resetKeys();
+}
 
 
 
