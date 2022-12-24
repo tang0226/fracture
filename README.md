@@ -37,7 +37,8 @@ Clone and open main.html
     * Equation
     * Iteration style: Mandelbrot or Julia
     * Misc. math functions (abs, log, trig functions)
-* Prevent scientific notation for complex coordinates (especially close to im = 0).
+* Prevent scientific notation for complex coordinates (especially close to im = 0)
+* Pause render time timer when window loses focus
 
 ## Samples:
 ![mandelbrot set](https://github.com/tang0226/fractal/blob/master/samples/mandelbrot_set.png?raw=true)

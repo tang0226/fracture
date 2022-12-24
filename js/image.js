@@ -80,8 +80,8 @@ Image.prototype.drawLayer = function() {
     }
 
     // Update render time
-    this.renderTime = new Date(new Date() - this.startTime);
-    toolbar.displayRenderTime(this.renderTime);
+    this.renderTime = new Date() - this.startTime;
+    toolbar.displayRenderTime();
 };
 
 

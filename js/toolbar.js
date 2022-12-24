@@ -35,6 +35,7 @@ var toolbar = {
         juliaConstantContainer: document.getElementById("julia-constant-container")
     },
 
+    // Booleans for valid inputs
     inputStatus: {
         exponent: true,
         juliaConstant: true,
@@ -66,12 +67,8 @@ var toolbar = {
 
 
     // Render time
-    displayRenderTime(time) {
-        this.elements.renderTime.innerHTML = (
-            time.getUTCMinutes() * 60000 +
-            time.getUTCSeconds() * 1000 +
-            time.getUTCMilliseconds()
-        ).toString();
+    displayRenderTime() {
+        this.elements.renderTime.innerHTML = currImg.renderTime.toString();
     },
 
 
