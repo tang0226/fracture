@@ -34,6 +34,10 @@ canvas {
     display: none;
 }
 
+.alert {
+    color: red;
+}
+
 hr {
     margin-top: 10px;
 }

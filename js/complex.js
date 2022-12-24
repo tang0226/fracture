@@ -22,7 +22,7 @@ Complex.toString = function(c) {
 
 // String "a+bi" -> object
 Complex.parseString = function(s) {
-    let match = s.match(/(-?\d+(\.\d+)?)((\+|-)(\d+(\.\d+)?))i/);
+    let match = s.match(/^(-?\d+(\.\d+)?)((\+|-)(\d+(\.\d+)?))i$/);
     if(match) {
         return Complex(Number(match[1]), Number(match[3]));
     }

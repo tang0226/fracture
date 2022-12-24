@@ -35,10 +35,12 @@
                 <div id="exponent-container" class="hide">
                     Exponent:
                     <input type="text" id="exponent" class="inline" onchange="toolbar.updateInternalExponent()"/>
+                    <div id="exponent-alert" class="alert hide">Exponent must be a positive integer</div>
                 </div>
                 <div id="julia-constant-container" class="hide">
                     Julia constant:
                     <input type="text" id="julia-constant" class="inline" onchange="toolbar.updateInternalJuliaConstant()"/>
+                    <div id="julia-constant-alert" class="alert hide">Julia constant must be of the form a+bi</div>
                 </div>
             </div>
             <hr>
@@ -47,11 +49,13 @@
                 <div id="iterations-container">
                     Iterations:
                     <input type="text" id="iterations" class="inline" onblur="toolbar.updateInternalIterations()"/>
+                    <div id="iterations-alert" class="alert hide">Iterations must be a positive integer</div>
                 </div>
                 <input type="button" value="-" onclick="toolbar.decreaseIterations()"/>
                 <div>
                     Increment:
-                    <input id="iteration-increment" type="text" value="100" class="inline"/>
+                    <input id="iteration-increment" type="text" value="100" class="inline" onblur="toolbar.updateInternalIterationIncrement()"/>
+                    <div id="iteration-increment-alert" class="alert hide">Iteration increment must be an integer</div>
                 </div>
             </div>
             <hr>
@@ -62,6 +66,7 @@
                 <div>
                     Click zoom factor:
                     <input id="click-zoom-factor" value="4" onchange="toolbar.updateInternalCZF()"/>
+                    <div id="click-zoom-factor-alert" class="alert hide">Click zoom factor must be a positive number</div>
                 </div>
             </div>
             <hr>
@@ -69,10 +74,12 @@
                 <div id="canvas-width-container">
                     Width (px):
                     <input id="canvas-width" value="800" onchange="toolbar.updateInternalCanvasWidth()"/>
+                    <div id="canvas-width-alert" class="alert hide">Canvas width must be a positive integer</div>
                 </div>
                 <div id="canvas-height-container">
                     Height (px):
                     <input id="canvas-height" value="600" onchange="toolbar.updateInternalCanvasHeight()"/>
+                    <div id="canvas-height-alert" class="alert hide">Canvas height must be a positive integer</div>
                 </div>
             </div>
             <hr>
