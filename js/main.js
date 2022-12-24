@@ -251,6 +251,10 @@ document.onkeydown = function(event) {
     if(event.key == "Escape") {
         resetDrag();
     }
+    if(event.key == "Enter") {
+        document.activeElement.blur();
+        toolbar.redrawImage();
+    }
 };
 
 document.onkeyup = function(event) {
