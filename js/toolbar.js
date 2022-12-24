@@ -67,7 +67,11 @@ var toolbar = {
 
     // Render time
     displayRenderTime(time) {
-        this.elements.renderTime.innerHTML = (time.getUTCSeconds() * 1000 + time.getUTCMilliseconds()).toString();
+        this.elements.renderTime.innerHTML = (
+            time.getUTCMinutes() * 60000 +
+            time.getUTCSeconds() * 1000 +
+            time.getUTCMilliseconds()
+        ).toString();
     },
 
 
