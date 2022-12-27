@@ -1,5 +1,5 @@
 # WIP fractal viewer
-Clone and open [main.html](https://tang0226.github.io/fractal/main.html)
+Clone and open main.html
 * Displays these fractals:
   * Mandelbrot set
   * Julia sets
