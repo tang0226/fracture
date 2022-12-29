@@ -1,5 +1,5 @@
 # WIP fractal viewer
-Clone and open main.html
+Main page is located at [main.html](https://tang0226.github.io/fracture/main)
 * Displays these fractals:
   * Mandelbrot set
   * Julia sets
