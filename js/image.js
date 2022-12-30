@@ -11,9 +11,9 @@ var Image = function(fractal, iterations, srcFrame) {
     
     // Distance between pixels on the complex plane
     this.complexIter = 
-        _width > _height ?
-        this.frame.reWidth / _width :
-        this.frame.imHeight / _height;
+        canvasWidth > canvasHeight ?
+        this.frame.reWidth / canvasWidth :
+        this.frame.imHeight / canvasHeight;
     
     this.currY = 0;
     this.currIm = this.frame.imMin;
@@ -34,9 +34,9 @@ Image.prototype.getFractalType = function() {
 Image.prototype.fitToCanvas = function() {
     this.frame = this.srcFrame.fitToCanvas();
     this.complexIter = 
-        _width > _height ?
-        this.frame.reWidth / _width :
-        this.frame.imHeight / _height;
+        canvasWidth > canvasHeight ?
+        this.frame.reWidth / canvasWidth :
+        this.frame.imHeight / canvasHeight;
 };
 
 
@@ -49,24 +49,24 @@ Image.prototype.setFrame = function(srcFrame) {
 // Draw one layer, moving down
 Image.prototype.drawLayer = function() {
     let currRe = this.frame.reMin;
-    for(let currX = 0; currX < _width; currX++) {
+    for(let currX = 0; currX < canvasWidth; currX++) {
 
         let val = this.fractal.iterate(Complex(currRe, this.currIm), this.iterations);
         
         if(val == this.iterations) {
             // Part of set, color black
-            canvas.fillStyle = hsl(0, 0, 0);
+            canvasCtx.fillStyle = hsl(0, 0, 0);
         }
         else {
             // Color scale: HSL (0-360, 100, 0-100)
-            canvas.fillStyle = hsl(
+            canvasCtx.fillStyle = hsl(
                 scale(val, 0, this.iterations, 0, 360),
                 100,
                 scale(val, 0, this.iterations, 0, 100)
             );
         }
         
-        canvas.fillRect(currX, this.currY, 1, 1);
+        canvasCtx.fillRect(currX, this.currY, 1, 1);
         
         currRe += this.complexIter;
     };
@@ -75,7 +75,7 @@ Image.prototype.drawLayer = function() {
     this.currIm += this.complexIter;
     
     // Stop if at the bottom of the canvas
-    if(this.currY > _height) {
+    if(this.currY > canvasHeight) {
         this.drawing = false;
     }
 

@@ -15,8 +15,8 @@ var Frame = function(center, reWidth, imHeight) {
 // to coordinates on the complex plane.
 Frame.prototype.toComplexCoords = function(x, y){
     return Complex(
-        this.reMin + (this.reWidth * x / _width),
-        this.imMin + (this.imHeight * y / _height)
+        this.reMin + (this.reWidth * x / canvasWidth),
+        this.imMin + (this.imHeight * y / canvasHeight)
     );
 };
 
@@ -29,17 +29,17 @@ Frame.prototype.toZoom = function() {
 
 // Return a frame that matches canvas aspect ratio
 Frame.prototype.fitToCanvas = function() {
-    if(this.reWidth / this.imHeight > _width / _height) {
+    if(this.reWidth / this.imHeight > canvasWidth / canvasHeight) {
         return new Frame(
             this.center,
             this.reWidth,
-            this.reWidth * _height / _width
+            this.reWidth * canvasHeight / canvasWidth
         );
     }
     else {
         return new Frame(
             this.center,
-            this.imHeight * _width / _height,
+            this.imHeight * canvasWidth / canvasHeight,
             this.imHeight
         );
     }

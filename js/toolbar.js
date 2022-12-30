@@ -56,10 +56,10 @@ var toolbar = {
         this.iterationIncrement = Number(this.elements.iterationIncrement.value);
         this.zoom = currImg.frame.toZoom();
         this.clickZoomFactor = Number(this.elements.clickZoomFactor.value);
-        this.elements.canvasWidth.value = _width;
-        this.elements.canvasHeight.value = _height;
-        this.canvasWidth = _width;
-        this.canvasHeight = _height;
+        this.elements.canvasWidth.value = canvasWidth;
+        this.elements.canvasHeight.value = canvasHeight;
+        this.canvasWidth = canvasWidth;
+        this.canvasHeight = canvasHeight;
         this.resetMouseComplexCoords();
         this.displayIterations();
         this.updateZoom();
@@ -273,7 +273,7 @@ var toolbar = {
         }
         
         // Update canvas dimensions if changed
-        if(this.canvasWidth != _width || this.canvasHeight != _height) {
+        if(this.canvasWidth != canvasWidth || this.canvasHeight != canvasHeight) {
             setCanvasDim(this.canvasWidth, this.canvasHeight);
         }
 
