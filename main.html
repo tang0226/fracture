@@ -21,7 +21,7 @@
             <div id="fractal-toolbar">
                 <div id="fractal-select-container">
                     Fractal: 
-                    <select id="fractal-type" class="inline" onchange="toolbar.updateInternalFractalType()">
+                    <select id="fractal-type" class="inline">
                         <option value="Mandelbrot">Mandelbrot set</option>
                         <option value="Julia">Julia set</option>
                         <option value="Multibrot">Multibrot set</option>
@@ -34,27 +34,27 @@
                 </div>
                 <div id="exponent-container" class="hide">
                     Exponent:
-                    <input type="text" id="exponent" class="inline" onchange="toolbar.updateInternalExponent()"/>
+                    <input type="text" id="exponent" class="inline"/>
                     <div id="exponent-alert" class="alert hide">Exponent must be a positive integer</div>
                 </div>
                 <div id="julia-constant-container" class="hide">
                     Julia constant:
-                    <input type="text" id="julia-constant" class="inline" onchange="toolbar.updateInternalJuliaConstant()"/>
+                    <input type="text" id="julia-constant" class="inline"/>
                     <div id="julia-constant-alert" class="alert hide">Julia constant must be of the form a+bi</div>
                 </div>
             </div>
             <hr>
             <div id="iterations-toolbar">
-                <input type="button" value="+" onclick="toolbar.increaseIterations()"/>
+                <input type="button" id="increase-iterations" value="+"/>
                 <div id="iterations-container">
                     Iterations:
-                    <input type="text" id="iterations" class="inline" onblur="toolbar.updateInternalIterations()"/>
+                    <input type="text" id="iterations" class="inline"/>
                     <div id="iterations-alert" class="alert hide">Iterations must be a positive integer</div>
                 </div>
-                <input type="button" value="-" onclick="toolbar.decreaseIterations()"/>
+                <input type="button" id="decrease-iterations" value="-"/>
                 <div>
                     Increment:
-                    <input id="iteration-increment" type="text" value="100" class="inline" onblur="toolbar.updateInternalIterationIncrement()"/>
+                    <input id="iteration-increment" type="text" value="100" class="inline"/>
                     <div id="iteration-increment-alert" class="alert hide">Iteration increment must be an integer</div>
                 </div>
             </div>
@@ -65,7 +65,7 @@
                 </div>
                 <div>
                     Click zoom factor:
-                    <input id="click-zoom-factor" value="4" onchange="toolbar.updateInternalCZF()"/>
+                    <input id="click-zoom-factor" value="4"/>
                     <div id="click-zoom-factor-alert" class="alert hide">Click zoom factor must be a positive number</div>
                 </div>
             </div>
@@ -73,24 +73,25 @@
             <div id="canvas-dim-toolbar">
                 <div id="canvas-width-container">
                     Width (px):
-                    <input id="canvas-width" value="800" onchange="toolbar.updateInternalCanvasWidth()"/>
+                    <input id="canvas-width" value="800"/>
                     <div id="canvas-width-alert" class="alert hide">Canvas width must be a positive integer</div>
                 </div>
                 <div id="canvas-height-container">
                     Height (px):
-                    <input id="canvas-height" value="600" onchange="toolbar.updateInternalCanvasHeight()"/>
+                    <input id="canvas-height" value="600"/>
                     <div id="canvas-height-alert" class="alert hide">Canvas height must be a positive integer</div>
                 </div>
             </div>
             <hr>
             <div id="redraw-button-container">
-                <input type="button" value="Redraw" onclick="toolbar.redrawImage()"/>
+                <input type="button" id="redraw" value="Redraw"/>
             </div>
         </div>
-        <script src="./js/complex.js"></script>
-        <script src="./js/fractal.js"></script>
-        <script src="./js/frame.js"></script>
-        <script src="./js/image.js"></script>
-        <script src="./js/main.js"></script>
+        <script type="module" src="./js/utils.js"></script>
+        <script type="module" src="./js/complex.js"></script>
+        <script type="module" src="./js/fractal.js"></script>
+        <script type="module" src="./js/frame.js"></script>
+        <script type="module" src="./js/image.js"></script>
+        <script type="module" src="./js/main.js"></script>
     </body>
 </html>

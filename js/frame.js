@@ -1,3 +1,5 @@
+import Complex from "./complex.js";
+
 /******************************
 FRAME PROTOTYPE: REGION ON THE COMPLEX PLANE
 ******************************/
@@ -13,10 +15,10 @@ var Frame = function(center, reWidth, imHeight) {
 
 // Translate xy coordinates on the canvas
 // to coordinates on the complex plane.
-Frame.prototype.toComplexCoords = function(x, y){
+Frame.prototype.toComplexCoords = function(x, y, w, h){
     return Complex(
-        this.reMin + (this.reWidth * x / canvasWidth),
-        this.imMin + (this.imHeight * y / canvasHeight)
+        this.reMin + (this.reWidth * x / w),
+        this.imMin + (this.imHeight * y / h)
     );
 };
 
@@ -28,19 +30,21 @@ Frame.prototype.toZoom = function() {
 
 
 // Return a frame that matches canvas aspect ratio
-Frame.prototype.fitToCanvas = function() {
-    if(this.reWidth / this.imHeight > canvasWidth / canvasHeight) {
+Frame.prototype.fitToCanvas = function(w, h) {
+    if(this.reWidth / this.imHeight > w / h) {
         return new Frame(
             this.center,
             this.reWidth,
-            this.reWidth * canvasHeight / canvasWidth
+            this.reWidth * h / w
         );
     }
     else {
         return new Frame(
             this.center,
-            this.imHeight * canvasWidth / canvasHeight,
+            this.imHeight * w / h,
             this.imHeight
         );
     }
 };
+
+export default Frame;
