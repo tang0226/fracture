@@ -1,12 +1,12 @@
-import {rgb, hsl, scale} from "./utils.js";
-import Complex from "./complex.js";
+import {rgb, hsl, scale} from "./modules/utils.js";
+import Complex from "./modules/complex.js";
 import {
     Mandelbrot, Julia, Multibrot, Multijulia,
     BurningShip, BurningShipJulia, Multiship, MultishipJulia,
     requiresExponent, requiresJuliaConstant, getJuliaEquivalent
-} from "./fractal.js";
-import Frame from "./frame.js";
-import Image from "./image.js";
+} from "./modules/fractal.js";
+import Frame from "./modules/frame.js";
+import Image from "./modules/image.js";
 
 
 var canvas = document.getElementById("canvas");
