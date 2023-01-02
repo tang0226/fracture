@@ -247,7 +247,7 @@ var toolbar = {
         let toSet = Number(this.elements.exponent.value);
 
         // Sanitize
-        if(toSet == NaN || toSet < 1 || !Number.isInteger(toSet)) {
+        if(Number.isNaN(toSet) || toSet < 1 || !Number.isInteger(toSet)) {
             this.elements.exponentAlert.classList.remove("hide");
             this.inputStatus.exponent = false;
         }
@@ -288,7 +288,7 @@ var toolbar = {
         let toSet = Number(this.elements.iterations.value);
 
         // Sanitize
-        if(toSet == NaN || toSet < 1 || !Number.isInteger(toSet)) {
+        if(Number.isNaN(toSet) || toSet < 1 || !Number.isInteger(toSet)) {
             this.elements.iterationsAlert.classList.remove("hide");
             this.inputStatus.iterations = false;
         }
@@ -310,7 +310,7 @@ var toolbar = {
         let toSet = Number(this.elements.iterationIncrement.value);
 
         // Sanitize
-        if(toSet == NaN || !Number.isInteger(toSet)) {
+        if(Number.isNaN(toSet) || !Number.isInteger(toSet)) {
             this.elements.iterationIncrementAlert.classList.remove("hide");
             this.inputStatus.iterationIncrement = false;
         }
@@ -347,7 +347,7 @@ var toolbar = {
         let toSet = Number(this.elements.clickZoomFactor.value);
 
         // Sanitize
-        if(toSet == NaN || toSet <= 0) {
+        if(Number.isNaN(toSet) || toSet <= 0) {
             this.elements.clickZoomFactorAlert.classList.remove("hide");
             this.inputStatus.clickZoomFactor = false;
         }
@@ -365,7 +365,7 @@ var toolbar = {
         let toSet = Number(this.elements.canvasWidth.value);
 
         // Sanitize
-        if(toSet == NaN || toSet < 1 || !Number.isInteger(toSet)) {
+        if(Number.isNaN(toSet) || toSet < 1 || !Number.isInteger(toSet)) {
             this.elements.canvasWidthAlert.classList.remove("hide");
             this.inputStatus.canvasWidth = false;
         }
@@ -380,7 +380,7 @@ var toolbar = {
         let toSet = Number(this.elements.canvasHeight.value);
 
         // Sanitize
-        if(toSet == NaN || toSet < 1 || !Number.isInteger(toSet)) {
+        if(Number.isNaN(toSet) || toSet < 1 || !Number.isInteger(toSet)) {
             this.elements.canvasHeightAlert.classList.remove("hide");
             this.inputStatus.canvasHeight = false;
         }
