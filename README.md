@@ -17,6 +17,7 @@ Main page is located at [main.html](https://tang0226.github.io/fracture/main)
     * Press Esc to cancel a drag
 * Center the image with Ctrl + click
 * Use Alt + click to view a point's corresponding Juila set or to switch back to the original image
+* More features and fractals coming!
 
 ## Coding todo list:
 * Add more toolbar options:
