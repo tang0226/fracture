@@ -78,3 +78,5 @@ Complex.exp = function(c, e) {
 Complex.abs = function(c) {
     return (c.re ** 2 + c.im ** 2) ** 0.5;
 };
+
+export default Complex;
