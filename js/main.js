@@ -1,7 +1,18 @@
+import {rgb, hsl, scale} from "./modules/utils.js";
+import Complex from "./modules/complex.js";
+import {
+    Mandelbrot, Julia, Multibrot, Multijulia,
+    BurningShip, BurningShipJulia, Multiship, MultishipJulia,
+    requiresExponent, requiresJuliaConstant, getJuliaEquivalent
+} from "./modules/fractal.js";
+import Frame from "./modules/frame.js";
+import Image from "./modules/image.js";
+
+
 var canvas = document.getElementById("canvas");
 var canvasCtx = canvas.getContext("2d");
 var controlsCanvas = document.getElementById("controls-canvas");
-var controlscanvasCtx = controlsCanvas.getContext("2d");
+var controlsCanvasCtx = controlsCanvas.getContext("2d");
 
 var canvasWidth = 600;
 var canvasHeight = 600;
@@ -19,39 +30,21 @@ setCanvasDim(canvasWidth, canvasHeight);
 
 
 
-// Color functions
-var hsl = function(h, s, l) {
-    return `hsl(${h}, ${s}%, ${l}%)`;
-}
-
-var rgb = function(r, g, b) {
-    return `rgb(${r}, ${g}, ${b})`;
-}
-
-
-
-// Math functions
-var scale = function(n, minFrom, maxFrom, minTo, maxTo) {
-    return ((n / (maxFrom - minFrom)) * (maxTo - minTo)) + minTo;
-};
-
-
-
 // Frames
 var defaultView = new Frame(Complex(0, 0), 4, 4);
 
 
-
+var canvasParams = [canvasWidth, canvasHeight, canvasCtx];
 // Images
 var defaultImages = {
-    Mandelbrot: new Image(new Mandelbrot(), 100, new Frame(Complex(-0.5, 0), 4, 4)),
-    Julia: new Image(new Julia(Complex(-0.8, 0.156)), 100, defaultView),
-    Multibrot: new Image(new Multibrot(3), 100, defaultView),
-    Multijulia: new Image(new Multijulia(3, Complex(-0.12, -0.8)), 100, defaultView),
-    BurningShip: new Image(new BurningShip(), 100, new Frame(Complex(0, -0.5), 4, 4)),
-    BurningShipJulia: new Image(new BurningShipJulia(Complex(-1.5, 0)), 100, defaultView),
-    Multiship: new Image(new Multiship(3), 100, defaultView),
-    MultishipJulia: new Image(new MultishipJulia(3, Complex(-1.326667, 0)), 100, defaultView)
+    Mandelbrot: new Image(new Mandelbrot(), 100, new Frame(Complex(-0.5, 0), 4, 4), ...canvasParams),
+    Julia: new Image(new Julia(Complex(-0.8, 0.156)), 100, defaultView, ...canvasParams),
+    Multibrot: new Image(new Multibrot(3), 100, defaultView, ...canvasParams),
+    Multijulia: new Image(new Multijulia(3, Complex(-0.12, -0.8)), 100, defaultView, ...canvasParams),
+    BurningShip: new Image(new BurningShip(), 100, new Frame(Complex(0, -0.5), 4, 4), ...canvasParams),
+    BurningShipJulia: new Image(new BurningShipJulia(Complex(-1.5, 0)), 100, defaultView, ...canvasParams),
+    Multiship: new Image(new Multiship(3), 100, defaultView, ...canvasParams),
+    MultishipJulia: new Image(new MultishipJulia(3, Complex(-1.326667, 0)), 100, defaultView, ...canvasParams)
 };
 
 
@@ -76,6 +69,11 @@ var toolbar = {
         clickZoomFactor: document.getElementById("click-zoom-factor"),
         canvasWidth: document.getElementById("canvas-width"),
         canvasHeight: document.getElementById("canvas-height"),
+
+        // Buttons
+        increaseIterations: document.getElementById("increase-iterations"),
+        decreaseIterations: document.getElementById("decrease-iterations"),
+        redraw: document.getElementById("redraw"),
 
         // Alerts
         exponentAlert: document.getElementById("exponent-alert"),
@@ -110,6 +108,7 @@ var toolbar = {
 
     // For currently undefined variables
     init() {
+        // Internal input variables
         this.fractalType = this.lastFractalType = currImg.getFractalType();
         this.exponent = this.lastExponent = currImg.fractal.e || null;
         this.juliaConstant = this.lastJuliaConstant = currImg.fractal.c || Complex(null, null);1001
@@ -121,6 +120,45 @@ var toolbar = {
         this.elements.canvasHeight.value = canvasHeight;
         this.canvasWidth = canvasWidth;
         this.canvasHeight = canvasHeight;
+
+        // Inputs
+        this.elements.fractalType.onchange = function() {
+            toolbar.updateInternalFractalType();
+        };
+        this.elements.exponent.onchange = function() {
+            toolbar.updateInternalExponent();
+        };
+        this.elements.juliaConstant.onchange = function() {
+            toolbar.updateInternalJuliaConstant();
+        };
+        this.elements.iterations.onchange = function() {
+            toolbar.updateInternalIterations();
+        };
+        this.elements.iterationIncrement.onchange = function() {
+            toolbar.updateInternalIterationIncrement();
+        };
+        this.elements.clickZoomFactor.onchange = function() {
+            toolbar.updateInternalCZF();
+        };
+        this.elements.canvasWidth.onchange = function() {
+            toolbar.updateInternalCanvasWidth();
+        }
+        this.elements.canvasHeight.onchange = function() {
+            toolbar.updateInternalCanvasHeight();
+        };
+
+        // Buttons
+        this.elements.increaseIterations.onclick = function() {
+            toolbar.increaseIterations();
+        };
+        this.elements.decreaseIterations.onclick = function() {
+            toolbar.decreaseIterations();
+        };
+        this.elements.redraw.onclick = function() {
+            toolbar.redrawImage();
+        }
+
+        // Display
         this.resetMouseComplexCoords();
         this.displayIterations();
         this.updateZoom();
@@ -135,7 +173,7 @@ var toolbar = {
 
     // Mouse complex coordinates
     displayMouseComplexCoords() {
-        let complexCoords = currImg.frame.toComplexCoords(mouseX, mouseY);
+        let complexCoords = currImg.frame.toComplexCoords(mouseX, mouseY, canvasWidth, canvasHeight);
         let complexRe = complexCoords.re.toString();
         let complexIm = complexCoords.im.toString();
         if(Number(complexIm) >= 0) {
@@ -385,7 +423,7 @@ var toolbar = {
         }
 
         // Prepare the image to be redrawn
-        currImg.fitToCanvas();
+        currImg.fitToCanvas(canvasWidth, canvasHeight);
         currImg.reset();
     },
 
@@ -440,7 +478,7 @@ var resetDrag = function() {
     mouseDown = false;
     startDragX = null;
     startDragY = null;
-    controlscanvasCtx.clearRect(0, 0, canvasWidth, canvasHeight);
+    controlsCanvasCtx.clearRect(0, 0, canvasWidth, canvasHeight);
 };
 
 
@@ -460,12 +498,13 @@ controlsCanvas.onmousedown = function(event) {
 // Based on mouse coordinates, click/drag,
 // and keyboard events, draw the new image
 controlsCanvas.onmouseup = function() {
+    
     // Glitch-proofing
     if(!mouseDown) {
         return;
     }
 
-    let newFrame;
+    let newFrame = false;
 
     // Click
     if(mouseX == startDragX && mouseY == startDragY) {
@@ -483,28 +522,23 @@ controlsCanvas.onmouseup = function() {
 
                     // Initialize new image based on Julia
                     // equivalent of previous fractal
-                    newFractal = getJuliaEquivalent(currImg.getFractalType());
+                    let newFractal = getJuliaEquivalent(currImg.getFractalType());
                     currImg = defaultImages[newFractal].copy();
 
                     // New fractal requires a julia constant,
                     // but not necessarily an exponent
-                    currImg.fractal.c = storedImg.frame.toComplexCoords(mouseX, mouseY);
+                    currImg.fractal.c = storedImg.frame.toComplexCoords(mouseX, mouseY, canvasWidth, canvasHeight);
                     if(requiresExponent(newFractal)) {
                         currImg.fractal.e = storedImg.fractal.e;
                     }
-
-                    // Draw the new image
-                    currImg.reset();
                 }
             }
 
             else {
-
                 // Return to default mode
                 currMode = "default";
                 currImg = storedImg.copy();
                 storedImg = null;
-                currImg.reset();
             }
 
             toolbar.syncWithImage();
@@ -514,7 +548,7 @@ controlsCanvas.onmouseup = function() {
         else if(keys["Control"]) {
             let currFrame = currImg.frame;
             newFrame = new Frame(
-                currFrame.toComplexCoords(mouseX, mouseY),
+                currFrame.toComplexCoords(mouseX, mouseY, canvasWidth, canvasHeight),
                 currFrame.reWidth,
                 currFrame.imHeight
             );
@@ -545,7 +579,7 @@ controlsCanvas.onmouseup = function() {
             }
 
             // Update frame
-            let focus = currImg.frame.toComplexCoords(mouseX, mouseY);
+            let focus = currImg.frame.toComplexCoords(mouseX, mouseY, canvasWidth, canvasHeight);
             newFrame = new Frame(
                 Complex(
                     focus.re - (xOffset * newReWidth / canvasWidth),
@@ -571,10 +605,11 @@ controlsCanvas.onmouseup = function() {
     // Update frame
     if(newFrame) {
         currImg.setFrame(newFrame);
-        currImg.fitToCanvas();
-        toolbar.updateZoom();
-        currImg.reset();
     }
+    
+    currImg.fitToCanvas(canvasWidth, canvasHeight);
+    toolbar.updateZoom();
+    currImg.reset();
 
     // Reset drag
     resetDrag();
@@ -586,9 +621,9 @@ controlsCanvas.onmousemove = function(event) {
     mouseY = event.offsetY;
     toolbar.displayMouseComplexCoords();
     if(mouseDown) {
-        controlscanvasCtx.clearRect(0, 0, canvasWidth, canvasHeight);
-        controlscanvasCtx.strokeStyle = rgb(255, 0, 0);
-        controlscanvasCtx.strokeRect(
+        controlsCanvasCtx.clearRect(0, 0, canvasWidth, canvasHeight);
+        controlsCanvasCtx.strokeStyle = rgb(255, 0, 0);
+        controlsCanvasCtx.strokeRect(
             Math.min(startDragX, mouseX),
             Math.min(startDragY, mouseY),
             Math.abs(mouseX - startDragX),
@@ -642,6 +677,7 @@ window.onblur = function() {
 var draw = function() {
     if(currImg.drawing) {
         currImg.drawLayer();
+        toolbar.displayRenderTime();
     };
     setTimeout(draw, 0);
 };
