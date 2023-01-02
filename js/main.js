@@ -142,7 +142,8 @@ var toolbar = {
         // Internal input variables
         this.fractalType = this.lastFractalType = currImg.getFractalType();
         this.exponent = this.lastExponent = currImg.fractal.e || null;
-        this.juliaConstant = this.lastJuliaConstant = currImg.fractal.c || Complex(null, null);1001
+        this.juliaConstant = this.lastJuliaConstant =
+            currImg.fractal.c || Complex(null, null);
         this.iterations = currImg.iterations;
         this.iterationIncrement = Number(this.elements.iterationIncrement.value);
         this.zoom = currImg.frame.toZoom();
@@ -204,7 +205,10 @@ var toolbar = {
 
     // Mouse complex coordinates
     displayMouseComplexCoords() {
-        let complexCoords = currImg.frame.toComplexCoords(mouseX, mouseY, canvasWidth, canvasHeight);
+        let complexCoords = currImg.frame.toComplexCoords(
+            mouseX, mouseY,
+            canvasWidth, canvasHeight
+        );
         let complexRe = complexCoords.re.toString();
         let complexIm = complexCoords.im.toString();
         if(Number(complexIm) >= 0) {
@@ -558,7 +562,10 @@ controlsCanvas.onmouseup = function() {
 
                     // New fractal requires a julia constant,
                     // but not necessarily an exponent
-                    currImg.fractal.c = storedImg.frame.toComplexCoords(mouseX, mouseY, canvasWidth, canvasHeight);
+                    currImg.fractal.c = storedImg.frame.toComplexCoords(
+                        mouseX, mouseY,
+                        canvasWidth, canvasHeight
+                    );
                     if(requiresExponent(newFractal)) {
                         currImg.fractal.e = storedImg.fractal.e;
                     }
@@ -610,7 +617,10 @@ controlsCanvas.onmouseup = function() {
             }
 
             // Update frame
-            let focus = currImg.frame.toComplexCoords(mouseX, mouseY, canvasWidth, canvasHeight);
+            let focus = currImg.frame.toComplexCoords(
+                mouseX, mouseY,
+                canvasWidth, canvasHeight
+            );
             newFrame = new Frame(
                 Complex(
                     focus.re - (xOffset * newReWidth / canvasWidth),
