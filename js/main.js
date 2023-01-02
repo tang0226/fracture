@@ -34,17 +34,48 @@ setCanvasDim(canvasWidth, canvasHeight);
 var defaultView = new Frame(Complex(0, 0), 4, 4);
 
 
-var canvasParams = [canvasWidth, canvasHeight, canvasCtx];
 // Images
 var defaultImages = {
-    Mandelbrot: new Image(new Mandelbrot(), 100, new Frame(Complex(-0.5, 0), 4, 4), ...canvasParams),
-    Julia: new Image(new Julia(Complex(-0.8, 0.156)), 100, defaultView, ...canvasParams),
-    Multibrot: new Image(new Multibrot(3), 100, defaultView, ...canvasParams),
-    Multijulia: new Image(new Multijulia(3, Complex(-0.12, -0.8)), 100, defaultView, ...canvasParams),
-    BurningShip: new Image(new BurningShip(), 100, new Frame(Complex(0, -0.5), 4, 4), ...canvasParams),
-    BurningShipJulia: new Image(new BurningShipJulia(Complex(-1.5, 0)), 100, defaultView, ...canvasParams),
-    Multiship: new Image(new Multiship(3), 100, defaultView, ...canvasParams),
-    MultishipJulia: new Image(new MultishipJulia(3, Complex(-1.326667, 0)), 100, defaultView, ...canvasParams)
+    Mandelbrot: new Image(
+        new Mandelbrot(), 100,
+        new Frame(Complex(-0.5, 0), 4, 4),
+        canvasWidth, canvasHeight, canvasCtx
+    ),
+    Julia: new Image(
+        new Julia(Complex(-0.8, 0.156)), 100,
+        defaultView,
+        canvasWidth, canvasHeight, canvasCtx
+    ),
+    Multibrot: new Image(
+        new Multibrot(3), 100,
+        defaultView,
+        canvasWidth, canvasHeight, canvasCtx
+    ),
+    Multijulia: new Image(
+        new Multijulia(3, Complex(-0.12, -0.8)), 100,
+        defaultView,
+        canvasWidth, canvasHeight, canvasCtx
+    ),
+    BurningShip: new Image(
+        new BurningShip(), 100,
+        new Frame(Complex(0, -0.5), 4, 4),
+        canvasWidth, canvasHeight, canvasCtx
+    ),
+    BurningShipJulia: new Image(
+        new BurningShipJulia(Complex(-1.5, 0)), 100,
+        defaultView,
+        canvasWidth, canvasHeight, canvasCtx
+    ),
+    Multiship: new Image(
+        new Multiship(3), 100,
+        defaultView,
+        canvasWidth, canvasHeight, canvasCtx
+    ),
+    MultishipJulia: new Image(
+        new MultishipJulia(3, Complex(-1.326667, 0)), 100,
+        defaultView,
+        canvasWidth, canvasHeight, canvasCtx
+    )
 };
 
 
