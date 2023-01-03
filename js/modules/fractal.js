@@ -6,10 +6,10 @@ FRACTAL PROTOTYPES: THEORETICAL MATHEMATICAL SETS IN THE COMPLEX PLANE:
 
 var Mandelbrot = function() {};
 
-Mandelbrot.prototype.iterate = function(c, iterations) {
+Mandelbrot.prototype.iterate = function(c, iterations, escapeRadius) {
     let z = Complex(0, 0);
     let n = 0;
-    while(Complex.abs(z) <= 2 && n < iterations) {
+    while(Complex.abs(z) <= escapeRadius && n < iterations) {
         z = Complex.add(Complex.mul(z, z), c);
         n++;
     }
@@ -22,10 +22,10 @@ var Julia = function(c) {
     this.c = c;
 };
 
-Julia.prototype.iterate = function(_z, iterations) {
+Julia.prototype.iterate = function(_z, iterations, escapeRadius) {
     let z = _z;
     let n = 0;
-    while(Complex.abs(z) <= 2 && n < iterations) {
+    while(Complex.abs(z) <= escapeRadius && n < iterations) {
         z = Complex.add(Complex.mul(z, z), this.c);
         n++;
     }
@@ -38,10 +38,10 @@ var Multibrot = function(e) {
     this.e = e;
 };
 
-Multibrot.prototype.iterate = function(c, iterations) {
+Multibrot.prototype.iterate = function(c, iterations, escapeRadius) {
     let z = Complex(0, 0);
     let n = 0;
-    while(Complex.abs(z) <= 2 && n < iterations) {
+    while(Complex.abs(z) <= escapeRadius && n < iterations) {
         z = Complex.add(Complex.exp(z, this.e), c);
         n++;
     }
@@ -55,10 +55,10 @@ var Multijulia = function(e, c) {
     this.c = c;
 }; 
 
-Multijulia.prototype.iterate = function(_z, iterations) {
+Multijulia.prototype.iterate = function(_z, iterations, escapeRadius) {
     let z = _z;
     let n = 0;
-    while(Complex.abs(z) <= 2 && n < iterations) {
+    while(Complex.abs(z) <= escapeRadius && n < iterations) {
         z = Complex.add(Complex.exp(z, this.e), this.c);
         n++;
     }
@@ -69,10 +69,10 @@ Multijulia.prototype.iterate = function(_z, iterations) {
 
 var BurningShip = function() {};
 
-BurningShip.prototype.iterate = function(c, iterations) {
+BurningShip.prototype.iterate = function(c, iterations, escapeRadius) {
     let z = Complex(0, 0);
     let n = 0;
-    while(Complex.abs(z) <= 2 && n < iterations) {
+    while(Complex.abs(z) <= escapeRadius && n < iterations) {
         z = Complex.add(Complex.exp(Complex(Math.abs(z.re), Math.abs(z.im)), 2), c);
         n++;
     }
@@ -85,10 +85,10 @@ var BurningShipJulia = function(c) {
     this.c = c;
 };
 
-BurningShipJulia.prototype.iterate = function(_z, iterations) {
+BurningShipJulia.prototype.iterate = function(_z, iterations, escapeRadius) {
     let z = _z;
     let n = 0;
-    while(Complex.abs(z) <= 2 && n < iterations) {
+    while(Complex.abs(z) <= escapeRadius && n < iterations) {
         z = Complex.add(Complex.exp(Complex(Math.abs(z.re), Math.abs(z.im)), 2), this.c);
         n++;
     }
@@ -100,10 +100,10 @@ BurningShipJulia.prototype.iterate = function(_z, iterations) {
 var Multiship = function(e) {
     this.e = e;
 };
-Multiship.prototype.iterate = function(c, iterations) {
+Multiship.prototype.iterate = function(c, iterations, escapeRadius) {
     let z = Complex(0, 0);
     let n = 0;
-    while(Complex.abs(z) <= 2 && n < iterations) {
+    while(Complex.abs(z) <= escapeRadius && n < iterations) {
         z = Complex.add(Complex.exp(Complex(Math.abs(z.re), Math.abs(z.im)), this.e), c);
         n++;
     }
@@ -117,10 +117,10 @@ var MultishipJulia = function(e, c) {
     this.c = c;
 };
 
-MultishipJulia.prototype.iterate = function(_z, iterations) {
+MultishipJulia.prototype.iterate = function(_z, iterations, escapeRadius) {
     let z = _z;
     let n = 0;
-    while(Complex.abs(z) <= 2 && n < iterations) {
+    while(Complex.abs(z) <= escapeRadius && n < iterations) {
         z = Complex.add(Complex.exp(Complex(Math.abs(z.re), Math.abs(z.im)), this.e), this.c);
         n++;
     }

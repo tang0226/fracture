@@ -5,9 +5,10 @@ import Complex from "./complex.js";
 IMAGE PROTOTYPE: RENDERING OF A FRACTAL WITH ITERATIONS, FRAME, AND CANVAS SIZE
 ******************************/
 
-var Image = function(fractal, iterations, srcFrame, width, height, canvasCtx) {
+var Image = function(fractal, iterations, escapeRadius, srcFrame, width, height, canvasCtx) {
     this.fractal = fractal;
     this.iterations = iterations;
+    this.escapeRadius = escapeRadius;
 
     this.srcFrame = srcFrame;
     this.frame = srcFrame.fitToCanvas(width, height);
@@ -61,7 +62,11 @@ Image.prototype.drawLayer = function() {
     let currRe = this.frame.reMin;
     for(let currX = 0; currX < this.width; currX++) {
 
-        let val = this.fractal.iterate(Complex(currRe, this.currIm), this.iterations);
+        let val = this.fractal.iterate(
+            Complex(currRe, this.currIm),
+            this.iterations,
+            this.escapeRadius
+        );
         
         if(val == this.iterations) {
             // Part of set, color black
@@ -106,7 +111,8 @@ Image.prototype.reset = function() {
 // Return a deep copy of self: critical for fractal picking
 Image.prototype.copy = function() {
     return new Image(
-        this.fractal, this.iterations,
+        this.fractal,
+        this.iterations, this.escapeRadius,
         this.srcFrame,
         this.width, this.height,
         this.canvasCtx

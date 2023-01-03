@@ -37,42 +37,50 @@ var defaultView = new Frame(Complex(0, 0), 4, 4);
 // Images
 var defaultImages = {
     Mandelbrot: new Image(
-        new Mandelbrot(), 100,
+        new Mandelbrot(),
+        100, 2,
         new Frame(Complex(-0.5, 0), 4, 4),
         canvasWidth, canvasHeight, canvasCtx
     ),
     Julia: new Image(
-        new Julia(Complex(-0.8, 0.156)), 100,
+        new Julia(Complex(-0.8, 0.156)),
+        100, 2,
         defaultView,
         canvasWidth, canvasHeight, canvasCtx
     ),
     Multibrot: new Image(
-        new Multibrot(3), 100,
+        new Multibrot(3),
+        100, 2,
         defaultView,
         canvasWidth, canvasHeight, canvasCtx
     ),
     Multijulia: new Image(
-        new Multijulia(3, Complex(-0.12, -0.8)), 100,
+        new Multijulia(3, Complex(-0.12, -0.8)),
+        100, 2,
         defaultView,
         canvasWidth, canvasHeight, canvasCtx
     ),
     BurningShip: new Image(
-        new BurningShip(), 100,
+        new BurningShip(),
+        100, 2,
         new Frame(Complex(0, -0.5), 4, 4),
         canvasWidth, canvasHeight, canvasCtx
     ),
     BurningShipJulia: new Image(
-        new BurningShipJulia(Complex(-1.5, 0)), 100,
+        new BurningShipJulia(Complex(-1.5, 0)),
+        100, 2,
         defaultView,
         canvasWidth, canvasHeight, canvasCtx
     ),
     Multiship: new Image(
-        new Multiship(3), 100,
+        new Multiship(3),
+        100, 2,
         defaultView,
         canvasWidth, canvasHeight, canvasCtx
     ),
     MultishipJulia: new Image(
-        new MultishipJulia(3, Complex(-1.326667, 0)), 100,
+        new MultishipJulia(3, Complex(-1.326667, 0)),
+        100, 2,
         defaultView,
         canvasWidth, canvasHeight, canvasCtx
     )
@@ -97,6 +105,7 @@ var toolbar = {
         juliaConstant: document.getElementById("julia-constant"),
         iterations: document.getElementById("iterations"),
         iterationIncrement: document.getElementById("iteration-increment"),
+        escapeRadius: document.getElementById("escape-radius"),
         clickZoomFactor: document.getElementById("click-zoom-factor"),
         canvasWidth: document.getElementById("canvas-width"),
         canvasHeight: document.getElementById("canvas-height"),
@@ -111,6 +120,7 @@ var toolbar = {
         juliaConstantAlert: document.getElementById("julia-constant-alert"),
         iterationsAlert: document.getElementById("iterations-alert"),
         iterationIncrementAlert: document.getElementById("iteration-increment-alert"),
+        escapeRadiusAlert: document.getElementById("escape-radius-alert"),
         clickZoomFactorAlert: document.getElementById("click-zoom-factor-alert"),
         canvasWidthAlert: document.getElementById("canvas-width-alert"),
         canvasHeightAlert: document.getElementById("canvas-height-alert"),
@@ -131,6 +141,7 @@ var toolbar = {
         juliaConstant: true,
         iterations: true,
         iterationIncrement: true,
+        escapeRadius: true,
         clickZoomFactor: true,
         canvasWidth: true,
         canvasHeight: true
@@ -146,6 +157,7 @@ var toolbar = {
             currImg.fractal.c || Complex(null, null);
         this.iterations = currImg.iterations;
         this.iterationIncrement = Number(this.elements.iterationIncrement.value);
+        this.escapeRadius = Number(this.elements.escapeRadius.value);
         this.zoom = currImg.frame.toZoom();
         this.clickZoomFactor = Number(this.elements.clickZoomFactor.value);
         this.elements.canvasWidth.value = canvasWidth;
@@ -168,6 +180,9 @@ var toolbar = {
         };
         this.elements.iterationIncrement.onchange = function() {
             toolbar.updateInternalIterationIncrement();
+        };
+        this.elements.escapeRadius.onchange = function() {
+            toolbar.updateInternalEscapeRadius();
         };
         this.elements.clickZoomFactor.onchange = function() {
             toolbar.updateInternalCZF();
@@ -280,7 +295,7 @@ var toolbar = {
 
 
 
-    // Iterations
+    // Image quality (iterations and escape radius)
 
     // Display internal iterations
     displayIterations() {
@@ -333,6 +348,23 @@ var toolbar = {
     // For -iterations button
     decreaseIterations() {
         this.setIterations(this.iterations - this.iterationIncrement);
+    },
+
+
+    // Escape radius
+    updateInternalEscapeRadius() {
+        let toSet = Number(this.elements.escapeRadius.value);
+
+        // Sanitize
+        if(Number.isNaN(toSet) || toSet < 2) {
+            this.elements.escapeRadiusAlert.classList.remove("hide");
+            this.inputStatus.escapeRadius = false;
+        }
+        else {
+            this.escapeRadius = toSet;
+            this.elements.escapeRadiusAlert.classList.add("hide");
+            this.inputStatus.escapeRadius = true;
+        }
     },
 
 
@@ -449,6 +481,9 @@ var toolbar = {
 
         // Update image iterations
         currImg.iterations = this.iterations;
+
+        // Update image escape radius
+        currImg.escapeRadius = this.escapeRadius;
 
         // Exit Julia mode if the fractal was changed
         if(fractalChanged && currMode == "julia") {
