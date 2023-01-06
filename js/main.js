@@ -82,6 +82,7 @@ var storedImg = null;
 var currMode = "default";
 
 
+var renderInProgress = true;
 
 // Render worker
 var renderWorker = new Worker("./js/render.js");
@@ -95,6 +96,7 @@ renderWorker.onmessage = function(event) {
     if(data.type == "done") {
         canvasCtx.putImageData(data.imgData, 0, 0);
         toolbar.displayRenderTime(data.renderTime);
+        renderInProgress = false;
     }
 };
 
@@ -102,7 +104,8 @@ var draw = function() {
     renderWorker.postMessage({
         type: "draw",
         img: currImg
-    })
+    });
+    renderInProgress = true;
 };
 
 
@@ -453,6 +456,10 @@ var toolbar = {
 
     // Redraw
     redrawImage() {
+        if(renderInProgress) {
+            return;
+        }
+
         // Check for bad inputs
         for(let key in this.inputStatus) {
             if(!this.inputStatus[key]) {
@@ -578,6 +585,10 @@ var resetDrag = function() {
 // Mouse Events
 
 controlsCanvas.onmousedown = function(event) {
+    if(renderInProgress) {
+        return;
+    }
+
     if(event.buttons == 1) {
         if(!mouseDown) {
             startDragX = mouseX;
@@ -591,9 +602,12 @@ controlsCanvas.onmousedown = function(event) {
 // Based on mouse coordinates, click/drag,
 // and keyboard events, draw the new image
 controlsCanvas.onmouseup = function() {
-    
     // Glitch-proofing
     if(!mouseDown) {
+        return;
+    }
+
+    if(renderInProgress) {
         return;
     }
 

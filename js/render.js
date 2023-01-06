@@ -15,6 +15,7 @@ onmessage = function(event) {
         let i = 0;
         for(let currY = 0; currY < img.height; currY++) {
             let re = img.frame.reMin;
+
             for(let currX = 0; currX < img.width; currX++) {
                 let val = iterate(
                     img.fractal.params,
@@ -52,6 +53,7 @@ onmessage = function(event) {
                 renderTime: renderTime
             });
         }
+        
         postMessage({
             type: "done",
             imgData: imgData,
