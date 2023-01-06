@@ -29,49 +29,49 @@ var defaultImages = {
         new Fractal("Mandelbrot"),
         100, 2,
         new Frame(Complex(-0.5, 0), 4, 4),
-        canvasWidth, canvasHeight, canvasCtx
+        canvasWidth, canvasHeight
     ),
     Julia: new Image(
         new Fractal("Julia", {c: Complex(-0.8, 0.156)}),
         100, 2,
         defaultView,
-        canvasWidth, canvasHeight, canvasCtx
+        canvasWidth, canvasHeight
     ),
     Multibrot: new Image(
         new Fractal("Multibrot", {e: 3}),
         100, 2,
         defaultView,
-        canvasWidth, canvasHeight, canvasCtx
+        canvasWidth, canvasHeight
     ),
     Multijulia: new Image(
         new Fractal("Multijulia", {e: 3, c: Complex(-0.12, -0.8)}),
         100, 2,
         defaultView,
-        canvasWidth, canvasHeight, canvasCtx
+        canvasWidth, canvasHeight
     ),
     BurningShip: new Image(
         new Fractal("BurningShip"),
         100, 2,
         new Frame(Complex(0, -0.5), 4, 4),
-        canvasWidth, canvasHeight, canvasCtx
+        canvasWidth, canvasHeight
     ),
     BurningShipJulia: new Image(
         new Fractal("BurningShipJulia", {c: Complex(-1.5, 0)}),
         100, 2,
         defaultView,
-        canvasWidth, canvasHeight, canvasCtx
+        canvasWidth, canvasHeight
     ),
     Multiship: new Image(
         new Fractal("Multiship", {e: 3}),
         100, 2,
         defaultView,
-        canvasWidth, canvasHeight, canvasCtx
+        canvasWidth, canvasHeight
     ),
     MultishipJulia: new Image(
         new Fractal("MultishipJulia", {e: 3, c: Complex(-1.326667, 0)}),
         100, 2,
         defaultView,
-        canvasWidth, canvasHeight, canvasCtx
+        canvasWidth, canvasHeight
     )
 };
 
@@ -80,6 +80,29 @@ var defaultImages = {
 var currImg = defaultImages.Mandelbrot.copy();
 var storedImg = null;
 var currMode = "default";
+
+
+
+// Render worker
+var renderWorker = new Worker("./js/render.js");
+
+renderWorker.onmessage = function(event) {
+    let data = event.data;
+    if(data.type == "progress") {
+        toolbar.displayRenderTime(data.renderTime);
+    }
+    if(data.type == "done") {
+        canvasCtx.putImageData(data.imgData, 0, 0);
+        toolbar.displayRenderTime(data.renderTime);
+    }
+};
+
+var draw = function() {
+    renderWorker.postMessage({
+        type: "draw",
+        img: currImg
+    })
+};
 
 
 
@@ -202,8 +225,8 @@ var toolbar = {
 
 
     // Render time
-    displayRenderTime() {
-        this.elements.renderTime.innerHTML = currImg.renderTime.toString();
+    displayRenderTime(time) {
+        this.elements.renderTime.innerHTML = time.toString();
     },
 
 
@@ -483,7 +506,8 @@ var toolbar = {
 
         // Prepare the image to be redrawn
         currImg.fitToCanvas(canvasWidth, canvasHeight);
-        currImg.reset();
+
+        draw();
     },
 
 
@@ -674,7 +698,7 @@ controlsCanvas.onmouseup = function() {
     
     currImg.fitToCanvas(canvasWidth, canvasHeight);
     toolbar.updateZoom();
-    currImg.reset();
+    draw();
 
     // Reset drag
     resetDrag();
@@ -738,17 +762,6 @@ window.onblur = function() {
 
 
 
-// Draw loop
-var draw = function() {
-    if(currImg.drawing) {
-        currImg.drawLayer();
-        toolbar.displayRenderTime();
-    };
-    setTimeout(draw, 0);
-};
-
-
 // Run:
 toolbar.init();
-currImg.reset();
 draw();

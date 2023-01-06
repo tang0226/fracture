@@ -2,7 +2,7 @@
 IMAGE PROTOTYPE: RENDERING OF A FRACTAL WITH ITERATIONS, FRAME, AND CANVAS SIZE
 ******************************/
 
-var Image = function(fractal, iterations, escapeRadius, srcFrame, width, height, canvasCtx) {
+var Image = function(fractal, iterations, escapeRadius, srcFrame, width, height) {
     this.fractal = fractal;
     this.iterations = iterations;
     this.escapeRadius = escapeRadius;
@@ -12,8 +12,6 @@ var Image = function(fractal, iterations, escapeRadius, srcFrame, width, height,
 
     this.width = width;
     this.height = height;
-
-    this.canvasCtx = canvasCtx;
     
     // Distance between pixels on the complex plane
     this.complexIter = 
@@ -45,49 +43,6 @@ Image.prototype.fitToCanvas = function(width, height) {
 // Set the source frame
 Image.prototype.setFrame = function(srcFrame) {
     this.srcFrame = srcFrame;
-};
-
-
-// Draw one layer, moving down
-Image.prototype.drawLayer = function() {
-    let currRe = this.frame.reMin;
-    for(let currX = 0; currX < this.width; currX++) {
-
-        let val = iterateFractal[this.fractal.type](
-            this.fractal.params,
-            Complex(currRe, this.currIm),
-            this.iterations,
-            this.escapeRadius
-        );
-        
-        if(val == this.iterations) {
-            // Part of set, color black
-            this.canvasCtx.fillStyle = hsl(0, 0, 0);
-        }
-        else {
-            // Color scale: HSL (0-360, 100, 0-100)
-            this.canvasCtx.fillStyle = hsl(
-                scale(val, 0, this.iterations, 0, 360),
-                100,
-                scale(val, 0, this.iterations, 0, 100)
-            );
-        }
-        
-        this.canvasCtx.fillRect(currX, this.currY, 1, 1);
-        
-        currRe += this.complexIter;
-    };
-    
-    this.currY += 1;
-    this.currIm += this.complexIter;
-    
-    // Stop if at the bottom of the canvas
-    if(this.currY > this.height) {
-        this.drawing = false;
-    }
-
-    // Update render time
-    this.renderTime = new Date() - this.startTime;
 };
 
 
