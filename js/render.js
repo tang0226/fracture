@@ -46,13 +46,13 @@ onmessage = function(event) {
             // Update render time
             renderTime = new Date() - startTime;
 
-            this.postMessage({
+            postMessage({
                 type: "progress",
                 progress: Math.round(i / 4 / (img.width * img.height) * 100),
                 renderTime: renderTime
             });
         }
-        this.postMessage({
+        postMessage({
             type: "done",
             imgData: imgData,
             renderTime: renderTime
