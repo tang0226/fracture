@@ -9,8 +9,11 @@ Main page is located at [main.html](https://tang0226.github.io/fracture/main)
   * Burning Ship Julia sets
   * Multiship fractals (Burning Ships with an exponent other than 2)
   * Multiship Julia sets (Burning Ship Julia sets with an exponent other than 2)
-* Adjustable iterations
-* Adjustable canvas size
+* Adjustable parameters:
+  * Iterations
+  * Canvas size
+  * Escape radius
+  * Julia constants and exponents
 * Zooming:
   * Clicking (to focus on a point)
   * Drag and release (to focus on a region)
@@ -21,14 +24,11 @@ Main page is located at [main.html](https://tang0226.github.io/fracture/main)
 
 ## Coding todo list:
 * Add more toolbar options:
-  * Set window
-  * Set zoom
   * Image quality:
     * Anti-aliasing
-    * Smoothed coloring
+    * Smooth coloring
     * More color options (aka premade palettes / coloring functions)
     * (harder) Custom palettes?
-  * (as more toolbar features are added): input sanitization (maybe separate module for tests?)
 * Add new fractals:
   * Rational maps
   * Phoenix fractal (feedback from previous iterations)
@@ -38,8 +38,10 @@ Main page is located at [main.html](https://tang0226.github.io/fracture/main)
     * Equation
     * Iteration style: Mandelbrot or Julia
     * Misc. math functions (abs, log, trig functions)
+    * Feedback from previous iterations
 * Prevent scientific notation for complex coordinates (especially close to im = 0)
 * Pause render time timer when window loses focus
+* Add help section/popup
 
 ## Samples:
 ![mandelbrot set](https://github.com/tang0226/fractal/blob/master/samples/mandelbrot_set.png?raw=true)

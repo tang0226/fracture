@@ -12,17 +12,25 @@
         </div>
         <br/>
         <div id="toolbar">
-            <div id="render-time-container">
-                Render time: <div id="render-time" class="inline"></div> ms
+            <div id="progress-toolbar">
+                <div id="progress-container">
+                    Progress: <div id="progress" class="inline"></div>
+                </div>
+                <div id="progress-bar-container">
+                    <progress id="progress-bar" max="100"></progress>
+                </div>
+                <div id="render-time-container">
+                    Render time: <div id="render-time" class="inline"></div>
+                </div>
             </div>
             <hr>
-            <div id="mouse-coords-container">
+            <div id="mouse-coords-toolbar">
                 Mouse coordinates: <div id="mouse-complex-coords" class="inline"></div>
             </div>
             <hr>
             <div id="fractal-toolbar">
                 <div id="fractal-select-container">
-                    Fractal: 
+                    Fractal:
                     <select id="fractal-type" class="inline">
                         <option value="Mandelbrot">Mandelbrot set</option>
                         <option value="Julia">Julia set</option>
