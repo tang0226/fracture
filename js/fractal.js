@@ -4,7 +4,7 @@ FRACTALS: THEORETICAL MATHEMATICAL SETS IN THE COMPLEX PLANE:
 
 var Fractal = function(type, params) {
     this.type = type;
-    this.params = params ? params : {};
+    this.params = params || {};
 };
 
 // Object with iteration functions for each type of fractal
