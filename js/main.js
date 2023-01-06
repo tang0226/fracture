@@ -26,49 +26,49 @@ var defaultView = new Frame(Complex(0, 0), 4, 4);
 // Images
 var defaultImages = {
     Mandelbrot: new Image(
-        new Mandelbrot(),
+        new Fractal("Mandelbrot"),
         100, 2,
         new Frame(Complex(-0.5, 0), 4, 4),
         canvasWidth, canvasHeight, canvasCtx
     ),
     Julia: new Image(
-        new Julia(Complex(-0.8, 0.156)),
+        new Fractal("Julia", {c: Complex(-0.8, 0.156)}),
         100, 2,
         defaultView,
         canvasWidth, canvasHeight, canvasCtx
     ),
     Multibrot: new Image(
-        new Multibrot(3),
+        new Fractal("Multibrot", {e: 3}),
         100, 2,
         defaultView,
         canvasWidth, canvasHeight, canvasCtx
     ),
     Multijulia: new Image(
-        new Multijulia(3, Complex(-0.12, -0.8)),
+        new Fractal("Multijulia", {e: 3, c: Complex(-0.12, -0.8)}),
         100, 2,
         defaultView,
         canvasWidth, canvasHeight, canvasCtx
     ),
     BurningShip: new Image(
-        new BurningShip(),
+        new Fractal("BurningShip"),
         100, 2,
         new Frame(Complex(0, -0.5), 4, 4),
         canvasWidth, canvasHeight, canvasCtx
     ),
     BurningShipJulia: new Image(
-        new BurningShipJulia(Complex(-1.5, 0)),
+        new Fractal("BurningShipJulia", {c: Complex(-1.5, 0)}),
         100, 2,
         defaultView,
         canvasWidth, canvasHeight, canvasCtx
     ),
     Multiship: new Image(
-        new Multiship(3),
+        new Fractal("Multiship", {e: 3}),
         100, 2,
         defaultView,
         canvasWidth, canvasHeight, canvasCtx
     ),
     MultishipJulia: new Image(
-        new MultishipJulia(3, Complex(-1.326667, 0)),
+        new Fractal("MultishipJulia", {e: 3, c: Complex(-1.326667, 0)}),
         100, 2,
         defaultView,
         canvasWidth, canvasHeight, canvasCtx
@@ -140,10 +140,10 @@ var toolbar = {
     // For currently undefined variables
     init() {
         // Internal input variables
-        this.fractalType = this.lastFractalType = currImg.getFractalType();
-        this.exponent = this.lastExponent = currImg.fractal.e || null;
+        this.fractalType = this.lastFractalType = currImg.fractal.type;
+        this.exponent = this.lastExponent = currImg.fractal.params.e || null;
         this.juliaConstant = this.lastJuliaConstant =
-            currImg.fractal.c || Complex(null, null);
+            currImg.fractal.params.c || Complex(null, null);
         this.iterations = currImg.iterations;
         this.iterationIncrement = Number(this.elements.iterationIncrement.value);
         this.escapeRadius = Number(this.elements.escapeRadius.value);
@@ -443,8 +443,8 @@ var toolbar = {
         }
 
         // Check for new exponent
-        if(requiresExponent(currImg.getFractalType())) {
-            currImg.fractal.e = this.exponent;
+        if(requiresExponent(currImg.fractal.type)) {
+            currImg.fractal.params.e = this.exponent;
 
             // If exponent has changed, return to original frame
             // (i.e. don't stay zoomed in, same for Julia constant below)
@@ -455,8 +455,8 @@ var toolbar = {
         }
 
         // Check for new Julia constant
-        if(requiresJuliaConstant(currImg.getFractalType())) {
-            currImg.fractal.c = this.juliaConstant;
+        if(requiresJuliaConstant(currImg.fractal.type)) {
+            currImg.fractal.params.c = this.juliaConstant;
             if(!Complex.equals(this.juliaConstant, this.lastJuliaConstant)) {
                 currImg.setFrame(defaultView);
                 fractalChanged = true;
@@ -494,7 +494,7 @@ var toolbar = {
 
         // Manually set fractal type input and update
         // internals accordingly, a little dirty...
-        this.elements.fractalType.value = currImg.getFractalType();
+        this.elements.fractalType.value = currImg.fractal.type;
         this.updateInternalFractalType();
 
         let currFractal = currImg.fractal;
@@ -502,15 +502,15 @@ var toolbar = {
         this.lastFractalType = currFractal;
 
         // Sync Exponent
-        if(currFractal.e) {
-            this.elements.exponent.value = currFractal.e.toString();
-            this.exponent = this.lastExponent = currFractal.e;
+        if(currFractal.params.e) {
+            this.elements.exponent.value = currFractal.params.e.toString();
+            this.exponent = this.lastExponent = currFractal.params.e;
         }
 
         // Sync Julia constant
-        if(currFractal.c) {
-            this.elements.juliaConstant.value = Complex.toString(currImg.fractal.c);
-            this.juliaConstant = this.lastJuliaConstant = currFractal.c;
+        if(currFractal.params.c) {
+            this.elements.juliaConstant.value = Complex.toString(currImg.fractal.params.c);
+            this.juliaConstant = this.lastJuliaConstant = currFractal.params.c;
         }
 
         // Sync iterations
@@ -573,7 +573,7 @@ controlsCanvas.onmouseup = function() {
                 // Switch to Julia mode
 
                 // Confirm that Julia mode is applicable
-                if(!requiresJuliaConstant(currImg.getFractalType())) {
+                if(!requiresJuliaConstant(currImg.fractal.type)) {
                     currMode = "julia";
 
                     // Store current image for switching back
@@ -581,17 +581,17 @@ controlsCanvas.onmouseup = function() {
 
                     // Initialize new image based on Julia
                     // equivalent of previous fractal
-                    let newFractal = getJuliaEquivalent(currImg.getFractalType());
+                    let newFractal = getJuliaEquivalent(currImg.fractal.type);
                     currImg = defaultImages[newFractal].copy();
 
                     // New fractal requires a julia constant,
                     // but not necessarily an exponent
-                    currImg.fractal.c = storedImg.frame.toComplexCoords(
+                    currImg.fractal.params.c = storedImg.frame.toComplexCoords(
                         mouseX, mouseY,
                         canvasWidth, canvasHeight
                     );
                     if(requiresExponent(newFractal)) {
-                        currImg.fractal.e = storedImg.fractal.e;
+                        currImg.fractal.params.e = storedImg.fractal.params.e;
                     }
                 }
             }

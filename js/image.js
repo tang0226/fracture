@@ -29,12 +29,6 @@ var Image = function(fractal, iterations, escapeRadius, srcFrame, width, height,
 };
 
 
-// Return the fractal type as a string
-Image.prototype.getFractalType = function() {
-    return this.fractal.constructor.name;
-};
-
-
 // Fit drawing frame to canvas and
 // update dependent parameters
 Image.prototype.fitToCanvas = function(width, height) {
@@ -59,7 +53,8 @@ Image.prototype.drawLayer = function() {
     let currRe = this.frame.reMin;
     for(let currX = 0; currX < this.width; currX++) {
 
-        let val = this.fractal.iterate(
+        let val = Iterate[this.fractal.type](
+            this.fractal.params,
             Complex(currRe, this.currIm),
             this.iterations,
             this.escapeRadius

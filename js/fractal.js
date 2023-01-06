@@ -1,10 +1,16 @@
 /******************************
-FRACTAL PROTOTYPES: THEORETICAL MATHEMATICAL SETS IN THE COMPLEX PLANE:
+FRACTALS: THEORETICAL MATHEMATICAL SETS IN THE COMPLEX PLANE:
 ******************************/
 
-var Mandelbrot = function() {};
+var Fractal = function(type, params) {
+    this.type = type;
+    this.params = params ? params : {};
+};
 
-Mandelbrot.prototype.iterate = function(c, iterations, escapeRadius) {
+// Object with iteration functions for each type of fractal
+var Iterate = {};
+
+Iterate.Mandelbrot = function(params, c, iterations, escapeRadius) {
     let z = Complex(0, 0);
     let n = 0;
     while(Complex.abs(z) <= escapeRadius && n < iterations) {
@@ -14,60 +20,37 @@ Mandelbrot.prototype.iterate = function(c, iterations, escapeRadius) {
     return n;
 };
 
-
-
-var Julia = function(c) {
-    this.c = c;
-};
-
-Julia.prototype.iterate = function(_z, iterations, escapeRadius) {
+Iterate.Julia = function(params, _z, iterations, escapeRadius) {
     let z = _z;
     let n = 0;
     while(Complex.abs(z) <= escapeRadius && n < iterations) {
-        z = Complex.add(Complex.mul(z, z), this.c);
+        z = Complex.add(Complex.mul(z, z), params.c);
         n++;
     }
     return n;
 };
 
-
-
-var Multibrot = function(e) {
-    this.e = e;
-};
-
-Multibrot.prototype.iterate = function(c, iterations, escapeRadius) {
+Iterate.Multibrot = function(params, c, iterations, escapeRadius) {
     let z = Complex(0, 0);
     let n = 0;
     while(Complex.abs(z) <= escapeRadius && n < iterations) {
-        z = Complex.add(Complex.exp(z, this.e), c);
+        z = Complex.add(Complex.exp(z, params.e), c);
         n++;
     }
     return n;
 };
 
-
-
-var Multijulia = function(e, c) {
-    this.e = e;
-    this.c = c;
-}; 
-
-Multijulia.prototype.iterate = function(_z, iterations, escapeRadius) {
+Iterate.Multijulia = function(params, _z, iterations, escapeRadius) {
     let z = _z;
     let n = 0;
     while(Complex.abs(z) <= escapeRadius && n < iterations) {
-        z = Complex.add(Complex.exp(z, this.e), this.c);
+        z = Complex.add(Complex.exp(z, params.e), params.c);
         n++;
     }
     return n;
 };
 
-
-
-var BurningShip = function() {};
-
-BurningShip.prototype.iterate = function(c, iterations, escapeRadius) {
+Iterate.BurningShip = function(params, c, iterations, escapeRadius) {
     let z = Complex(0, 0);
     let n = 0;
     while(Complex.abs(z) <= escapeRadius && n < iterations) {
@@ -77,49 +60,31 @@ BurningShip.prototype.iterate = function(c, iterations, escapeRadius) {
     return n;
 };
 
-
-
-var BurningShipJulia = function(c) {
-    this.c = c;
-};
-
-BurningShipJulia.prototype.iterate = function(_z, iterations, escapeRadius) {
+Iterate.BurningShipJulia = function(params, _z, iterations, escapeRadius) {
     let z = _z;
     let n = 0;
     while(Complex.abs(z) <= escapeRadius && n < iterations) {
-        z = Complex.add(Complex.exp(Complex(Math.abs(z.re), Math.abs(z.im)), 2), this.c);
+        z = Complex.add(Complex.exp(Complex(Math.abs(z.re), Math.abs(z.im)), 2), params.c);
         n++;
     }
     return n;
 };
 
-
-
-var Multiship = function(e) {
-    this.e = e;
-};
-Multiship.prototype.iterate = function(c, iterations, escapeRadius) {
+Iterate.Multiship = function(params, c, iterations, escapeRadius) {
     let z = Complex(0, 0);
     let n = 0;
     while(Complex.abs(z) <= escapeRadius && n < iterations) {
-        z = Complex.add(Complex.exp(Complex(Math.abs(z.re), Math.abs(z.im)), this.e), c);
+        z = Complex.add(Complex.exp(Complex(Math.abs(z.re), Math.abs(z.im)), params.e), c);
         n++;
     }
     return n;
 };
 
-
-
-var MultishipJulia = function(e, c) {
-    this.e = e;
-    this.c = c;
-};
-
-MultishipJulia.prototype.iterate = function(_z, iterations, escapeRadius) {
+Iterate.MultishipJulia = function(params, _z, iterations, escapeRadius) {
     let z = _z;
     let n = 0;
     while(Complex.abs(z) <= escapeRadius && n < iterations) {
-        z = Complex.add(Complex.exp(Complex(Math.abs(z.re), Math.abs(z.im)), this.e), this.c);
+        z = Complex.add(Complex.exp(Complex(Math.abs(z.re), Math.abs(z.im)), params.e), params.c);
         n++;
     }
     return n;
