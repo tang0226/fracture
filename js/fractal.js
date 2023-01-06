@@ -1,5 +1,3 @@
-import Complex from "./complex.js";
-
 /******************************
 FRACTAL PROTOTYPES: THEORETICAL MATHEMATICAL SETS IN THE COMPLEX PLANE:
 ******************************/
@@ -155,10 +153,4 @@ var getJuliaEquivalent = function(fractalType) {
         "BurningShip": "BurningShipJulia",
         "Multiship": "MultishipJulia"
     }[fractalType];
-};
-
-export {
-    Mandelbrot, Julia, Multibrot, Multijulia,
-    BurningShip, BurningShipJulia, Multiship, MultishipJulia,
-    requiresExponent, requiresJuliaConstant, getJuliaEquivalent
 };

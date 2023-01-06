@@ -1,6 +1,3 @@
-import {hsl, rgb, scale} from "./utils.js";
-import Complex from "./complex.js";
-
 /******************************
 IMAGE PROTOTYPE: RENDERING OF A FRACTAL WITH ITERATIONS, FRAME, AND CANVAS SIZE
 ******************************/
@@ -118,5 +115,3 @@ Image.prototype.copy = function() {
         this.canvasCtx
     );
 };
-
-export default Image;

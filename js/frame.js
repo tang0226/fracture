@@ -1,5 +1,3 @@
-import Complex from "./complex.js";
-
 /******************************
 FRAME PROTOTYPE: REGION ON THE COMPLEX PLANE
 ******************************/
@@ -46,5 +44,3 @@ Frame.prototype.fitToCanvas = function(w, h) {
         );
     }
 };
-
-export default Frame;
