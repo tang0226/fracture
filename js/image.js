@@ -53,7 +53,7 @@ Image.prototype.drawLayer = function() {
     let currRe = this.frame.reMin;
     for(let currX = 0; currX < this.width; currX++) {
 
-        let val = Iterate[this.fractal.type](
+        let val = iterateFractal[this.fractal.type](
             this.fractal.params,
             Complex(currRe, this.currIm),
             this.iterations,

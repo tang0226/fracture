@@ -8,9 +8,9 @@ var Fractal = function(type, params) {
 };
 
 // Object with iteration functions for each type of fractal
-var Iterate = {};
+var iterateFractal = {};
 
-Iterate.Mandelbrot = function(params, c, iterations, escapeRadius) {
+iterateFractal.Mandelbrot = function(params, c, iterations, escapeRadius) {
     let z = Complex(0, 0);
     let n = 0;
     while(Complex.abs(z) <= escapeRadius && n < iterations) {
@@ -20,7 +20,7 @@ Iterate.Mandelbrot = function(params, c, iterations, escapeRadius) {
     return n;
 };
 
-Iterate.Julia = function(params, _z, iterations, escapeRadius) {
+iterateFractal.Julia = function(params, _z, iterations, escapeRadius) {
     let z = _z;
     let n = 0;
     while(Complex.abs(z) <= escapeRadius && n < iterations) {
@@ -30,7 +30,7 @@ Iterate.Julia = function(params, _z, iterations, escapeRadius) {
     return n;
 };
 
-Iterate.Multibrot = function(params, c, iterations, escapeRadius) {
+iterateFractal.Multibrot = function(params, c, iterations, escapeRadius) {
     let z = Complex(0, 0);
     let n = 0;
     while(Complex.abs(z) <= escapeRadius && n < iterations) {
@@ -40,7 +40,7 @@ Iterate.Multibrot = function(params, c, iterations, escapeRadius) {
     return n;
 };
 
-Iterate.Multijulia = function(params, _z, iterations, escapeRadius) {
+iterateFractal.Multijulia = function(params, _z, iterations, escapeRadius) {
     let z = _z;
     let n = 0;
     while(Complex.abs(z) <= escapeRadius && n < iterations) {
@@ -50,7 +50,7 @@ Iterate.Multijulia = function(params, _z, iterations, escapeRadius) {
     return n;
 };
 
-Iterate.BurningShip = function(params, c, iterations, escapeRadius) {
+iterateFractal.BurningShip = function(params, c, iterations, escapeRadius) {
     let z = Complex(0, 0);
     let n = 0;
     while(Complex.abs(z) <= escapeRadius && n < iterations) {
@@ -60,7 +60,7 @@ Iterate.BurningShip = function(params, c, iterations, escapeRadius) {
     return n;
 };
 
-Iterate.BurningShipJulia = function(params, _z, iterations, escapeRadius) {
+iterateFractal.BurningShipJulia = function(params, _z, iterations, escapeRadius) {
     let z = _z;
     let n = 0;
     while(Complex.abs(z) <= escapeRadius && n < iterations) {
@@ -70,7 +70,7 @@ Iterate.BurningShipJulia = function(params, _z, iterations, escapeRadius) {
     return n;
 };
 
-Iterate.Multiship = function(params, c, iterations, escapeRadius) {
+iterateFractal.Multiship = function(params, c, iterations, escapeRadius) {
     let z = Complex(0, 0);
     let n = 0;
     while(Complex.abs(z) <= escapeRadius && n < iterations) {
@@ -80,7 +80,7 @@ Iterate.Multiship = function(params, c, iterations, escapeRadius) {
     return n;
 };
 
-Iterate.MultishipJulia = function(params, _z, iterations, escapeRadius) {
+iterateFractal.MultishipJulia = function(params, _z, iterations, escapeRadius) {
     let z = _z;
     let n = 0;
     while(Complex.abs(z) <= escapeRadius && n < iterations) {
