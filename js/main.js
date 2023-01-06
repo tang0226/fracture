@@ -238,7 +238,7 @@ var toolbar = {
 
     // Progress
     displayProgress(progress) {
-        this.elements.progress.innerHTML = progress + "%";
+        this.elements.progress.innerHTML = Math.round(progress) + "%";
         this.elements.progressBar.value = progress;
     },
 

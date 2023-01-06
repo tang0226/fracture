@@ -49,11 +49,11 @@ onmessage = function(event) {
 
             postMessage({
                 type: "progress",
-                progress: Math.round(i / 4 / (img.width * img.height) * 100),
+                progress: i / 4 / (img.width * img.height) * 100,
                 renderTime: renderTime
             });
         }
-        
+
         postMessage({
             type: "done",
             imgData: imgData,
