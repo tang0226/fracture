@@ -90,6 +90,7 @@ renderWorker.onmessage = function(event) {
     let data = event.data;
     if(data.type == "progress") {
         toolbar.displayRenderTime(data.renderTime);
+        toolbar.displayProgress(data.progress);
     }
     if(data.type == "done") {
         canvasCtx.putImageData(data.imgData, 0, 0);
@@ -139,6 +140,8 @@ var toolbar = {
 
         // Display
         renderTime: document.getElementById("render-time"),
+        progress: document.getElementById("progress"),
+        progressBar: document.getElementById("progress-bar"),
         mouseComplexCoords: document.getElementById("mouse-complex-coords"),
         zoom: document.getElementById("zoom"),
 
@@ -226,7 +229,14 @@ var toolbar = {
 
     // Render time
     displayRenderTime(time) {
-        this.elements.renderTime.innerHTML = time.toString();
+        this.elements.renderTime.innerHTML = time.toString() + " ms";
+    },
+
+
+    // Progress
+    displayProgress(progress) {
+        this.elements.progress.innerHTML = progress + "%";
+        this.elements.progressBar.value = progress;
     },
 
 

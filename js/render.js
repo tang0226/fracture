@@ -48,7 +48,7 @@ onmessage = function(event) {
 
             this.postMessage({
                 type: "progress",
-                progress: i,
+                progress: Math.round(i / 4 / (img.width * img.height) * 100),
                 renderTime: renderTime
             });
         }
