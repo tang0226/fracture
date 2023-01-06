@@ -13,5 +13,3 @@ var rgb = function(r, g, b) {
 var scale = function(n, minFrom, maxFrom, minTo, maxTo) {
     return ((n / (maxFrom - minFrom)) * (maxTo - minTo)) + minTo;
 };
-
-export {hsl, rgb, scale};
