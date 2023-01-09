@@ -109,6 +109,13 @@ var draw = function() {
 };
 
 
+var download = function() {
+    let link = document.createElement('a');
+    link.setAttribute('download', 'fractal.png');
+    link.setAttribute('href', canvas.toDataURL());
+    link.click();
+};
+
 
 // Toolbar
 var toolbar = {
@@ -130,6 +137,7 @@ var toolbar = {
         increaseIterations: document.getElementById("increase-iterations"),
         decreaseIterations: document.getElementById("decrease-iterations"),
         redraw: document.getElementById("redraw"),
+        download: document.getElementById("download"),
 
         // Alerts
         exponentAlert: document.getElementById("exponent-alert"),
@@ -233,6 +241,10 @@ var toolbar = {
         this.elements.redraw.setAttribute(
             "onclick",
             "toolbar.redraw()"
+        );
+        this.elements.download.setAttribute(
+            "onclick",
+            "download()"
         );
 
         // Display
