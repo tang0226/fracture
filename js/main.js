@@ -109,13 +109,6 @@ var draw = function() {
 };
 
 
-var download = function() {
-    let link = document.createElement('a');
-    link.setAttribute('download', 'fractal.png');
-    link.setAttribute('href', canvas.toDataURL());
-    link.click();
-};
-
 
 // Toolbar
 var toolbar = {
@@ -132,6 +125,7 @@ var toolbar = {
         clickZoomFactor: document.getElementById("click-zoom-factor"),
         canvasWidth: document.getElementById("canvas-width"),
         canvasHeight: document.getElementById("canvas-height"),
+        downloadType: document.getElementById("download-type"),
 
         // Buttons
         increaseIterations: document.getElementById("increase-iterations"),
@@ -244,7 +238,7 @@ var toolbar = {
         );
         this.elements.download.setAttribute(
             "onclick",
-            "download()"
+            "toolbar.download()"
         );
 
         // Display
@@ -549,6 +543,20 @@ var toolbar = {
         currImg.fitToCanvas(canvasWidth, canvasHeight);
 
         draw();
+    },
+
+
+
+    // Download
+    download() {
+        // Create an anchor used to download the image
+        let a = document.createElement('a');
+        a.setAttribute('download', 'fractal');
+        a.setAttribute(
+            'href',
+            canvas.toDataURL(`image/${this.elements.downloadType.value}`)
+        );
+        a.click();
     },
 
 

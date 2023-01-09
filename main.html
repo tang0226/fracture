@@ -126,7 +126,13 @@
 
             <section id="buttons-toolbar">
                 <input type="button" id="redraw" value="Redraw"/>
-                <input type="button" id="download" value="Download"/>
+                <div id="download-container" class="right no-margin">
+                    <input type="button" id="download" value="Download"/>
+                    <select id="download-type">
+                        <option value="png">PNG</option>
+                        <option value="jpeg">JPEG</option>
+                    </select>
+                </div>
             </section>
         </section>
 
