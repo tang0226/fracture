@@ -21,10 +21,15 @@ canvas {
     padding: 10px;
 }
 
-#toolbar div, #toolbar input, select {
+#toolbar section, #toolbar div, #toolbar input, #toolbar select {
     margin-top: 5px;
     font-family: "Arial";
     font-size: 1em;
+}
+
+hr {
+    margin-top: 10px;
+    margin-bottom: 0px;
 }
 
 .inline {
@@ -39,6 +44,18 @@ canvas {
     color: red;
 }
 
-hr {
-    margin-top: 10px;
+.center {
+    float: center;
+}
+
+.left {
+    float: left;
+}
+
+.right {
+    float: right;
+}
+
+.no-margin {
+    margin: 0px !important;
 }
