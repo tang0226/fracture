@@ -125,11 +125,13 @@ var toolbar = {
         clickZoomFactor: document.getElementById("click-zoom-factor"),
         canvasWidth: document.getElementById("canvas-width"),
         canvasHeight: document.getElementById("canvas-height"),
+        downloadType: document.getElementById("download-type"),
 
         // Buttons
         increaseIterations: document.getElementById("increase-iterations"),
         decreaseIterations: document.getElementById("decrease-iterations"),
         redraw: document.getElementById("redraw"),
+        download: document.getElementById("download"),
 
         // Alerts
         exponentAlert: document.getElementById("exponent-alert"),
@@ -184,44 +186,60 @@ var toolbar = {
         this.canvasHeight = canvasHeight;
 
         // Inputs
-        this.elements.fractalType.onchange = function() {
-            toolbar.updateInternalFractalType();
-        };
-        this.elements.exponent.onchange = function() {
-            toolbar.updateInternalExponent();
-        };
-        this.elements.juliaConstant.onchange = function() {
-            toolbar.updateInternalJuliaConstant();
-        };
-        this.elements.iterations.onchange = function() {
-            toolbar.updateInternalIterations();
-        };
-        this.elements.iterationIncrement.onchange = function() {
-            toolbar.updateInternalIterationIncrement();
-        };
-        this.elements.escapeRadius.onchange = function() {
-            toolbar.updateInternalEscapeRadius();
-        };
-        this.elements.clickZoomFactor.onchange = function() {
-            toolbar.updateInternalCZF();
-        };
-        this.elements.canvasWidth.onchange = function() {
-            toolbar.updateInternalCanvasWidth();
-        }
-        this.elements.canvasHeight.onchange = function() {
-            toolbar.updateInternalCanvasHeight();
-        };
+        this.elements.fractalType.setAttribute(
+            "onchange",
+            "toolbar.updateFractalType()"
+        );
+        this.elements.exponent.setAttribute(
+            "onchange",
+            "toolbar.updateExponent()"
+        );
+        this.elements.juliaConstant.setAttribute(
+            "onchange",
+            "toolbar.updateJuliaConstant()"
+        );
+        this.elements.iterations.setAttribute(
+            "onchange",
+            "toolbar.updateIterations()"
+        );
+        this.elements.iterationIncrement.setAttribute(
+            "onchange",
+            "toolbar.updateIterationIncrement()"
+        );
+        this.elements.escapeRadius.setAttribute(
+            "onchange",
+            "toolbar.updateEscapeRadius()"
+        );
+        this.elements.clickZoomFactor.setAttribute(
+            "onchange",
+            "toolbar.updateCZF()"
+        );
+        this.elements.canvasWidth.setAttribute(
+            "onchange",
+            "toolbar.updateCanvasWidth()"
+        );
+        this.elements.canvasHeight.setAttribute(
+            "onchange",
+            "toolbar.updateCanvasHeight()"
+        );
 
         // Buttons
-        this.elements.increaseIterations.onclick = function() {
-            toolbar.increaseIterations();
-        };
-        this.elements.decreaseIterations.onclick = function() {
-            toolbar.decreaseIterations();
-        };
-        this.elements.redraw.onclick = function() {
-            toolbar.redrawImage();
-        }
+        this.elements.increaseIterations.setAttribute(
+            "onclick",
+            "toolbar.increaseIterations()"
+        );
+        this.elements.decreaseIterations.setAttribute(
+            "onclick",
+            "toolbar.decreaseIterations()"
+        );
+        this.elements.redraw.setAttribute(
+            "onclick",
+            "toolbar.redraw()"
+        );
+        this.elements.download.setAttribute(
+            "onclick",
+            "toolbar.download()"
+        );
 
         // Display
         this.resetMouseComplexCoords();
@@ -266,7 +284,7 @@ var toolbar = {
     // Fractal
 
     // When fractal select is changed
-    updateInternalFractalType() {
+    updateFractalType() {
         // Set internal fractal type
         this.fractalType = this.elements.fractalType.value;
 
@@ -287,7 +305,7 @@ var toolbar = {
     },
 
     // When exponent input is changed
-    updateInternalExponent() {
+    updateExponent() {
         let toSet = Number(this.elements.exponent.value);
 
         // Sanitize
@@ -303,7 +321,7 @@ var toolbar = {
     },
 
     // When Julia constant input is changed
-    updateInternalJuliaConstant() {
+    updateJuliaConstant() {
         let toSet = Complex.parseString(this.elements.juliaConstant.value);
 
         // Sanitize
@@ -328,7 +346,7 @@ var toolbar = {
     },
 
     // When iterations input is changed
-    updateInternalIterations() {
+    updateIterations() {
         let toSet = Number(this.elements.iterations.value);
 
         // Sanitize
@@ -350,7 +368,7 @@ var toolbar = {
     },
 
     // When iteration increment input is changed
-    updateInternalIterationIncrement() {
+    updateIterationIncrement() {
         let toSet = Number(this.elements.iterationIncrement.value);
 
         // Sanitize
@@ -377,7 +395,7 @@ var toolbar = {
 
 
     // Escape radius
-    updateInternalEscapeRadius() {
+    updateEscapeRadius() {
         let toSet = Number(this.elements.escapeRadius.value);
 
         // Sanitize
@@ -404,7 +422,7 @@ var toolbar = {
     },
 
     // When click zoom factor input is changed
-    updateInternalCZF() {
+    updateCZF() {
         let toSet = Number(this.elements.clickZoomFactor.value);
 
         // Sanitize
@@ -422,7 +440,7 @@ var toolbar = {
 
 
     // Canvas dimensions
-    updateInternalCanvasWidth() {
+    updateCanvasWidth() {
         let toSet = Number(this.elements.canvasWidth.value);
 
         // Sanitize
@@ -437,7 +455,7 @@ var toolbar = {
         }
     },
 
-    updateInternalCanvasHeight() {
+    updateCanvasHeight() {
         let toSet = Number(this.elements.canvasHeight.value);
 
         // Sanitize
@@ -455,7 +473,7 @@ var toolbar = {
 
 
     // Redraw
-    redrawImage() {
+    redraw() {
         if(renderInProgress) {
             return;
         }
@@ -529,6 +547,20 @@ var toolbar = {
 
 
 
+    // Download
+    download() {
+        // Create an anchor used to download the image
+        let a = document.createElement('a');
+        a.setAttribute('download', 'fractal');
+        a.setAttribute(
+            'href',
+            canvas.toDataURL(`image/${this.elements.downloadType.value}`)
+        );
+        a.click();
+    },
+
+
+
     // Sync
     syncWithImage() {
         // Sync fractal type
@@ -536,7 +568,7 @@ var toolbar = {
         // Manually set fractal type input and update
         // internals accordingly, a little dirty...
         this.elements.fractalType.value = currImg.fractal.type;
-        this.updateInternalFractalType();
+        this.updateFractalType();
 
         let currFractal = currImg.fractal;
         this.fractalType = currFractal;
@@ -772,7 +804,7 @@ window.onkeydown = function(event) {
     }
     if(event.key == "Enter") {
         document.activeElement.blur();
-        toolbar.redrawImage();
+        toolbar.redraw();
     }
 };
 

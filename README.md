@@ -1,5 +1,5 @@
 # Fracture: fractal viewer built with HTML canvas
-Main page is located at [main.html](https://tang0226.github.io/fracture/main)
+Main page is located at main.html ([view online](https://tang0226.github.io/fracture/main)).
 * Displays these fractals:
   * Mandelbrot set
   * Julia sets
@@ -20,6 +20,7 @@ Main page is located at [main.html](https://tang0226.github.io/fracture/main)
     * Press Esc to cancel a drag
 * Center the image with Ctrl + click
 * Use Alt + click to view a point's corresponding Juila set or to switch back to the original image
+* Downloadable images
 * More features and fractals coming!
 
 ## Coding todo list:
@@ -46,8 +47,10 @@ Main page is located at [main.html](https://tang0226.github.io/fracture/main)
 ## Samples:
 ![mandelbrot set](https://github.com/tang0226/fractal/blob/master/samples/mandelbrot_set.png?raw=true)
 
-![mandelbrot set zoom](https://github.com/tang0226/fractal/blob/master/samples/mandelbrot_10^8_zoom.png?raw=true)
-
-![multibrot set zoom](https://github.com/tang0226/fractal/blob/master/samples/multibrot_4_zoom.png?raw=true)
+![julia set](https://github.com/tang0226/fractal/blob/master/samples/julia_set_1.png?raw=true)
 
 ![burning ship armada](https://github.com/tang0226/fractal/blob/master/samples/burning_ship_armada.png?raw=true)
+
+![multibrot set](https://github.com/tang0226/fractal/blob/master/samples/multibrot_3.png?raw=true)
+
+![multibrot zoom](https://github.com/tang0226/fractal/blob/master/samples/multibrot_large.png?raw=true)
