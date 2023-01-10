@@ -46,8 +46,10 @@ Main page is located at main.html ([view online](https://tang0226.github.io/frac
 ## Samples:
 ![mandelbrot set](https://github.com/tang0226/fractal/blob/master/samples/mandelbrot_set.png?raw=true)
 
-![mandelbrot set zoom](https://github.com/tang0226/fractal/blob/master/samples/mandelbrot_10^8_zoom.png?raw=true)
-
-![multibrot set zoom](https://github.com/tang0226/fractal/blob/master/samples/multibrot_4_zoom.png?raw=true)
+![julia set](https://github.com/tang0226/fractal/blob/master/samples/julia_set_1.png?raw=true)
 
 ![burning ship armada](https://github.com/tang0226/fractal/blob/master/samples/burning_ship_armada.png?raw=true)
+
+![multibrot set](https://github.com/tang0226/fractal/blob/master/samples/multibrot_3.png?raw=true)
+
+![multibrot zoom](https://github.com/tang0226/fractal/blob/master/samples/multibrot_large.png?raw=true)
