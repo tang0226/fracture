@@ -20,6 +20,7 @@ Main page is located at main.html ([view online](https://tang0226.github.io/frac
     * Press Esc to cancel a drag
 * Center the image with Ctrl + click
 * Use Alt + click to view a point's corresponding Juila set or to switch back to the original image
+* Downloadable images
 * More features and fractals coming!
 
 ## Coding todo list:
