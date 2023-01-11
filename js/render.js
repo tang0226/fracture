@@ -17,12 +17,29 @@ onmessage = function(event) {
             let re = img.frame.reMin;
 
             for(let currX = 0; currX < img.width; currX++) {
-                let val = iterate(
-                    img.fractal.params,
-                    Complex(re, im),
-                    img.iterations,
-                    img.escapeRadius
-                );
+                let val = 0;
+                if(img.supersamples) {
+                    for(let i = 0; i < img.supersamples; i++) {
+                        val += iterate(
+                            img.fractal.params,
+                            Complex(
+                                re + (Math.random() - 0.5) * img.complexIter,
+                                im + (Math.random() - 0.5) * img.complexIter
+                            ),
+                            img.iterations,
+                            img.escapeRadius
+                        );
+                    }
+                    val /= img.supersamples;
+                }
+                else {
+                    val = iterate(
+                        img.fractal.params,
+                        Complex(re, im),
+                        img.iterations,
+                        img.escapeRadius
+                    );
+                }
 
                 let bw;
                 if(val == img.iterations) {

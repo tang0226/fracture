@@ -2,10 +2,12 @@
 IMAGE PROTOTYPE: RENDERING OF A FRACTAL WITH ITERATIONS, FRAME, AND CANVAS SIZE
 ******************************/
 
-var Image = function(fractal, iterations, escapeRadius, srcFrame, width, height) {
+var Image = function(fractal, iterations, escapeRadius, supersamples, srcFrame, width, height) {
     this.fractal = fractal;
+
     this.iterations = iterations;
     this.escapeRadius = escapeRadius;
+    this.supersamples = supersamples;
 
     this.srcFrame = srcFrame;
     this.frame = srcFrame.fitToCanvas(width, height);
@@ -59,7 +61,7 @@ Image.prototype.reset = function() {
 Image.prototype.copy = function() {
     return new Image(
         this.fractal,
-        this.iterations, this.escapeRadius,
+        this.iterations, this.escapeRadius, this.supersamples,
         this.srcFrame,
         this.width, this.height,
         this.canvasCtx

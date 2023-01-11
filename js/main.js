@@ -27,54 +27,54 @@ var defaultView = new Frame(Complex(0, 0), 4, 4);
 var defaultImages = {
     Mandelbrot: new Image(
         new Fractal("Mandelbrot"),
-        100, 2,
+        100, 2, false,
         new Frame(Complex(-0.5, 0), 4, 4),
         canvasWidth, canvasHeight
     ),
     Julia: new Image(
         new Fractal("Julia", {c: Complex(-0.8, 0.156)}),
-        100, 2,
+        100, 2, 4,
         defaultView,
         canvasWidth, canvasHeight
     ),
     Multibrot: new Image(
         new Fractal("Multibrot", {e: 3}),
-        100, 2,
+        100, 2, false,
         defaultView,
         canvasWidth, canvasHeight
     ),
     Multijulia: new Image(
         new Fractal("Multijulia", {e: 3, c: Complex(-0.12, -0.8)}),
-        100, 2,
+        100, 2, false,
         defaultView,
         canvasWidth, canvasHeight
     ),
     BurningShip: new Image(
         new Fractal("BurningShip"),
-        100, 2,
+        100, 2, false,
         new Frame(Complex(0, -0.5), 4, 4),
         canvasWidth, canvasHeight
     ),
     BurningShipJulia: new Image(
         new Fractal("BurningShipJulia", {c: Complex(-1.5, 0)}),
-        100, 2,
+        100, 2, false,
         defaultView,
         canvasWidth, canvasHeight
     ),
     Multiship: new Image(
         new Fractal("Multiship", {e: 3}),
-        100, 2,
+        100, 2, false,
         defaultView,
         canvasWidth, canvasHeight
     ),
     MultishipJulia: new Image(
         new Fractal("MultishipJulia", {e: 3, c: Complex(-1.326667, 0)}),
-        100, 2,
+        100, 2, false,
         defaultView,
         canvasWidth, canvasHeight
     )
 };
-
+//HEY modify image
 
 // Initial image settings:
 var currImg = defaultImages.Mandelbrot.copy();
@@ -122,6 +122,8 @@ var toolbar = {
         iterations: document.getElementById("iterations"),
         iterationIncrement: document.getElementById("iteration-increment"),
         escapeRadius: document.getElementById("escape-radius"),
+        supersamplesCheckbox: document.getElementById("supersamples-checkbox"),
+        supersamples: document.getElementById("supersamples"),
         clickZoomFactor: document.getElementById("click-zoom-factor"),
         canvasWidth: document.getElementById("canvas-width"),
         canvasHeight: document.getElementById("canvas-height"),
@@ -139,6 +141,7 @@ var toolbar = {
         iterationsAlert: document.getElementById("iterations-alert"),
         iterationIncrementAlert: document.getElementById("iteration-increment-alert"),
         escapeRadiusAlert: document.getElementById("escape-radius-alert"),
+        supersamplesAlert: document.getElementById("supersamples-alert"),
         clickZoomFactorAlert: document.getElementById("click-zoom-factor-alert"),
         canvasWidthAlert: document.getElementById("canvas-width-alert"),
         canvasHeightAlert: document.getElementById("canvas-height-alert"),
@@ -152,7 +155,8 @@ var toolbar = {
 
         // Containers
         exponentContainer: document.getElementById("exponent-container"),
-        juliaConstantContainer: document.getElementById("julia-constant-container")
+        juliaConstantContainer: document.getElementById("julia-constant-container"),
+        supersamplesContainer: document.getElementById("supersamples-container")
     },
 
     // Booleans for valid inputs
@@ -162,6 +166,7 @@ var toolbar = {
         iterations: true,
         iterationIncrement: true,
         escapeRadius: true,
+        supersamples: true,
         clickZoomFactor: true,
         canvasWidth: true,
         canvasHeight: true
@@ -179,6 +184,7 @@ var toolbar = {
         this.iterationIncrement = Number(this.elements.iterationIncrement.value);
         this.escapeRadius = Number(this.elements.escapeRadius.value);
         this.zoom = currImg.frame.toZoom();
+        this.supersamples = currImg.supersamples;
         this.clickZoomFactor = Number(this.elements.clickZoomFactor.value);
         this.elements.canvasWidth.value = canvasWidth;
         this.elements.canvasHeight.value = canvasHeight;
@@ -210,6 +216,14 @@ var toolbar = {
             "onchange",
             "toolbar.updateEscapeRadius()"
         );
+        this.elements.supersamplesCheckbox.setAttribute(
+            "onclick",
+            "toolbar.toggleSupersamples()"
+        );
+        this.elements.supersamples.setAttribute(
+            "onchange",
+            "toolbar.updateSupersamples()"
+        ),
         this.elements.clickZoomFactor.setAttribute(
             "onchange",
             "toolbar.updateCZF()"
@@ -411,6 +425,36 @@ var toolbar = {
     },
 
 
+    // Supersamples
+    toggleSupersamples() {
+        if(this.elements.supersamplesCheckbox.checked) {
+            this.elements.supersamplesContainer.classList.remove("hide");
+            this.updateSupersamples();
+        }
+        else {
+            this.elements.supersamplesContainer.classList.add("hide");
+            this.supersamples = false;
+            this.inputStatus.supersamples = true;
+        }
+    },
+
+    updateSupersamples() {
+        let toSet = Number(this.elements.supersamples.value);
+
+        // Sanitize
+        if(Number.isNaN(toSet) || toSet < 1 || !Number.isInteger(toSet)) {
+            this.elements.supersamplesAlert.classList.remove("hide");
+            this.supersamples = false;
+            this.inputStatus.supersamples = false;
+        }
+        else {
+            this.elements.supersamplesAlert.classList.add("hide");
+            this.supersamples = toSet;
+            this.inputStatus.supersamples = true;
+        }
+    },
+
+
 
     // Zoom
 
@@ -526,11 +570,10 @@ var toolbar = {
         this.lastExponent = this.exponent;
         this.lastJuliaConstant = this.juliaConstant;
 
-        // Update image iterations
+        // Update other image parameters
         currImg.iterations = this.iterations;
-
-        // Update image escape radius
         currImg.escapeRadius = this.escapeRadius;
+        currImg.supersamples = this.supersamples;
 
         // Exit Julia mode if the fractal was changed
         if(fractalChanged && currMode == "julia") {
