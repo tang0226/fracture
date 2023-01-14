@@ -289,15 +289,14 @@ var toolbar = {
         this.fractalType = this.elements.fractalType.value;
 
         // Show exponent and Juila constant inputs where applicable
-        if(requiresExponent(this.fractalType)) {
+        if(Fractal.requiresExponent(this.fractalType)) {
             this.elements.exponentContainer.className = "";
         }
         else {
             this.elements.exponentContainer.className = "hide";
         }
-        if(requiresJuliaConstant(this.fractalType)) {
+        if(Fractal.requiresJuliaConstant(this.fractalType)) {
             this.elements.juliaConstantContainer.className = "";
-
         }
         else {
             this.elements.juliaConstantContainer.className = "hide";
@@ -501,7 +500,7 @@ var toolbar = {
         }
 
         // Check for new exponent
-        if(requiresExponent(currImg.fractal.type)) {
+        if(currImg.fractal.requiresExponent) {
             currImg.fractal.params.e = this.exponent;
 
             // If exponent has changed, return to original frame
@@ -513,7 +512,7 @@ var toolbar = {
         }
 
         // Check for new Julia constant
-        if(requiresJuliaConstant(currImg.fractal.type)) {
+        if(currImg.fractal.requiresJuliaConstant) {
             currImg.fractal.params.c = this.juliaConstant;
             if(!Complex.equals(this.juliaConstant, this.lastJuliaConstant)) {
                 currImg.setFrame(defaultView);
@@ -653,7 +652,7 @@ controlsCanvas.onmouseup = function() {
                 // Switch to Julia mode
 
                 // Confirm that Julia mode is applicable
-                if(!requiresJuliaConstant(currImg.fractal.type)) {
+                if(!currImg.fractal.requiresJuliaConstant) {
                     currMode = "julia";
 
                     // Store current image for switching back
@@ -661,8 +660,8 @@ controlsCanvas.onmouseup = function() {
 
                     // Initialize new image based on Julia
                     // equivalent of previous fractal
-                    let newFractal = getJuliaEquivalent(currImg.fractal.type);
-                    currImg = defaultImages[newFractal].copy();
+                    let newFractalType = currImg.fractal.juliaEquivalent;
+                    currImg = defaultImages[newFractalType].copy();
 
                     // New fractal requires a julia constant,
                     // but not necessarily an exponent
@@ -670,7 +669,7 @@ controlsCanvas.onmouseup = function() {
                         mouseX, mouseY,
                         canvasWidth, canvasHeight
                     );
-                    if(requiresExponent(newFractal)) {
+                    if(Fractal.requiresExponent(newFractalType)) {
                         currImg.fractal.params.e = storedImg.fractal.params.e;
                     }
                 }

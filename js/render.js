@@ -7,7 +7,7 @@ onmessage = function(event) {
         let renderTime;
 
         let img = data.img;
-        let iterate = iterateFractal[img.fractal.type];
+        let iterate = Fractal.iterate[img.fractal.type];
 
         let imgData = new ImageData(img.width, img.height);
 
