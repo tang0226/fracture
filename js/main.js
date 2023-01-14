@@ -766,7 +766,7 @@ controlsCanvas.onmousemove = function(event) {
     toolbar.displayMouseComplexCoords();
     if(mouseDown) {
         controlsCanvasCtx.clearRect(0, 0, canvasWidth, canvasHeight);
-        controlsCanvasCtx.strokeStyle = rgb(255, 0, 0);
+        controlsCanvasCtx.strokeStyle = "#FF0000";
         controlsCanvasCtx.strokeRect(
             Math.min(startDragX, mouseX),
             Math.min(startDragY, mouseY),

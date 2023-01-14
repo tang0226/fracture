@@ -1,4 +1,8 @@
-importScripts("./complex.js", "./fractal.js", "./utils.js");
+importScripts("./complex.js", "./fractal.js");
+
+var scale = function(n, minFrom, maxFrom, minTo, maxTo) {
+    return ((n / (maxFrom - minFrom)) * (maxTo - minTo)) + minTo;
+};
 
 onmessage = function(event) {
     let data = event.data;
