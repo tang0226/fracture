@@ -520,23 +520,25 @@ var toolbar = {
             }
         }
 
+        if(fractalChanged) {
+            this.syncImageParams();
+            if(currMode == "julia") {
+                currMode = "default";
+                storedImg = null;
+            }
+        }
+        else {
+            // Update image iterations
+            currImg.iterations = this.iterations;
+
+            // Update image escape radius
+            currImg.escapeRadius = this.escapeRadius;
+        }
+
         // Update last fractal parameters for future checks
         this.lastFractalType = this.fractalType;
         this.lastExponent = this.exponent;
         this.lastJuliaConstant = this.juliaConstant;
-
-        // Update image iterations
-        currImg.iterations = this.iterations;
-
-        // Update image escape radius
-        currImg.escapeRadius = this.escapeRadius;
-
-        // Exit Julia mode if the fractal was changed
-        if(fractalChanged && currMode == "julia") {
-            currMode = "default";
-            storedImg = null;
-            this.syncWithImage();
-        }
 
         // Prepare the image to be redrawn
         currImg.fitToCanvas(canvasWidth, canvasHeight);
@@ -561,7 +563,7 @@ var toolbar = {
 
 
     // Sync
-    syncWithImage() {
+    syncFractal() {
         // Sync fractal type
 
         // Manually set fractal type input and update
@@ -584,10 +586,16 @@ var toolbar = {
             this.elements.juliaConstant.value = Complex.toString(currImg.fractal.params.c);
             this.juliaConstant = this.lastJuliaConstant = currFractal.params.c;
         }
+    },
 
+    syncImageParams() {
         // Sync iterations
         this.elements.iterations.value = currImg.iterations.toString();
         this.iterations = currImg.iterations;
+
+        // Sync escape radius
+        this.elements.escapeRadius.value = currImg.escapeRadius.toString();
+        this.escapeRadius = currImg.escapeRadius;
         
         // Sync zoom
         this.updateZoom();
@@ -681,8 +689,8 @@ controlsCanvas.onmouseup = function() {
                 currImg = storedImg.copy();
                 storedImg = null;
             }
-
-            toolbar.syncWithImage();
+            toolbar.syncFractal();
+            toolbar.syncImageParams();
         }
 
         // Center the frame
