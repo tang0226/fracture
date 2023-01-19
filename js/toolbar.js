@@ -45,6 +45,17 @@ var toolbar = {
         juliaConstantContainer: document.getElementById("julia-constant-container")
     },
 
+
+    // Default parameter values
+    defaults: {
+        exponent: 3,
+        juliaConstant: Complex(0, 1),
+        iterations: 100,
+        iterationIncrement: 100,
+        escapeRadius: 2,
+        clickZoomFactor: 4,
+    },
+
     // Booleans for valid inputs
     inputStatus: {
         exponent: true,
@@ -62,14 +73,29 @@ var toolbar = {
     init() {
         // Internal input variables
         this.fractalType = this.lastFractalType = currImg.fractal.type;
-        this.exponent = this.lastExponent = currImg.fractal.params.e || null;
+        this.elements.fractalType.value = this.fractalType;
+
+        this.exponent = this.lastExponent = currImg.fractal.params.e || undefined;
+        this.elements.exponent.value = this.exponent || "";
+
         this.juliaConstant = this.lastJuliaConstant =
-            currImg.fractal.params.c || Complex(null, null);
+            currImg.fractal.params.c || undefined;
+        this.elements.juliaConstant.value =
+            this.juliaConstant ?
+            Complex.toString(this.juliaConstant) : "";
+        
         this.iterations = currImg.iterations;
-        this.iterationIncrement = Number(this.elements.iterationIncrement.value);
-        this.escapeRadius = Number(this.elements.escapeRadius.value);
-        this.zoom = currImg.frame.toZoom();
-        this.clickZoomFactor = Number(this.elements.clickZoomFactor.value);
+        this.elements.iterations.value = this.iterations;
+
+        this.iterationIncrement = this.defaults.iterationIncrement;
+        this.elements.iterationIncrement.value = this.iterationIncrement;
+
+        this.escapeRadius = currImg.escapeRadius;
+        this.elements.escapeRadius.value = this.escapeRadius;
+
+        this.clickZoomFactor = this.defaults.clickZoomFactor;
+        this.elements.clickZoomFactor.value = this.clickZoomFactor;
+
         this.elements.canvasWidth.value = canvasWidth;
         this.elements.canvasHeight.value = canvasHeight;
         this.canvasWidth = canvasWidth;
@@ -305,9 +331,7 @@ var toolbar = {
 
     // Sync internal and external zoom with current image
     updateZoom() {
-        let zoom = currImg.frame.toZoom();
-        this.zoom = zoom;
-        this.elements.zoom.innerHTML = this.zoom.toString();
+        this.elements.zoom.innerHTML = currImg.frame.toZoom().toString();
     },
 
     // When click zoom factor input is changed

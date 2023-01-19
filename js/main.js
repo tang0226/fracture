@@ -32,7 +32,7 @@ var defaultImages = {
         canvasWidth, canvasHeight
     ),
     Julia: new Image(
-        new Fractal("Julia", {c: Complex(-0.8, 0.156)}),
+        new Fractal("Julia", {c: Complex(0, 1)}),
         100, 2,
         defaultView,
         canvasWidth, canvasHeight
