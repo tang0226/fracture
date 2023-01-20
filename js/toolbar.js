@@ -75,13 +75,13 @@ var toolbar = {
         this.fractalType = this.lastFractalType = currImg.fractal.type;
         this.elements.fractalType.value = this.fractalType;
 
-        this.exponent = this.lastExponent = currImg.fractal.params.e || undefined;
+        this.exponent = this.lastExponent = currImg.fractal.params.e || 0;
         this.elements.exponent.value = this.exponent || "";
 
         this.juliaConstant = this.lastJuliaConstant =
-            currImg.fractal.params.c || undefined;
+            currImg.fractal.params.c || new Complex(null, null);
         this.elements.juliaConstant.value =
-            this.juliaConstant ?
+            this.juliaConstant.re ?
             Complex.toString(this.juliaConstant) : "";
         
         this.iterations = currImg.iterations;
@@ -159,6 +159,7 @@ var toolbar = {
 
         // Display
         this.resetMouseComplexCoords();
+        this.updateFractalType();
         this.displayIterations();
         this.updateZoom();
     },
@@ -210,13 +211,19 @@ var toolbar = {
         }
         else {
             this.elements.exponentContainer.className = "hide";
+            this.elements.exponent.value = this.defaults.exponent;
         }
         if(Fractal.requiresJuliaConstant(this.fractalType)) {
             this.elements.juliaConstantContainer.className = "";
         }
         else {
             this.elements.juliaConstantContainer.className = "hide";
+            this.elements.juliaConstant.value =
+                Complex.toString(this.defaults.juliaConstant);
         }
+
+        this.updateExponent();
+        this.updateJuliaConstant();
     },
 
     // When exponent input is changed
