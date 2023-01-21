@@ -78,3 +78,8 @@ Complex.exp = function(c, e) {
 Complex.abs = function(c) {
     return (c.re ** 2 + c.im ** 2) ** 0.5;
 };
+
+// The complex conjugate a+bi is a-bi
+Complex.conj = function(c) {
+    return Complex(c.re, -c.im);
+}
