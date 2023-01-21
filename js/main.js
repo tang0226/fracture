@@ -49,6 +49,36 @@ var defaultImages = {
         defaultView,
         canvasWidth, canvasHeight
     ),
+    Tricorn: new Image(
+        new Fractal("Tricorn"),
+        100, 2,
+        new Frame(
+            Complex(-0.25, 0),
+            4, 4
+        ),
+        canvasWidth, canvasHeight
+    ),
+    TricornJulia: new Image(
+        new Fractal("TricornJulia", {c: Complex(-1, 0)}),
+        100, 2,
+        new Frame(
+            Complex(-0.25, 0),
+            4, 4
+        ),
+        canvasWidth, canvasHeight
+    ),
+    Multicorn: new Image(
+        new Fractal("Multicorn", {e: 3}),
+        100, 2,
+        defaultView,
+        canvasWidth, canvasHeight
+    ),
+    MulticornJulia: new Image(
+        new Fractal("MulticornJulia", {e: 3, c: Complex(-1, -1)}),
+        100, 2,
+        defaultView,
+        canvasWidth, canvasHeight
+    ),
     BurningShip: new Image(
         new Fractal("BurningShip"),
         100, 2,

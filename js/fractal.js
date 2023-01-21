@@ -29,6 +29,24 @@ Fractal.data = {
         requiresJuliaConstant: true,
         requiresExponent: true
     },
+    Tricorn: {
+        requiresJuliaConstant: false,
+        requiresExponent: false,
+        juliaEquivalent: "TricornJulia"
+    },
+    TricornJulia: {
+        requiresJuliaConstant: true,
+        requiresExponent: false
+    },
+    Multicorn: {
+        requiresJuliaConstant: false,
+        requiresExponent: true,
+        juliaEquivalent: "MulticornJulia"
+    },
+    MulticornJulia: {
+        requiresJuliaConstant: true,
+        requiresExponent: true
+    },
     BurningShip: {
         requiresJuliaConstant: false,
         requiresExponent: false,
@@ -85,6 +103,46 @@ Fractal.iterate = {
         let n = 0;
         while(Complex.abs(z) <= escapeRadius && n < iterations) {
             z = Complex.add(Complex.exp(z, params.e), params.c);
+            n++;
+        }
+        return n;
+    },
+
+    Tricorn(params, c, iterations, escapeRadius) {
+        let z = Complex(0, 0);
+        let n = 0;
+        while(Complex.abs(z) <= escapeRadius && n < iterations) {
+            z = Complex.add(Complex.exp(Complex.conj(z), 2), c);
+            n++;
+        }
+        return n;
+    },
+
+    TricornJulia(params, _z, iterations, escapeRadius) {
+        let z = _z;
+        let n = 0;
+        while(Complex.abs(z) <= escapeRadius && n < iterations) {
+            z = Complex.add(Complex.exp(Complex.conj(z), 2), params.c);
+            n++;
+        }
+        return n;
+    },
+
+    Multicorn(params, c, iterations, escapeRadius) {
+        let z = Complex(0, 0);
+        let n = 0;
+        while(Complex.abs(z) <= escapeRadius && n < iterations) {
+            z = Complex.add(Complex.exp(Complex.conj(z), params.e), c);
+            n++;
+        }
+        return n;
+    },
+
+    MulticornJulia(params, _z, iterations, escapeRadius) {
+        let z = _z;
+        let n = 0;
+        while(Complex.abs(z) <= escapeRadius && n < iterations) {
+            z = Complex.add(Complex.exp(Complex.conj(z), params.e), params.c);
             n++;
         }
         return n;
