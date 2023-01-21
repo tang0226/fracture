@@ -1,14 +1,12 @@
 # Fracture: fractal viewer built with HTML canvas
 Main page is located at main.html ([view online](https://tang0226.github.io/fracture/main)).
 * Displays these fractals:
-  * Mandelbrot set
-  * Julia sets
-  * Multibrot sets
-  * Multijulia sets
-  * Burning Ship fractal
-  * Burning Ship Julia sets
-  * Multiship fractals (Burning Ships with an exponent other than 2)
-  * Multiship Julia sets (Burning Ship Julia sets with an exponent other than 2)
+  * Mandelbrot set and Julia sets
+  * Multibrot sets and Julia sets
+  * Burning Ship fractal and Julia sets
+  * Multiship fractals and Julia sets (Burning Ships and Julia sets with an exponent other than 2)
+  * Tricorn fractal and Julia sets
+  * Mulicorn fractals and Julia sets
 * Adjustable parameters:
   * Iterations
   * Canvas size
@@ -30,6 +28,7 @@ Main page is located at main.html ([view online](https://tang0226.github.io/frac
     * Smooth coloring
     * More color options (aka premade palettes / coloring functions)
     * (harder) Custom palettes?
+    * (general) Palette prototype
 * Add new fractals:
   * Rational maps
   * Phoenix fractal (feedback from previous iterations)
@@ -41,7 +40,6 @@ Main page is located at main.html ([view online](https://tang0226.github.io/frac
     * Misc. math functions (abs, log, trig functions)
     * Feedback from previous iterations
 * Prevent scientific notation for complex coordinates (especially close to im = 0)
-* Pause render time timer when window loses focus
 * Add help section/popup
 
 ## Samples:
