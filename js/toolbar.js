@@ -13,6 +13,7 @@ var toolbar = {
         iterationIncrement: document.getElementById("iteration-increment"),
         escapeRadius: document.getElementById("escape-radius"),
         clickZoomFactor: document.getElementById("click-zoom-factor"),
+        palette: document.getElementById("palette"),
         canvasWidth: document.getElementById("canvas-width"),
         canvasHeight: document.getElementById("canvas-height"),
         downloadType: document.getElementById("download-type"),
@@ -30,6 +31,7 @@ var toolbar = {
         iterationIncrementAlert: document.getElementById("iteration-increment-alert"),
         escapeRadiusAlert: document.getElementById("escape-radius-alert"),
         clickZoomFactorAlert: document.getElementById("click-zoom-factor-alert"),
+        paletteAlert: document.getElementById("palette-alert"),
         canvasWidthAlert: document.getElementById("canvas-width-alert"),
         canvasHeightAlert: document.getElementById("canvas-height-alert"),
 
@@ -64,6 +66,7 @@ var toolbar = {
         iterationIncrement: true,
         escapeRadius: true,
         clickZoomFactor: true,
+        palette: true,
         canvasWidth: true,
         canvasHeight: true
     },
@@ -95,6 +98,9 @@ var toolbar = {
 
         this.clickZoomFactor = this.defaults.clickZoomFactor;
         this.elements.clickZoomFactor.value = this.clickZoomFactor;
+
+        this.palette = currImg.palette;
+        this.elements.palette.innerHTML = currImg.palette.string;
 
         this.elements.canvasWidth.value = canvasWidth;
         this.elements.canvasHeight.value = canvasHeight;
@@ -129,6 +135,10 @@ var toolbar = {
         this.elements.clickZoomFactor.setAttribute(
             "onchange",
             "toolbar.updateCZF()"
+        );
+        this.elements.palette.setAttribute(
+            "onchange",
+            "toolbar.updatePalette()"
         );
         this.elements.canvasWidth.setAttribute(
             "onchange",
@@ -355,6 +365,28 @@ var toolbar = {
             this.elements.clickZoomFactorAlert.classList.add("hide");
             this.inputStatus.clickZoomFactor = true;
         }
+    },
+
+
+
+    // Palette
+    updatePalette() {
+        let toSet;
+
+        try {
+            toSet = new Palette(this.elements.palette.value, 200);
+        }
+        catch(error) {
+            this.elements.paletteAlert.classList.remove("hide")
+            this.inputStatus.palette = false;
+            return;
+        }
+
+        this.elements.paletteAlert.classList.add("hide");
+        currImg.palette = toSet;
+        this.inputStatus.palette = true;
+
+        console.log(toSet);
     },
 
 
