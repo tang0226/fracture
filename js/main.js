@@ -23,30 +23,42 @@ setCanvasDim(canvasWidth, canvasHeight);
 var defaultView = new Frame(Complex(0, 0), 4, 4);
 
 
+// Palette
+
+var defaultPalette = new Palette(
+    "100;0, 0 0 255; 25, 255 255 255; 50, 255 0 0; 75, 255 255 255;"
+);
+
+
+
 // Images
 var defaultImages = {
     Mandelbrot: new Image(
         new Fractal("Mandelbrot"),
         100, 2,
         new Frame(Complex(-0.5, 0), 4, 4),
+        defaultPalette,
         canvasWidth, canvasHeight
     ),
     Julia: new Image(
         new Fractal("Julia", {c: Complex(0, 1)}),
         100, 2,
         defaultView,
+        defaultPalette,
         canvasWidth, canvasHeight
     ),
     Multibrot: new Image(
         new Fractal("Multibrot", {e: 3}),
         100, 2,
         defaultView,
+        defaultPalette,
         canvasWidth, canvasHeight
     ),
     Multijulia: new Image(
         new Fractal("Multijulia", {e: 3, c: Complex(-0.12, -0.8)}),
         100, 2,
         defaultView,
+        defaultPalette,
         canvasWidth, canvasHeight
     ),
     Tricorn: new Image(
@@ -56,6 +68,7 @@ var defaultImages = {
             Complex(-0.25, 0),
             4, 4
         ),
+        defaultPalette,
         canvasWidth, canvasHeight
     ),
     TricornJulia: new Image(
@@ -65,54 +78,53 @@ var defaultImages = {
             Complex(-0.25, 0),
             4, 4
         ),
+        defaultPalette,
         canvasWidth, canvasHeight
     ),
     Multicorn: new Image(
         new Fractal("Multicorn", {e: 3}),
         100, 2,
         defaultView,
+        defaultPalette,
         canvasWidth, canvasHeight
     ),
     MulticornJulia: new Image(
         new Fractal("MulticornJulia", {e: 3, c: Complex(-1, -1)}),
         100, 2,
         defaultView,
+        defaultPalette,
         canvasWidth, canvasHeight
     ),
     BurningShip: new Image(
         new Fractal("BurningShip"),
         100, 2,
         new Frame(Complex(0, -0.5), 4, 4),
+        defaultPalette,
         canvasWidth, canvasHeight
     ),
     BurningShipJulia: new Image(
         new Fractal("BurningShipJulia", {c: Complex(-1.5, 0)}),
         100, 2,
         defaultView,
+        defaultPalette,
         canvasWidth, canvasHeight
     ),
     Multiship: new Image(
         new Fractal("Multiship", {e: 3}),
         100, 2,
         defaultView,
+        defaultPalette,
         canvasWidth, canvasHeight
     ),
     MultishipJulia: new Image(
         new Fractal("MultishipJulia", {e: 3, c: Complex(-1.326667, 0)}),
         100, 2,
         defaultView,
+        defaultPalette,
         canvasWidth, canvasHeight
     )
 };
 
-try {
-    var p = new Palette("100;0,0 0 0;20,255 0 0;40, 255 255 255;50,0 255 255;75, 255 255 255");
-}
-catch(error) {
-    console.log(error);
-}
-
-console.log(p.getColorAt(0.6));
 
 
 // Initial image settings:

@@ -1,4 +1,4 @@
-importScripts("./complex.js", "./fractal.js");
+importScripts("./complex.js", "./fractal.js", "./palette.js");
 
 var scale = function(n, minFrom, maxFrom, minTo, maxTo) {
     return ((n / (maxFrom - minFrom)) * (maxTo - minTo)) + minTo;
@@ -12,7 +12,6 @@ onmessage = function(event) {
 
         let img = data.img;
         let iterate = Fractal.iterate[img.fractal.type];
-
         let imgData = new ImageData(img.width, img.height);
 
         let im = img.frame.imMin;
@@ -28,20 +27,21 @@ onmessage = function(event) {
                     img.escapeRadius
                 );
 
-                let bw;
                 if(val == img.iterations) {
                     // Part of set, color black
-                    bw = 0;
+                    imgData.data[i] = 0;
+                    imgData.data[i + 1] = 0;
+                    imgData.data[i + 2] = 0;
+                    imgData.data[i + 3] = 255;
                 }
                 else {
                     // Color scale
-                    bw = scale(val, 0, img.iterations, 0, 255);
+                    let color = Palette.getColorAt(img.palette, val / img.iterations);
+                    imgData.data[i] = color[0];
+                    imgData.data[i + 1] = color[1];
+                    imgData.data[i + 2] = color[2];
+                    imgData.data[i + 3] = 255;
                 }
-
-                imgData.data[i] = bw;
-                imgData.data[i + 1] = bw;
-                imgData.data[i + 2] = bw;
-                imgData.data[i + 3] = 255;
 
                 re += img.complexIter;
                 i += 4;

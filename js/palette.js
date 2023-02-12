@@ -66,29 +66,36 @@ var Palette = function(input) {
         }
         return 0;
     });
+
+    if(this.points[this.points.length - 1].pos != range) {
+        this.points.push({
+            pos: 1,
+            color: this.points[0].color
+        });
+    }
 };
 
-Palette.prototype.getColorAt = function(pos) {
-    let l = this.points.length;
+Palette.getColorAt = function(p, pos) {
+    let l = p.points.length;
 
     // Binary search
     let max = Math.ceil(l / 2);
     let min = max - 1;
     while(true) {
-        if(pos > this.points[max].pos) {
+        if(pos > p.points[max].pos) {
             min = max;
             max = Math.ceil((max + l) / 2);
         }
-        else if(pos < this.points[min].pos) {
+        else if(pos < p.points[min].pos) {
             max = min;
             min = Math.floor(min / 2);
         }
         else {
             let frac =
-                (pos - this.points[min].pos) /
-                (this.points[max].pos - this.points[min].pos);
-            let maxPoint = this.points[max];
-            return this.points[min].color.map((c, i) =>
+                (pos - p.points[min].pos) /
+                (p.points[max].pos - p.points[min].pos);
+            let maxPoint = p.points[max];
+            return p.points[min].color.map((c, i) =>
                 c + (maxPoint.color[i] - c) * frac
             );
         }
