@@ -105,6 +105,14 @@ var defaultImages = {
     )
 };
 
+try {
+    var palette = new Palette("100;\n0, 0 0 0; 50, 255 0 0; 100, 255 255 255");
+}
+catch(error) {
+    console.log(error);
+}
+console.log(palette);
+
 
 // Initial image settings:
 var currImg = defaultImages.Mandelbrot.copy();
