@@ -26,7 +26,8 @@ var defaultView = new Frame(Complex(0, 0), 4, 4);
 // Palette
 
 var defaultPalette = new Palette(
-    "100;0, 0 0 255; 25, 255 255 255; 50, 255 0 0; 75, 255 255 255;"
+    "100;0, 0 0 255; 25, 255 255 255; 50, 255 0 0; 75, 255 255 255;",
+    200
 );
 
 

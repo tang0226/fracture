@@ -35,8 +35,13 @@ onmessage = function(event) {
                     imgData.data[i + 3] = 255;
                 }
                 else {
+                    let ipc = img.palette.itersPerCycle;
+                    
+                    // Format for palette
+                    val %= ipc;
+
                     // Color scale
-                    let color = Palette.getColorAt(img.palette, val / img.iterations);
+                    let color = Palette.getColorAt(img.palette, val / ipc);
                     imgData.data[i] = color[0];
                     imgData.data[i + 1] = color[1];
                     imgData.data[i + 2] = color[2];

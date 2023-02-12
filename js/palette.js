@@ -1,4 +1,4 @@
-var Palette = function(input) {
+var Palette = function(input, itersPerCycle) {
     lines = input.split(";").map(l => l.trim());
     
     // First line is number of points
@@ -73,6 +73,8 @@ var Palette = function(input) {
             color: this.points[0].color
         });
     }
+
+    this.itersPerCycle = itersPerCycle;
 };
 
 Palette.getColorAt = function(p, pos) {
