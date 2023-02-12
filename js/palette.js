@@ -67,3 +67,30 @@ var Palette = function(input) {
         return 0;
     });
 };
+
+Palette.prototype.getColorAt = function(pos) {
+    let l = this.points.length;
+
+    // Binary search
+    let max = Math.ceil(l / 2);
+    let min = max - 1;
+    while(true) {
+        if(pos > this.points[max].pos) {
+            min = max;
+            max = Math.ceil((max + l) / 2);
+        }
+        else if(pos < this.points[min].pos) {
+            max = min;
+            min = Math.floor(min / 2);
+        }
+        else {
+            let frac =
+                (pos - this.points[min].pos) /
+                (this.points[max].pos - this.points[min].pos);
+            let maxPoint = this.points[max];
+            return this.points[min].color.map((c, i) =>
+                c + (maxPoint.color[i] - c) * frac
+            );
+        }
+    }
+};

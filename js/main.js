@@ -106,12 +106,13 @@ var defaultImages = {
 };
 
 try {
-    var palette = new Palette("100;\n0, 0 0 0; 50, 255 0 0; 100, 255 255 255");
+    var p = new Palette("100;0,0 0 0;20,255 0 0;40, 255 255 255;50,0 255 255;75, 255 255 255");
 }
 catch(error) {
     console.log(error);
 }
-console.log(palette);
+
+console.log(p.getColorAt(0.6));
 
 
 // Initial image settings:
