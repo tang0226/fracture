@@ -12,6 +12,7 @@ onmessage = function(event) {
 
         let img = data.img;
         let iterate = Fractal.iterate[img.fractal.type];
+        let ipc = img.itersPerCycle;
         let imgData = new ImageData(img.width, img.height);
 
         let im = img.frame.imMin;
@@ -35,8 +36,7 @@ onmessage = function(event) {
                     imgData.data[i + 3] = 255;
                 }
                 else {
-                    let ipc = img.palette.itersPerCycle;
-                    
+
                     // Format for palette
                     val %= ipc;
 

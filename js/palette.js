@@ -13,23 +13,10 @@ var Palette = function(input) {
         throw "ValueError: First line must be an positive number of points";
     }
 
-    // Second line is iters per cycle
-    // First line is number of points
-    let itersPerCycle = Number(lines[1]);
-
-    if(!Number.isInteger(itersPerCycle)) {
-        throw "ValueError: Second line must be an integer number of iterations per cycle";
-    }
-    if(itersPerCycle <= 0) {
-        throw "ValueError: Second line must be an positive number iterations per cycle";
-    }
-    
-    this.itersPerCycle = itersPerCycle;
-
 
     this.points = [];
 
-    for(let i = 2; i < lines.length; i++) {
+    for(let i = 1; i < lines.length; i++) {
         let line = lines[i];
         if(!line) {
             continue;
@@ -90,8 +77,6 @@ var Palette = function(input) {
             color: this.points[0].color
         });
     }
-
-    this.itersPerCycle = itersPerCycle;
 };
 
 Palette.getColorAt = function(p, pos) {

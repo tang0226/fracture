@@ -14,6 +14,7 @@ var toolbar = {
         escapeRadius: document.getElementById("escape-radius"),
         clickZoomFactor: document.getElementById("click-zoom-factor"),
         palette: document.getElementById("palette"),
+        itersPerCycle: document.getElementById("iters-per-cycle"),
         canvasWidth: document.getElementById("canvas-width"),
         canvasHeight: document.getElementById("canvas-height"),
         downloadType: document.getElementById("download-type"),
@@ -32,6 +33,7 @@ var toolbar = {
         escapeRadiusAlert: document.getElementById("escape-radius-alert"),
         clickZoomFactorAlert: document.getElementById("click-zoom-factor-alert"),
         paletteAlert: document.getElementById("palette-alert"),
+        ipcAlert: document.getElementById("ipc-alert"),
         canvasWidthAlert: document.getElementById("canvas-width-alert"),
         canvasHeightAlert: document.getElementById("canvas-height-alert"),
 
@@ -67,6 +69,7 @@ var toolbar = {
         escapeRadius: true,
         clickZoomFactor: true,
         palette: true,
+        itersPerCycle: true,
         canvasWidth: true,
         canvasHeight: true
     },
@@ -100,7 +103,10 @@ var toolbar = {
         this.elements.clickZoomFactor.value = this.clickZoomFactor;
 
         this.palette = currImg.palette;
-        this.elements.palette.innerHTML = currImg.palette.string;
+        this.elements.palette.value = currImg.palette.string;
+
+        this.itersPerCycle = currImg.itersPerCycle;
+        this.elements.itersPerCycle.value = currImg.itersPerCycle;
 
         this.elements.canvasWidth.value = canvasWidth;
         this.elements.canvasHeight.value = canvasHeight;
@@ -140,6 +146,10 @@ var toolbar = {
             "onchange",
             "toolbar.updatePalette()"
         );
+        this.elements.itersPerCycle.setAttribute(
+            "onchange",
+            "toolbar.updateIPC()"
+        )
         this.elements.canvasWidth.setAttribute(
             "onchange",
             "toolbar.updateCanvasWidth()"
@@ -374,19 +384,31 @@ var toolbar = {
         let toSet;
 
         try {
-            toSet = new Palette(this.elements.palette.value, 200);
+            toSet = new Palette(this.elements.palette.value);
         }
-        catch(error) {
+        catch(e) {
             this.elements.paletteAlert.classList.remove("hide")
             this.inputStatus.palette = false;
             return;
         }
 
         this.elements.paletteAlert.classList.add("hide");
-        currImg.palette = toSet;
+        this.palette = toSet;
         this.inputStatus.palette = true;
+    },
 
-        console.log(toSet);
+    updateIPC() {
+        let toSet = Number(this.elements.itersPerCycle.value);
+        // Sanitize
+        if(Number.isNaN(toSet) || toSet < 0 || !Number.isInteger(toSet)) {
+            this.elements.ipcAlert.classList.remove("hide");
+            this.inputStatus.itersPerCycle = false;
+        }
+        else {
+            this.itersPerCycle = toSet;
+            this.elements.ipcAlert.classList.add("hide");
+            this.inputStatus.itersPerCycle = true;
+        }
     },
 
 
@@ -492,6 +514,10 @@ var toolbar = {
         this.lastFractalType = this.fractalType;
         this.lastExponent = this.exponent;
         this.lastJuliaConstant = this.juliaConstant;
+
+        // Update palette and ipc
+        currImg.palette = this.palette;
+        currImg.itersPerCycle = this.itersPerCycle;
 
         // Prepare the image to be redrawn
         currImg.fitToCanvas(canvasWidth, canvasHeight);
