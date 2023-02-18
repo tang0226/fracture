@@ -248,6 +248,7 @@ controlsCanvas.onmouseup = function() {
             }
             toolbar.syncFractal();
             toolbar.syncImageParams();
+            toolbar.setImgPalette();
         }
 
         // Center the frame

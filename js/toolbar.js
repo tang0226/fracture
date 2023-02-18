@@ -516,8 +516,7 @@ var toolbar = {
         this.lastJuliaConstant = this.juliaConstant;
 
         // Update palette and ipc
-        currImg.palette = this.palette;
-        currImg.itersPerCycle = this.itersPerCycle;
+        this.setImgPalette();
 
         // Prepare the image to be redrawn
         currImg.fitToCanvas(canvasWidth, canvasHeight);
@@ -578,5 +577,10 @@ var toolbar = {
         
         // Sync zoom
         this.updateZoom();
+    },
+
+    setImgPalette() {
+        currImg.palette = this.palette;
+        currImg.itersPerCycle = this.itersPerCycle;
     }
 };
