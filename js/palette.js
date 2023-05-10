@@ -83,18 +83,16 @@ Palette.getColorAt = function(p, pos) {
     let l = p.points.length;
 
     // Binary search
-    let max = Math.ceil(l / 2);
-    let min = max - 1;
+    let max = l - 1;
+    let min = 0;
     while(true) {
-        if(pos > p.points[max].pos) {
-            min = max;
-            max = Math.ceil((max + l) / 2);
+        if(pos >= p.points[Math.floor((min + max) / 2)].pos) {
+            min = Math.floor((min + max) / 2);
         }
-        else if(pos < p.points[min].pos) {
-            max = min;
-            min = Math.floor(min / 2);
+        else if(pos <= p.points[Math.ceil((min + max) / 2)].pos) {
+            max = Math.ceil((min + max) / 2);
         }
-        else {
+        if(max - min == 1) {
             let frac =
                 (pos - p.points[min].pos) /
                 (p.points[max].pos - p.points[min].pos);
