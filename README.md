@@ -19,6 +19,7 @@ Main page is located at main.html ([view online](https://tang0226.github.io/frac
 * Center the image with Ctrl + click
 * Use Alt + click to view a point's corresponding Juila set or to switch back to the original image
 * Downloadable images
+* NEW: Custom palettes 
 * More features and fractals coming!
 
 ## Coding todo list:
@@ -27,20 +28,25 @@ Main page is located at main.html ([view online](https://tang0226.github.io/frac
     * Anti-aliasing
     * Smooth coloring
     * More color options (aka premade palettes / coloring functions)
-    * (harder) Custom palettes?
-    * (general) Palette prototype
 * Add new fractals:
   * Rational maps
   * Phoenix fractal (feedback from previous iterations)
   * Newtonian fractals?
   * Collatz fractal
   * Custom fractal
-    * Equation
+    * Equation (+ parser)
     * Iteration style: Mandelbrot or Julia
     * Misc. math functions (abs, log, trig functions)
     * Feedback from previous iterations
+* Fix wrong default Tricorn Julia frame
 * Prevent scientific notation for complex coordinates (especially close to im = 0)
 * Add help section/popup
+* Dynamically built functions to improve rendering time?
+  * This can also facilitate new options such as:
+    * Hybrid fractals
+    * More flexible palettes
+* "Touch up" function: only recalculate image if necessary (i.e. something about the fractal changed); This will allow for faster palette manipulation to fine-tune a render.
+* Friendly palette UI (instead of text)
 
 ## Samples:
 ![mandelbrot set](https://github.com/tang0226/fractal/blob/master/samples/mandelbrot_set.png?raw=true)
