@@ -574,6 +574,10 @@ var toolbar = {
         // Sync escape radius
         this.elements.escapeRadius.value = currImg.escapeRadius.toString();
         this.escapeRadius = currImg.escapeRadius;
+
+        // Sync IPC
+        this.elements.itersPerCycle.value = currImg.itersPerCycle.toString();
+        this.itersPerCycle = currImg.itersPerCycle;
         
         // Sync zoom
         this.updateZoom();
