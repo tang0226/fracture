@@ -74,10 +74,7 @@ var defaultImages = {
     TricornJulia: new Image(
         new Fractal("TricornJulia", {c: Complex(-1, 0)}),
         1000, 2,
-        new Frame(
-            Complex(-0.25, 0),
-            4, 4
-        ),
+        defaultView,
         defaultPalette, 200,
         canvasWidth, canvasHeight
     ),
