@@ -13,6 +13,8 @@ var toolbar = {
         iterationIncrement: document.getElementById("iteration-increment"),
         escapeRadius: document.getElementById("escape-radius"),
         clickZoomFactor: document.getElementById("click-zoom-factor"),
+        palette: document.getElementById("palette"),
+        itersPerCycle: document.getElementById("iters-per-cycle"),
         canvasWidth: document.getElementById("canvas-width"),
         canvasHeight: document.getElementById("canvas-height"),
         downloadType: document.getElementById("download-type"),
@@ -30,6 +32,8 @@ var toolbar = {
         iterationIncrementAlert: document.getElementById("iteration-increment-alert"),
         escapeRadiusAlert: document.getElementById("escape-radius-alert"),
         clickZoomFactorAlert: document.getElementById("click-zoom-factor-alert"),
+        paletteAlert: document.getElementById("palette-alert"),
+        ipcAlert: document.getElementById("ipc-alert"),
         canvasWidthAlert: document.getElementById("canvas-width-alert"),
         canvasHeightAlert: document.getElementById("canvas-height-alert"),
 
@@ -64,6 +68,8 @@ var toolbar = {
         iterationIncrement: true,
         escapeRadius: true,
         clickZoomFactor: true,
+        palette: true,
+        itersPerCycle: true,
         canvasWidth: true,
         canvasHeight: true
     },
@@ -95,6 +101,12 @@ var toolbar = {
 
         this.clickZoomFactor = this.defaults.clickZoomFactor;
         this.elements.clickZoomFactor.value = this.clickZoomFactor;
+
+        this.palette = currImg.palette;
+        this.elements.palette.value = currImg.palette.string;
+
+        this.itersPerCycle = currImg.itersPerCycle;
+        this.elements.itersPerCycle.value = currImg.itersPerCycle;
 
         this.elements.canvasWidth.value = canvasWidth;
         this.elements.canvasHeight.value = canvasHeight;
@@ -130,6 +142,14 @@ var toolbar = {
             "onchange",
             "toolbar.updateCZF()"
         );
+        this.elements.palette.setAttribute(
+            "onchange",
+            "toolbar.updatePalette()"
+        );
+        this.elements.itersPerCycle.setAttribute(
+            "onchange",
+            "toolbar.updateIPC()"
+        )
         this.elements.canvasWidth.setAttribute(
             "onchange",
             "toolbar.updateCanvasWidth()"
@@ -359,6 +379,40 @@ var toolbar = {
 
 
 
+    // Palette
+    updatePalette() {
+        let toSet;
+
+        try {
+            toSet = new Palette(this.elements.palette.value);
+        }
+        catch(e) {
+            this.elements.paletteAlert.classList.remove("hide")
+            this.inputStatus.palette = false;
+            return;
+        }
+
+        this.elements.paletteAlert.classList.add("hide");
+        this.palette = toSet;
+        this.inputStatus.palette = true;
+    },
+
+    updateIPC() {
+        let toSet = Number(this.elements.itersPerCycle.value);
+        // Sanitize
+        if(Number.isNaN(toSet) || toSet < 0 || !Number.isInteger(toSet)) {
+            this.elements.ipcAlert.classList.remove("hide");
+            this.inputStatus.itersPerCycle = false;
+        }
+        else {
+            this.itersPerCycle = toSet;
+            this.elements.ipcAlert.classList.add("hide");
+            this.inputStatus.itersPerCycle = true;
+        }
+    },
+
+
+
     // Canvas dimensions
     updateCanvasWidth() {
         let toSet = Number(this.elements.canvasWidth.value);
@@ -461,6 +515,9 @@ var toolbar = {
         this.lastExponent = this.exponent;
         this.lastJuliaConstant = this.juliaConstant;
 
+        // Update palette and ipc
+        this.setImgPalette();
+
         // Prepare the image to be redrawn
         currImg.fitToCanvas(canvasWidth, canvasHeight);
 
@@ -517,8 +574,17 @@ var toolbar = {
         // Sync escape radius
         this.elements.escapeRadius.value = currImg.escapeRadius.toString();
         this.escapeRadius = currImg.escapeRadius;
+
+        // Sync IPC
+        this.elements.itersPerCycle.value = currImg.itersPerCycle.toString();
+        this.itersPerCycle = currImg.itersPerCycle;
         
         // Sync zoom
         this.updateZoom();
+    },
+
+    setImgPalette() {
+        currImg.palette = this.palette;
+        currImg.itersPerCycle = this.itersPerCycle;
     }
 };

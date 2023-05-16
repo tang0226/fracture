@@ -112,6 +112,23 @@
 
             <hr>
 
+            <section id="palette-toolbar">
+                <div id="palette-container">
+                    Palette:
+                    <br/>
+                    <textarea id="palette" cols="40" rows="5"></textarea>
+                    <div id="palette-alert" class="alert hide">There is an error in the palette</div>
+                </div>
+
+                <div id="ipc-container">
+                    Iterations per cycle:
+                    <input id="iters-per-cycle"/>
+                    <div id="ipc-alert" class="alert hide">Iterations per cycle must be a positive integer</div>
+                </div>
+            </section>
+
+            <hr>
+
             <section id="canvas-dim-toolbar">
                 <div id="canvas-width-container">
                     Width (px):
@@ -145,6 +162,7 @@
         <script src="./js/complex.js"></script>
         <script src="./js/fractal.js"></script>
         <script src="./js/frame.js"></script>
+        <script src="./js/palette.js"></script>
         <script src="./js/image.js"></script>
         <script src="./js/toolbar.js"></script>
         <script src="./js/main.js"></script>
