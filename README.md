@@ -22,7 +22,7 @@ Main page is located at main.html ([view online](https://tang0226.github.io/frac
 * NEW: Custom palettes 
 * More features and fractals coming!
 
-## Coding todo list:
+## Code / features todo list:
 * Add more toolbar options:
   * Image quality:
     * Anti-aliasing
@@ -38,7 +38,6 @@ Main page is located at main.html ([view online](https://tang0226.github.io/frac
     * Iteration style: Mandelbrot or Julia
     * Misc. math functions (abs, log, trig functions)
     * Feedback from previous iterations
-* Fix wrong default Tricorn Julia frame
 * Prevent scientific notation for complex coordinates (especially close to im = 0)
 * Add help section/popup
 * Dynamically built functions to improve rendering time?
@@ -47,6 +46,8 @@ Main page is located at main.html ([view online](https://tang0226.github.io/frac
     * More flexible palettes
 * "Touch up" function: only recalculate image if necessary (i.e. something about the fractal changed); This will allow for faster palette manipulation to fine-tune a render.
 * Friendly palette UI (instead of text)
+* Streamline toolbar structure
+* Shorten variable and function names
 
 ## Samples:
 ![mandelbrot set](https://github.com/tang0226/fractal/blob/master/samples/mandelbrot_set.png?raw=true)
