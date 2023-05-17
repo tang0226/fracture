@@ -187,7 +187,7 @@ var toolbar = {
 
     // Render time
     displayRenderTime(time) {
-        this.elements.renderTime.innerHTML = time.toString() + " ms";
+        this.elements.renderTime.innerHTML = time + " ms";
     },
 
 
@@ -297,7 +297,7 @@ var toolbar = {
 
     // Display internal iterations
     displayIterations() {
-        this.elements.iterations.value = this.iterations.toString();
+        this.elements.iterations.value = this.iterations;
     },
 
     // When iterations input is changed
@@ -398,7 +398,7 @@ var toolbar = {
 
     // Sync internal and external zoom with current image
     updateZoom() {
-        this.elements.zoom.innerHTML = currImg.frame.toZoom().toString();
+        this.elements.zoom.innerHTML = currImg.frame.toZoom();
     },
 
     // When click zoom factor input is changed
@@ -446,6 +446,7 @@ var toolbar = {
         this.inputStatus.palette = true;
     },
 
+    // When iterations per cycle input is changed
     updateIPC() {
         let toSet = Number(this.elements.itersPerCycle.value);
 
@@ -643,7 +644,7 @@ var toolbar = {
 
         // Sync Exponent
         if(currFractal.params.e) {
-            this.elements.exponent.value = currFractal.params.e.toString();
+            this.elements.exponent.value = currFractal.params.e;
             this.exponent = this.lastExponent = currFractal.params.e;
         }
 
@@ -656,15 +657,15 @@ var toolbar = {
 
     syncImageParams() {
         // Sync iterations
-        this.elements.iterations.value = currImg.iterations.toString();
+        this.elements.iterations.value = currImg.iterations;
         this.iterations = currImg.iterations;
 
         // Sync escape radius
-        this.elements.escapeRadius.value = currImg.escapeRadius.toString();
+        this.elements.escapeRadius.value = currImg.escapeRadius;
         this.escapeRadius = currImg.escapeRadius;
 
         // Sync IPC
-        this.elements.itersPerCycle.value = currImg.itersPerCycle.toString();
+        this.elements.itersPerCycle.value = currImg.itersPerCycle;
         this.itersPerCycle = currImg.itersPerCycle;
         
         // Sync zoom
