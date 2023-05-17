@@ -198,7 +198,7 @@ var toolbar = {
     },
 
 
-    // Mouse complex coordinates
+    // Mouse coordinates
     displayMouseComplexCoords() {
         let complexCoords = currImg.frame.toComplexCoords(
             mouseX, mouseY,
@@ -329,7 +329,7 @@ var toolbar = {
         this.inputStatus.iterations = newStatus;
     },
 
-    // Set internal and displayed iterations 
+    // Sets internal and displayed iterations 
     setIterations(iterations) {
         this.iterations = iterations;
         this.displayIterations();
@@ -554,13 +554,13 @@ var toolbar = {
         // If so, exit Julia mode
         let fractalChanged = false;
         
-        // Check for new fractal type
+        // Update fractal and check for changes
         if(this.fractalType != this.lastFractalType) {
             currImg = defaultImages[this.fractalType].copy();
             fractalChanged = true;
         }
 
-        // Check for new exponent
+        // Update exponent and check for changes
         if(currImg.fractal.requiresExponent) {
             currImg.fractal.params.e = this.exponent;
 
@@ -572,7 +572,7 @@ var toolbar = {
             }
         }
 
-        // Check for new Julia constant
+        // Update Julia constant and check for changes
         if(currImg.fractal.requiresJuliaConstant) {
             currImg.fractal.params.c = this.juliaConstant;
             if(!Complex.equals(this.juliaConstant, this.lastJuliaConstant)) {
@@ -582,7 +582,9 @@ var toolbar = {
         }
 
         if(fractalChanged) {
+            // New image takes priority for parameters
             this.syncImageParams();
+
             if(currMode == "julia") {
                 currMode = "default";
                 storedImg = null;
@@ -626,7 +628,7 @@ var toolbar = {
 
 
 
-    // Sync
+    // Syncing - changing internals to match the curren timage
     syncFractal() {
         // Sync fractal type
 
@@ -669,6 +671,8 @@ var toolbar = {
         this.updateZoom();
     },
 
+    
+    // Palette
     setImgPalette() {
         currImg.palette = this.palette;
         currImg.itersPerCycle = this.itersPerCycle;
