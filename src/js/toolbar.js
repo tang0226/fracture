@@ -251,15 +251,27 @@ var toolbar = {
         let toSet = Number(this.elements.exponent.value);
 
         // Sanitize
-        if(Number.isNaN(toSet) || toSet < 1 || !Number.isInteger(toSet)) {
-            this.elements.exponentAlert.classList.remove("hide");
-            this.inputStatus.exponent = false;
+        let newStatus = true;
+        if(Number.isNaN(toSet)) {
+            this.elements.exponentAlert.innerHTML =
+                "Exponent must be a number";
+            newStatus = false;
+        }
+        else if(toSet <= 1) {
+            this.elements.exponentAlert.innerHTML =
+                "Exponent must be greater than 1";
+            newStatus = false;
+        }
+        else if(!Number.isInteger(toSet)) {
+            this.elements.exponentAlert.innerHTML =
+                "Exponent must be an integer";
+            newStatus = false;
         }
         else {
             this.exponent = toSet;
-            this.elements.exponentAlert.classList.add("hide");
-            this.inputStatus.exponent = true;
+            this.elements.exponentAlert.innerHTML = "";
         }
+        this.inputStatus.exponent = newStatus;
     },
 
     // When Julia constant input is changed
@@ -268,12 +280,13 @@ var toolbar = {
 
         // Sanitize
         if(toSet == undefined) {
-            this.elements.juliaConstantAlert.classList.remove("hide");
+            this.elements.juliaConstantAlert.innerHTML =
+                "Julia constant must be of the form a+bi";
             this.inputStatus.juliaConstant = false;
         }
         else {
             this.juliaConstant = toSet;
-            this.elements.juliaConstantAlert.classList.add("hide");
+            this.elements.juliaConstantAlert.innerHTML = "";
             this.inputStatus.juliaConstant = true;
         }
     },
@@ -292,15 +305,28 @@ var toolbar = {
         let toSet = Number(this.elements.iterations.value);
 
         // Sanitize
-        if(Number.isNaN(toSet) || toSet < 1 || !Number.isInteger(toSet)) {
-            this.elements.iterationsAlert.classList.remove("hide");
-            this.inputStatus.iterations = false;
+        let newStatus = true;
+        
+        if(Number.isNaN(toSet)) {
+            this.elements.iterationsAlert.innerHTML =
+                "Iterations must be a number";
+            newStatus = false;
+        }
+        else if(toSet < 1) {
+            this.elements.iterationsAlert.innerHTML =
+                "Iterations must be greater than 1";
+            newStatus = false;
+        }
+        else if(!Number.isInteger(toSet)) {
+            this.elements.iterationsAlert.innerHTML =
+                "Iterations must be an integer";
+            newStatus = true;
         }
         else {
             this.iterations = toSet;
-            this.elements.iterationsAlert.classList.add("hide");
-            this.inputStatus.iterations = true;
+            this.elements.iterationsAlert.innerHTML = "";
         }
+        this.inputStatus.iterations = newStatus;
     },
 
     // Set internal and displayed iterations 
@@ -314,15 +340,22 @@ var toolbar = {
         let toSet = Number(this.elements.iterationIncrement.value);
 
         // Sanitize
-        if(Number.isNaN(toSet) || !Number.isInteger(toSet)) {
-            this.elements.iterationIncrementAlert.classList.remove("hide");
-            this.inputStatus.iterationIncrement = false;
+        let newStatus = true;
+        if(Number.isNaN(toSet)) {
+            this.elements.iterationIncrementAlert.innerHTML =
+                "Iteration increment must be a number";
+            newStatus = false;
+        }
+        else if(!Number.isInteger(toSet)) {
+            this.elements.iterationIncrementAlert.innerHTML =
+                "Iteration increment must be an integer";
+            newStatus = false;
         }
         else {
             this.iterationIncrement = toSet;
-            this.elements.iterationIncrementAlert.classList.add("hide");
-            this.inputStatus.iterationIncrement = true;
+            this.elements.iterationIncrementAlert.innerHTML = "";
         }
+        this.inputStatus.iterationIncrement = newStatus;
     },
 
     // For +iterations button
@@ -341,15 +374,22 @@ var toolbar = {
         let toSet = Number(this.elements.escapeRadius.value);
 
         // Sanitize
-        if(Number.isNaN(toSet) || toSet < 2) {
-            this.elements.escapeRadiusAlert.classList.remove("hide");
-            this.inputStatus.escapeRadius = false;
+        let newStatus = true;
+        if(Number.isNaN(toSet)) {
+            this.elements.escapeRadiusAlert.innerHTML =
+                "Escape radius must be a number";
+                newStatus = false;
+        }
+        else if(toSet < 2) {
+            this.elements.escapeRadiusAlert.innerHTML =
+                "Escape radius must be at least 2";
+            newStatus = false;
         }
         else {
             this.escapeRadius = toSet;
-            this.elements.escapeRadiusAlert.classList.add("hide");
-            this.inputStatus.escapeRadius = true;
+            this.elements.escapeRadiusAlert.innerHTML = "";
         }
+        this.inputStatus.escapeRadius = newStatus;
     },
 
 
@@ -366,15 +406,23 @@ var toolbar = {
         let toSet = Number(this.elements.clickZoomFactor.value);
 
         // Sanitize
-        if(Number.isNaN(toSet) || toSet <= 0) {
-            this.elements.clickZoomFactorAlert.classList.remove("hide");
-            this.inputStatus.clickZoomFactor = false;
+        let newStatus = true;
+        if(Number.isNaN(toSet)) {
+            this.elements.clickZoomFactorAlert.innerHTML =
+                "Click zoom factor must be a number";
+            newStatus = false;
+        }
+        else if(toSet <= 0) {
+            this.elements.clickZoomFactorAlert.innerHTML =
+                "Click zoom factor must be positive";
+            newStatus = false;
         }
         else {
             this.clickZoomFactor = toSet;
-            this.elements.clickZoomFactorAlert.classList.add("hide");
+            this.elements.clickZoomFactorAlert.innerHTML = "";
             this.inputStatus.clickZoomFactor = true;
         }
+        this.inputStatus.clickZoomFactor = newStatus;
     },
 
 
@@ -387,28 +435,42 @@ var toolbar = {
             toSet = new Palette(this.elements.palette.value);
         }
         catch(e) {
-            this.elements.paletteAlert.classList.remove("hide")
+            this.elements.paletteAlert.innerHTML =
+                "There is an error in the palette";
             this.inputStatus.palette = false;
             return;
         }
 
-        this.elements.paletteAlert.classList.add("hide");
+        this.elements.paletteAlert.innerHTML = "";
         this.palette = toSet;
         this.inputStatus.palette = true;
     },
 
     updateIPC() {
         let toSet = Number(this.elements.itersPerCycle.value);
+
         // Sanitize
-        if(Number.isNaN(toSet) || toSet < 0 || !Number.isInteger(toSet)) {
-            this.elements.ipcAlert.classList.remove("hide");
-            this.inputStatus.itersPerCycle = false;
+        let newStatus = true;
+        if(Number.isNaN(toSet)) {
+            this.elements.ipcAlert.innerHTML =
+                "Iterations per cycle must be a number";
+            newStatus = false;
+        }
+        else if(toSet < 2) {
+            this.elements.ipcAlert.innerHTML =
+                "Iterations per cycle must be at least 2";
+            newStatus = false;
+        }
+        else if(!Number.isInteger(toSet)) {
+            this.elements.ipcAlert.innerHTML =
+                "Iterations per cycle must be an integer";
+            newStatus = false;
         }
         else {
             this.itersPerCycle = toSet;
-            this.elements.ipcAlert.classList.add("hide");
-            this.inputStatus.itersPerCycle = true;
+            this.elements.ipcAlert.innerHTML = "";
         }
+        this.inputStatus.itersPerCycle = newStatus;
     },
 
 
@@ -418,30 +480,54 @@ var toolbar = {
         let toSet = Number(this.elements.canvasWidth.value);
 
         // Sanitize
-        if(Number.isNaN(toSet) || toSet < 1 || !Number.isInteger(toSet)) {
-            this.elements.canvasWidthAlert.classList.remove("hide");
-            this.inputStatus.canvasWidth = false;
+        let newStatus = true;
+        if(Number.isNaN(toSet)) {
+            this.elements.canvasWidthAlert.innerHTML =
+                "Canvas width must be a number";
+            newStatus = false;
+        }
+        else if(toSet < 1) {
+            this.elements.canvasWidthAlert.innerHTML =
+                "Canvas width must be positive";
+            newStatus = false;
+        }
+        else if(!Number.isInteger(toSet)) {
+            this.elements.canvasWidthAlert.innerHTML =
+                "Canvas width must be an integer";
+            newStatus = false;
         }
         else {
             this.canvasWidth = toSet;
-            this.elements.canvasWidthAlert.classList.add("hide");
-            this.inputStatus.canvasWidth = true;
+            this.elements.canvasWidthAlert.innerHTML = "";
         }
+        this.inputStatus.canvasWidth = newStatus;
     },
 
     updateCanvasHeight() {
         let toSet = Number(this.elements.canvasHeight.value);
 
         // Sanitize
-        if(Number.isNaN(toSet) || toSet < 1 || !Number.isInteger(toSet)) {
-            this.elements.canvasHeightAlert.classList.remove("hide");
-            this.inputStatus.canvasHeight = false;
+        let newStatus = true;
+        if(Number.isNaN(toSet)) {
+            this.elements.canvasHeightAlert.innerHTML =
+                "Canvas height must be a number";
+            newStatus = false;
+        }
+        else if(toSet < 1) {
+            this.elements.canvasHeightAlert.innerHTML =
+                "Canvas height must be positive";
+            newStatus = false;
+        }
+        else if(!Number.isInteger(toSet)) {
+            this.elements.canvasHeightAlert.innerHTML =
+                "Canvas height must be an integer";
+            newStatus = false;
         }
         else {
             this.canvasHeight = toSet;
-            this.elements.canvasHeightAlert.classList.add("hide");
-            this.inputStatus.canvasHeight = true;
+            this.elements.canvasHeightAlert.innerHTML = "";
         }
+        this.inputStatus.canvasHeight = newStatus;
     },
 
 
