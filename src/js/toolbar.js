@@ -325,6 +325,7 @@ var toolbar = {
         else {
             this.iterations = toSet;
             this.elements.iterationsAlert.innerHTML = "";
+            this.harmonizeItersAndIPC("iterations");
         }
         this.inputStatus.iterations = newStatus;
     },
@@ -361,11 +362,13 @@ var toolbar = {
     // For +iterations button
     increaseIterations() {
         this.setIterations(this.iterations + this.iterationIncrement);
+        this.harmonizeItersAndIPC("iterations");
     },
 
     // For -iterations button
     decreaseIterations() {
         this.setIterations(this.iterations - this.iterationIncrement);
+        this.harmonizeItersAndIPC("iterations");
     },
 
 
@@ -469,9 +472,31 @@ var toolbar = {
         }
         else {
             this.itersPerCycle = toSet;
+            this.harmonizeItersAndIPC("itersPerCycle");
             this.elements.ipcAlert.innerHTML = "";
         }
         this.inputStatus.itersPerCycle = newStatus;
+    },
+
+    setItersPerCycle(itersPerCycle) {
+        this.itersPerCycle = itersPerCycle;
+        this.elements.itersPerCycle.value = itersPerCycle;
+    },
+
+    setImgPalette() {
+        currImg.palette = this.palette;
+        currImg.itersPerCycle = this.itersPerCycle;
+    },
+
+    harmonizeItersAndIPC(priority) {
+        if(this.iterations < this.itersPerCycle) {
+            if(priority == "iterations") {
+                this.setItersPerCycle(this.iterations);
+            }
+            else {
+                this.setIterations(this.itersPerCycle);
+            }
+        }
     },
 
 
@@ -670,12 +695,5 @@ var toolbar = {
         
         // Sync zoom
         this.updateZoom();
-    },
-
-    
-    // Palette
-    setImgPalette() {
-        currImg.palette = this.palette;
-        currImg.itersPerCycle = this.itersPerCycle;
     }
 };
