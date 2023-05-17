@@ -629,7 +629,7 @@ var toolbar = {
 
 
 
-    // Syncing - changing internals to match the curren timage
+    // Syncing - changing internals to match the current image
     syncFractal() {
         // Sync fractal type
 
