@@ -15,15 +15,14 @@ onmessage = function(event) {
         let ipc = img.itersPerCycle;
         let imgData = new ImageData(img.width, img.height);
 
-        let im = img.frame.imMin;
         let i = 0;
         for(let currY = 0; currY < img.height; currY++) {
-            let re = img.frame.reMin;
+            let im = img.frame.imMin + currY * img.complexIter;
 
             for(let currX = 0; currX < img.width; currX++) {
                 let val = iterate(
                     img.fractal.params,
-                    Complex(re, im),
+                    Complex(img.frame.reMin + currX * img.complexIter, im),
                     img.iterations,
                     img.escapeRadius
                 );
@@ -48,10 +47,8 @@ onmessage = function(event) {
                     imgData.data[i + 3] = 255;
                 }
 
-                re += img.complexIter;
                 i += 4;
             }
-            im += img.complexIter;
 
             // Update render time
             renderTime = new Date() - startTime;
