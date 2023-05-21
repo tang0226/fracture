@@ -41,7 +41,7 @@
             <section id="fractal-toolbar">
                 <div id="fractal-select-container">
                     Fractal:
-                    <select id="fractal-type" class="inline">
+                    <select id="fractal-type" class="inline" onchange="toolbar.updateFractalType()">
                         <option value="Mandelbrot">Mandelbrot set</option>
                         <option value="Julia">Julia set</option>
                         <option value="Multibrot">Multibrot set</option>
@@ -59,13 +59,13 @@
 
                 <div id="exponent-container" class="hide">
                     Exponent:
-                    <input type="text" id="exponent" class="inline"/>
+                    <input type="text" id="exponent" class="inline" onchange="toolbar.updateExponent()"/>
                     <div id="exponent-alert" class="alert"></div>
                 </div>
 
                 <div id="julia-constant-container" class="hide">
                     Julia constant:
-                    <input type="text" id="julia-constant" class="inline"/>
+                    <input type="text" id="julia-constant" class="inline" onchange="toolbar.updateJuliaConstant()"/>
                     <div id="julia-constant-alert" class="alert"></div>
                 </div>
             </section>
@@ -73,25 +73,25 @@
             <hr>
 
             <section id="image-quality-toolbar">
-                <input type="button" id="increase-iterations" value="+"/>
+                <input type="button" value="+" onclick="toolbar.increaseIterations()"/>
 
                 <div id="iterations-container">
                     Iterations:
-                    <input type="text" id="iterations" class="inline"/>
+                    <input type="text" id="iterations" class="inline" onchange="toolbar.updateIterations()"/>
                     <div id="iterations-alert" class="alert"></div>
                 </div>
 
-                <input type="button" id="decrease-iterations" value="-"/>
+                <input type="button" value="-" onclick="toolbar.decreaseIterations()"/>
 
                 <div>
                     Increment:
-                    <input id="iteration-increment" type="text" class="inline"/>
+                    <input id="iteration-increment" type="text" class="inline" onchange="toolbar.updateIterationIncrement()"/>
                     <div id="iteration-increment-alert" class="alert"></div>
                 </div>
 
                 <div id="escape-radius-container">
                     Escape radius:
-                    <input type="text" id="escape-radius" class="inline"/>
+                    <input type="text" id="escape-radius" class="inline" onchange="toolbar.updateEscapeRadius()"/>
                     <div id="escape-radius-alert" class="alert"></div>
                 </div>
             </section>
@@ -101,12 +101,12 @@
             <section id="frame-toolbar">
                 <div id="zoom-container">
                     Zoom: <div id="zoom" class="inline"></div>
-                    <input type="button" id="reset-zoom" style="margin-left: 20px" class="inline" value="Reset"/>
+                    <input type="button" style="margin-left: 20px" class="inline" value="Reset" onclick="toolbar.resetZoom()"/>
                 </div>
 
                 <div>
                     Click zoom factor:
-                    <input id="click-zoom-factor"/>
+                    <input id="click-zoom-factor" onchange="toolbar.updateCZF()"/>
                     <div id="click-zoom-factor-alert" class="alert"></div>
                 </div>
             </section>
@@ -117,13 +117,13 @@
                 <div id="palette-container">
                     Palette:
                     <br/>
-                    <textarea id="palette" cols="40" rows="5"></textarea>
+                    <textarea id="palette" cols="40" rows="5" onchange="toolbar.updatePalette()"></textarea>
                     <div id="palette-alert" class="alert"></div>
                 </div>
 
                 <div id="ipc-container">
                     Iterations per cycle:
-                    <input id="iters-per-cycle"/>
+                    <input type="text" id="iters-per-cycle" onchange="toolbar.updateIPC()"/>
                     <div id="ipc-alert" class="alert"></div>
                 </div>
             </section>
@@ -133,13 +133,13 @@
             <section id="canvas-dim-toolbar">
                 <div id="canvas-width-container">
                     Width (px):
-                    <input id="canvas-width"/>
+                    <input type="text" id="canvas-width" onchange="toolbar.updateCanvasWidth()"/>
                     <div id="canvas-width-alert" class="alert"></div>
                 </div>
 
                 <div id="canvas-height-container">
                     Height (px):
-                    <input id="canvas-height"/>
+                    <input type="text" id="canvas-height" onchange="toolbar.updateCanvasHeight()"/>
                     <div id="canvas-height-alert" class="alert"></div>
                 </div>
             </section>
@@ -147,10 +147,10 @@
             <hr>
 
             <section id="buttons-toolbar">
-                <input type="button" id="redraw" value="Redraw"/>
+                <input type="button" value="Redraw" onclick="toolbar.redraw()"/>
 
                 <div id="download-container" class="right no-margin">
-                    <input type="button" id="download" value="Download"/>
+                    <input type="button" value="Download" onclick="toolbar.download()"/>
                     
                     <select id="download-type">
                         <option value="png">PNG</option>
