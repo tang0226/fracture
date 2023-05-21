@@ -22,6 +22,7 @@ var toolbar = {
         // Buttons
         increaseIterations: document.getElementById("increase-iterations"),
         decreaseIterations: document.getElementById("decrease-iterations"),
+        resetZoom: document.getElementById("reset-zoom"),
         redraw: document.getElementById("redraw"),
         download: document.getElementById("download"),
 
@@ -167,6 +168,10 @@ var toolbar = {
         this.elements.decreaseIterations.setAttribute(
             "onclick",
             "toolbar.decreaseIterations()"
+        );
+        this.elements.resetZoom.setAttribute(
+            "onclick",
+            "toolbar.resetZoom()"
         );
         this.elements.redraw.setAttribute(
             "onclick",
@@ -402,6 +407,28 @@ var toolbar = {
     // Sync internal and external zoom with current image
     updateZoom() {
         this.elements.zoom.innerHTML = currImg.frame.toZoom();
+    },
+
+    // When zoom reset button is pressed
+    resetZoom() {
+        // Get the default image for the current fractal
+        let def = defaultImages[currImg.fractal.type];
+
+        // Give the current image these default parameters
+        // (because deep zooms often have differing parameters from shallow zooms)
+        currImg.setFrame(def.frame);
+        currImg.iterations = def.iterations;
+        currImg.escapeRadius = def.escapeRadius;
+        currImg.itersPerCycle = def.itersPerCycle;
+
+        // Sync external toolbar input elements
+        this.syncImageParams();
+
+        // Redraw the image
+        this.redraw();
+
+        // Display the updated zoom
+        this.updateZoom();
     },
 
     // When click zoom factor input is changed
