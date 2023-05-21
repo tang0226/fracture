@@ -13,22 +13,24 @@
 
         <br/>
         
+        <div id="navbar">
+            <span id="fractal-nav" class="nav active" onclick="toolbar.selectSection('fractal')">
+                <span>Fractal</span>
+            </span>
+            <span id="frame-nav" class="nav inactive" onclick="toolbar.selectSection('frame')">
+                <span>Frame</span>
+            </span>
+            <span id="image-nav" class="nav inactive" onclick="toolbar.selectSection('image')">
+                <span>Image</span>
+            </span>
+            <span id="render-nav" class="nav inactive" onclick="toolbar.selectSection('render')">
+                <span>Render</span>
+            </span>
+        </div>
+        
+        <br/>
+        
         <section id="toolbar">
-            <div id="navbar">
-                <span id="fractal-nav" class="nav active" onclick="toolbar.selectSection('fractal')">
-                    <span>Fractal</span>
-                </span>
-                <span id="frame-nav" class="nav inactive" onclick="toolbar.selectSection('frame')">
-                    <span>Frame</span>
-                </span>
-                <span id="image-nav" class="nav inactive" onclick="toolbar.selectSection('image')">
-                    <span>Image</span>
-                </span>
-                <span id="render-nav" class="nav inactive" onclick="toolbar.selectSection('render')">
-                    <span>Render</span>
-                </span>
-            </div>
-
             <section id="fractal-section">
                 <div id="fractal-select-container">
                     Fractal:
