@@ -5,6 +5,22 @@ TOOLBAR OBJECT
 var toolbar = {
     // Elements
     elements: {
+        // Navigation
+        nav: {
+            fractal: document.getElementById("fractal-nav"),
+            frame: document.getElementById("frame-nav"),
+            image: document.getElementById("image-nav"),
+            render: document.getElementById("render-nav")
+        },
+
+        // Sections
+        sections: {
+            fractal: document.getElementById("fractal-section"),
+            frame: document.getElementById("frame-section"),
+            image: document.getElementById("image-section"),
+            render: document.getElementById("render-section")
+        },
+
         // Inputs
         fractalType: document.getElementById("fractal-type"),
         exponent: document.getElementById("exponent"),
@@ -78,6 +94,9 @@ var toolbar = {
 
     // For currently undefined variables
     init() {
+        // Navigation
+        this.currSection = "fractal";
+
         // Internal input variables
         this.fractalType = this.lastFractalType = currImg.fractal.type;
         this.elements.fractalType.value = this.fractalType;
@@ -119,6 +138,32 @@ var toolbar = {
         this.updateFractalType();
         this.displayIterations();
         this.updateZoom();
+    },
+
+    
+    // Navigation
+    selectSection(newSection) {
+        // Hide current section
+        this.elements.sections[this.currSection]
+            .classList.add("hide");
+
+        // Show new section
+        this.elements.sections[newSection]
+            .classList.remove("hide");
+
+        // Give inactive class to old navbar div
+        this.elements.nav[this.currSection]
+            .classList.remove("active");
+        this.elements.nav[this.currSection]
+            .classList.add("inactive");
+
+        // Give active class to new navbar div
+        this.elements.nav[newSection]
+            .classList.remove("inactive");
+        this.elements.nav[newSection]
+            .classList.add("active");
+        
+        this.currSection = newSection;
     },
 
 
