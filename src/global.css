@@ -13,7 +13,7 @@ canvas {
     z-index: 1;
 }
 
-#toolbar {
+#toolbar, #status-section {
     width: 600px;
     border: 1px solid black;
     border-radius: 10px;
@@ -28,7 +28,7 @@ section, div, input, select {
 }
 
 hr {
-    margin-top: 10px;
+    margin-top: 5px;
     margin-bottom: 0px;
 }
 

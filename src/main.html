@@ -11,6 +11,38 @@
             <canvas id="controls-canvas"></canvas>
         </section>
 
+        <section id="status-section">
+            <div id="mouse-coords-container">
+                Mouse coordinates: <div id="mouse-complex-coords" class="inline"></div>
+            </div>
+
+            
+            <div id="progress-container">
+                Progress: <div id="progress" class="inline"></div>
+            </div>
+
+            <div id="progress-bar-container">
+                <progress id="progress-bar" max="100"></progress>
+            </div>
+
+            <div id="render-time-container">
+                Render time: <div id="render-time" class="inline"></div>
+            </div>
+
+            <hr>
+
+            <input type="button" value="Redraw" onclick="toolbar.redraw()"/>
+
+            <div id="download-container" class="right no-margin">
+                <input type="button" value="Download" onclick="toolbar.download()"/>
+                
+                <select id="download-type">
+                    <option value="png">PNG</option>
+                    <option value="jpeg">JPEG</option>
+                </select>
+            </div>
+        </section>
+
         <section id="toolbar">
             <div id="navbar">
                 <span id="fractal-nav" class="nav active" onclick="toolbar.selectSection('fractal')">
@@ -22,13 +54,10 @@
                 <span id="image-nav" class="nav inactive" onclick="toolbar.selectSection('image')">
                     <span>Image</span>
                 </span>
-                <span id="render-nav" class="nav inactive" onclick="toolbar.selectSection('render')">
-                    <span>Render</span>
-                </span>
             </div>
 
             <br/>
-            
+
             <br/>
 
             <section id="fractal-section">
@@ -117,12 +146,6 @@
             </section>
 
             <section id="frame-section" class="hide">
-                <div id="mouse-coords-container">
-                    Mouse coordinates: <div id="mouse-complex-coords" class="inline"></div>
-                </div>
-                
-                <hr>
-
                 <div id="zoom-container">
                     Zoom: <div id="zoom" class="inline"></div>
                     <input type="button" style="margin-left: 20px" class="inline" value="Reset" onclick="toolbar.resetZoom()"/>
@@ -132,33 +155,6 @@
                     Click zoom factor:
                     <input id="click-zoom-factor" onchange="toolbar.updateCZF()"/>
                     <div id="click-zoom-factor-alert" class="alert"></div>
-                </div>
-            </section>
-
-            <section id="render-section" class="hide">
-                <div id="progress-container">
-                    Progress: <div id="progress" class="inline"></div>
-                </div>
-
-                <div id="progress-bar-container">
-                    <progress id="progress-bar" max="100"></progress>
-                </div>
-
-                <div id="render-time-container">
-                    Render time: <div id="render-time" class="inline"></div>
-                </div>
-
-                <hr>
-
-                <input type="button" value="Redraw" onclick="toolbar.redraw()"/>
-
-                <div id="download-container" class="right no-margin">
-                    <input type="button" value="Download" onclick="toolbar.download()"/>
-                    
-                    <select id="download-type">
-                        <option value="png">PNG</option>
-                        <option value="jpeg">JPEG</option>
-                    </select>
                 </div>
             </section>
         </section>

@@ -9,16 +9,14 @@ var toolbar = {
         nav: {
             fractal: document.getElementById("fractal-nav"),
             frame: document.getElementById("frame-nav"),
-            image: document.getElementById("image-nav"),
-            render: document.getElementById("render-nav")
+            image: document.getElementById("image-nav")
         },
 
         // Sections
         sections: {
             fractal: document.getElementById("fractal-section"),
             frame: document.getElementById("frame-section"),
-            image: document.getElementById("image-section"),
-            render: document.getElementById("render-section")
+            image: document.getElementById("image-section")
         },
 
         // Inputs
