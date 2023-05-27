@@ -1,14 +1,16 @@
 /******************************
-FRACTALS: THEORETICAL MATHEMATICAL SETS IN THE COMPLEX PLANE:
+FRACTALS: THEORETICAL MATHEMATICAL SETS IN THE COMPLEX PLANE
 ******************************/
 
-function Fractal(type, params) {
-    this.type = type;
-    for(let prop in Fractal.data[type]) {
-        this[prop] = Fractal.data[type][prop];
+class Fractal {
+    constructor(type, params) {
+        this.type = type;
+        for(let prop in Fractal.data[type]) {
+            this[prop] = Fractal.data[type][prop];
+        }
+        this.params = params || {};
     }
-    this.params = params || {};
-};
+}
 
 Fractal.data = {
     Mandelbrot: {
