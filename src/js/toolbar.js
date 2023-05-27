@@ -2,7 +2,7 @@
 TOOLBAR OBJECT
 ******************************/
 
-var toolbar = {
+const toolbar = {
     // Elements
     elements: {
         // Navigation

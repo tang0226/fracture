@@ -2,7 +2,7 @@
 FRACTALS: THEORETICAL MATHEMATICAL SETS IN THE COMPLEX PLANE:
 ******************************/
 
-var Fractal = function(type, params) {
+function Fractal(type, params) {
     this.type = type;
     for(let prop in Fractal.data[type]) {
         this[prop] = Fractal.data[type][prop];

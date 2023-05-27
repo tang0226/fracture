@@ -1,6 +1,6 @@
 importScripts("./complex.js", "./fractal.js", "./palette.js");
 
-var scale = function(n, minFrom, maxFrom, minTo, maxTo) {
+function scale(n, minFrom, maxFrom, minTo, maxTo) {
     return ((n / (maxFrom - minFrom)) * (maxTo - minTo)) + minTo;
 };
 

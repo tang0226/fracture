@@ -4,7 +4,7 @@ COMPLEX NUMBERS
 
 // No prototype, too tedious and unnecessary
 // to type "new Complex()" each time
-var Complex = function(re, im) {
+function Complex(re, im) {
     return {
         re: re,
         im: im

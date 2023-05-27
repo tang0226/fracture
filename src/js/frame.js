@@ -2,7 +2,7 @@
 FRAME PROTOTYPE: REGION ON THE COMPLEX PLANE
 ******************************/
 
-var Frame = function(center, reWidth, imHeight) {
+function Frame(center, reWidth, imHeight) {
     this.center = center;
     this.reWidth = reWidth;
     this.imHeight = imHeight;

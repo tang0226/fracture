@@ -2,7 +2,7 @@
 IMAGE PROTOTYPE: RENDERING OF A FRACTAL WITH ITERATIONS, FRAME, AND CANVAS SIZE
 ******************************/
 
-var Image = function(
+function Image(
         fractal,
         iterations, escapeRadius,
         srcFrame,

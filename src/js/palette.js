@@ -1,4 +1,4 @@
-var Palette = function(input) {
+function Palette(input) {
     this.string = input;
 
     lines = input.split(";").map(l => l.trim());

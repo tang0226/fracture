@@ -1,12 +1,12 @@
-var canvas = document.getElementById("canvas");
-var canvasCtx = canvas.getContext("2d");
-var controlsCanvas = document.getElementById("controls-canvas");
-var controlsCanvasCtx = controlsCanvas.getContext("2d");
+const canvas = document.getElementById("canvas");
+const canvasCtx = canvas.getContext("2d");
+const controlsCanvas = document.getElementById("controls-canvas");
+const controlsCanvasCtx = controlsCanvas.getContext("2d");
 
 var canvasWidth = 600;
 var canvasHeight = 600;
 
-var setCanvasDim = function(w, h) {
+function setCanvasDim(w, h) {
     canvas.width = w;
     canvas.height = h;
     controlsCanvas.width = w;
@@ -20,19 +20,19 @@ setCanvasDim(canvasWidth, canvasHeight);
 
 
 // Frames
-var defaultView = new Frame(Complex(0, 0), 4, 4);
+const defaultView = new Frame(Complex(0, 0), 4, 4);
 
 
 // Palette
 
-var defaultPalette = new Palette(
+const defaultPalette = new Palette(
     "2;\n0, 0 0 0;\n1, 255 255 255;"
 );
 
 
 
 // Images
-var defaultImages = {
+const defaultImages = {
     Mandelbrot: new Image(
         new Fractal("Mandelbrot"),
         1000, 2,
@@ -133,7 +133,7 @@ var currMode = "default";
 var renderInProgress = true;
 
 // Render worker
-var renderWorker = new Worker("./js/render.js");
+const renderWorker = new Worker("./js/render.js");
 
 renderWorker.onmessage = function(event) {
     let data = event.data;
@@ -148,7 +148,7 @@ renderWorker.onmessage = function(event) {
     }
 };
 
-var draw = function() {
+function draw() {
     renderWorker.postMessage({
         type: "draw",
         img: currImg
@@ -167,7 +167,7 @@ var mouseDown = false;
 
 
 // Mouse functions
-var resetDrag = function() {
+function resetDrag() {
     mouseDown = false;
     startDragX = null;
     startDragY = null;
@@ -350,10 +350,10 @@ controlsCanvas.onmouseout = function() {
 
 
 // Keys variables
-var keys = {};
+const keys = {};
 
 // Keys functions
-var resetKeys = function() {
+function resetKeys() {
     for(let key in keys) {
         keys[key] = false;
     }
