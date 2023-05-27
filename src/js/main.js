@@ -316,7 +316,7 @@ controlsCanvas.onmouseup = function() {
     
     currImg.fitToCanvas(canvasWidth, canvasHeight);
     toolbar.updateZoom();
-    draw();
+    toolbar.redraw();
 
     // Reset drag
     resetDrag();
