@@ -25,17 +25,11 @@ class Image {
         this.width = width;
         this.height = height;
         
-        // Distance between pixels on the complex plane
+        // Distance between / width of pixels on the complex plane
         this.complexIter = 
             this.width > this.height ?
             this.frame.reWidth / this.width :
             this.frame.imHeight / this.height;
-        
-        this.currY = 0;
-        this.currIm = this.frame.imMin;
-        this.drawing = true;
-        this.startTime = null;
-        this.renderTime = null;
     }
 
     // Fit drawing frame to canvas and
@@ -53,14 +47,6 @@ class Image {
     // Set the source frame
     setFrame(srcFrame) {
         this.srcFrame = srcFrame;
-    }
-
-    // Restart the render process
-    reset() {
-        this.currY = 0;
-        this.currIm = this.frame.imMin;
-        this.drawing = true;
-        this.startTime = new Date();
     }
 
     // Return a deep copy of self: critical for fractal picking
