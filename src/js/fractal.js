@@ -74,9 +74,10 @@ Fractal.iterate = {
         let z = Complex(0, 0);
         let n = 0;
         while(Complex.abs(z) <= escapeRadius && n < iterations) {
-            z = Complex.add(
-                Complex.mul(z, z), c
-            );
+            let temp = z.re * z.re - z.im * z.im + c.re;
+            z.im = 2 * z.re * z.im + c.im;
+            z.re = temp;
+
             n++;
         }
         return n;
@@ -86,9 +87,10 @@ Fractal.iterate = {
         let z = _z;
         let n = 0;
         while(Complex.abs(z) <= escapeRadius && n < iterations) {
-            z = Complex.add(
-                Complex.mul(z, z), params.c
-            );
+            let temp = z.re * z.re - z.im * z.im + params.c.re;
+            z.im = 2 * z.re * z.im + params.c.im;
+            z.re = temp;
+
             n++;
         }
         return n;
@@ -101,6 +103,7 @@ Fractal.iterate = {
             z = Complex.add(
                 Complex.exp(z, params.e), c
             );
+
             n++;
         }
         return n;
@@ -113,6 +116,7 @@ Fractal.iterate = {
             z = Complex.add(
                 Complex.exp(z, params.e), params.c
             );
+
             n++;
         }
         return n;
@@ -122,11 +126,10 @@ Fractal.iterate = {
         let z = Complex(0, 0);
         let n = 0;
         while(Complex.abs(z) <= escapeRadius && n < iterations) {
-            z = Complex.add(
-                Complex.exp(
-                    Complex.conj(z), 2
-                ), c
-            );
+            let temp = z.re * z.re - z.im * z.im + c.re;
+            z.im = -2 * z.re * z.im + c.im;
+            z.re = temp;
+
             n++;
         }
         return n;
@@ -136,12 +139,10 @@ Fractal.iterate = {
         let z = _z;
         let n = 0;
         while(Complex.abs(z) <= escapeRadius && n < iterations) {
-            z = Complex.add(
-                Complex.exp(
-                    Complex.conj(z), 2
-                ),
-                params.c
-            );
+            let temp = z.re * z.re - z.im * z.im + params.c.re;
+            z.im = -2 * z.re * z.im + params.c.im;
+            z.re = temp;
+
             n++;
         }
         return n;
@@ -156,6 +157,7 @@ Fractal.iterate = {
                     Complex.conj(z), params.e
                 ), c
             );
+
             n++;
         }
         return n;
@@ -171,6 +173,7 @@ Fractal.iterate = {
                 ),
                 params.c
             );
+
             n++;
         }
         return n;
@@ -180,11 +183,10 @@ Fractal.iterate = {
         let z = Complex(0, 0);
         let n = 0;
         while(Complex.abs(z) <= escapeRadius && n < iterations) {
-            z = Complex.add(
-                Complex.exp(
-                    Complex(Math.abs(z.re), Math.abs(z.im)), 2
-                ), c
-            );
+            let temp = z.re * z.re - z.im * z.im + c.re;
+            z.im = Math.abs(2 * z.re * z.im) + c.im;
+            z.re = temp;
+
             n++;
         }
         return n;
@@ -194,11 +196,10 @@ Fractal.iterate = {
         let z = _z;
         let n = 0;
         while(Complex.abs(z) <= escapeRadius && n < iterations) {
-            z = Complex.add(
-                Complex.exp(
-                    Complex(Math.abs(z.re), Math.abs(z.im)), 2
-                ), params.c
-            );
+            let temp = z.re * z.re - z.im * z.im + params.c.re;
+            z.im = Math.abs(2 * z.re * z.im) + params.c.im;
+            z.re = temp;
+
             n++;
         }
         return n;
@@ -213,6 +214,7 @@ Fractal.iterate = {
                     Complex(Math.abs(z.re), Math.abs(z.im)), params.e
                 ), c
             );
+
             n++;
         }
         return n;
@@ -227,6 +229,7 @@ Fractal.iterate = {
                     Complex(Math.abs(z.re), Math.abs(z.im)), params.e
                 ), params.c
             );
+            
             n++;
         }
         return n;
