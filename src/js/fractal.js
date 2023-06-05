@@ -70,7 +70,7 @@ Fractal.data = {
 };
 
 Fractal.iterate = {
-    Mandelbrot(params, c, iterations, escapeRadius) {
+    Mandelbrot(params, c, iterations, escapeRadius, smoothColoring) {
         let z = Complex(0, 0);
         let n = 0;
         while(Complex.abs(z) <= escapeRadius && n < iterations) {
@@ -80,10 +80,15 @@ Fractal.iterate = {
 
             n++;
         }
+        
+        if(smoothColoring && n != iterations) {
+            n += 1 - Math.log(Math.log(Complex.abs(z))) / Math.log(2);
+        }
+        
         return n;
     },
     
-    Julia(params, _z, iterations, escapeRadius) {
+    Julia(params, _z, iterations, escapeRadius, smoothColoring) {
         let z = _z;
         let n = 0;
         while(Complex.abs(z) <= escapeRadius && n < iterations) {
@@ -93,10 +98,15 @@ Fractal.iterate = {
 
             n++;
         }
+
+        if(smoothColoring && n != iterations) {
+            n += 1 - Math.log(Math.log(Complex.abs(z))) / Math.log(2);
+        }
+
         return n;
     },
     
-    Multibrot(params, c, iterations, escapeRadius) {
+    Multibrot(params, c, iterations, escapeRadius, smoothColoring) {
         let z = Complex(0, 0);
         let n = 0;
         while(Complex.abs(z) <= escapeRadius && n < iterations) {
@@ -106,10 +116,15 @@ Fractal.iterate = {
 
             n++;
         }
+
+        if(smoothColoring && n != iterations) {
+            n += 1 - Math.log(Math.log(Complex.abs(z))) / Math.log(params.e);
+        }
+
         return n;
     },
     
-    Multijulia(params, _z, iterations, escapeRadius) {
+    Multijulia(params, _z, iterations, escapeRadius, smoothColoring) {
         let z = _z;
         let n = 0;
         while(Complex.abs(z) <= escapeRadius && n < iterations) {
@@ -119,10 +134,15 @@ Fractal.iterate = {
 
             n++;
         }
+
+        if(smoothColoring && n != iterations) {
+            n += 1 - Math.log(Math.log(Complex.abs(z))) / Math.log(params.e);
+        }
+
         return n;
     },
 
-    Tricorn(params, c, iterations, escapeRadius) {
+    Tricorn(params, c, iterations, escapeRadius, smoothColoring) {
         let z = Complex(0, 0);
         let n = 0;
         while(Complex.abs(z) <= escapeRadius && n < iterations) {
@@ -132,10 +152,15 @@ Fractal.iterate = {
 
             n++;
         }
+
+        if(smoothColoring && n != iterations) {
+            n += 1 - Math.log(Math.log(Complex.abs(z))) / Math.log(2);
+        }
+
         return n;
     },
 
-    TricornJulia(params, _z, iterations, escapeRadius) {
+    TricornJulia(params, _z, iterations, escapeRadius, smoothColoring) {
         let z = _z;
         let n = 0;
         while(Complex.abs(z) <= escapeRadius && n < iterations) {
@@ -145,10 +170,15 @@ Fractal.iterate = {
 
             n++;
         }
+
+        if(smoothColoring && n != iterations) {
+            n += 1 - Math.log(Math.log(Complex.abs(z))) / Math.log(2);
+        }
+
         return n;
     },
 
-    Multicorn(params, c, iterations, escapeRadius) {
+    Multicorn(params, c, iterations, escapeRadius, smoothColoring) {
         let z = Complex(0, 0);
         let n = 0;
         while(Complex.abs(z) <= escapeRadius && n < iterations) {
@@ -160,10 +190,15 @@ Fractal.iterate = {
 
             n++;
         }
+
+        if(smoothColoring && n != iterations) {
+            n += 1 - Math.log(Math.log(Complex.abs(z))) / Math.log(params.e);
+        }
+
         return n;
     },
 
-    MulticornJulia(params, _z, iterations, escapeRadius) {
+    MulticornJulia(params, _z, iterations, escapeRadius, smoothColoring) {
         let z = _z;
         let n = 0;
         while(Complex.abs(z) <= escapeRadius && n < iterations) {
@@ -176,10 +211,15 @@ Fractal.iterate = {
 
             n++;
         }
+
+        if(smoothColoring && n != iterations) {
+            n += 1 - Math.log(Math.log(Complex.abs(z))) / Math.log(params.e);
+        }
+
         return n;
     },
     
-    BurningShip(params, c, iterations, escapeRadius) {
+    BurningShip(params, c, iterations, escapeRadius, smoothColoring) {
         let z = Complex(0, 0);
         let n = 0;
         while(Complex.abs(z) <= escapeRadius && n < iterations) {
@@ -189,10 +229,15 @@ Fractal.iterate = {
 
             n++;
         }
+
+        if(smoothColoring && n != iterations) {
+            n += 1 - Math.log(Math.log(Complex.abs(z))) / Math.log(2);
+        }
+
         return n;
     },
     
-    BurningShipJulia(params, _z, iterations, escapeRadius) {
+    BurningShipJulia(params, _z, iterations, escapeRadius, smoothColoring) {
         let z = _z;
         let n = 0;
         while(Complex.abs(z) <= escapeRadius && n < iterations) {
@@ -202,10 +247,15 @@ Fractal.iterate = {
 
             n++;
         }
+
+        if(smoothColoring && n != iterations) {
+            n += 1 - Math.log(Math.log(Complex.abs(z))) / Math.log(2);
+        }
+
         return n;
     },
     
-    Multiship(params, c, iterations, escapeRadius) {
+    Multiship(params, c, iterations, escapeRadius, smoothColoring) {
         let z = Complex(0, 0);
         let n = 0;
         while(Complex.abs(z) <= escapeRadius && n < iterations) {
@@ -217,10 +267,15 @@ Fractal.iterate = {
 
             n++;
         }
+
+        if(smoothColoring && n != iterations) {
+            n += 1 - Math.log(Math.log(Complex.abs(z))) / Math.log(params.e);
+        }
+
         return n;
     },
     
-    MultishipJulia(params, _z, iterations, escapeRadius) {
+    MultishipJulia(params, _z, iterations, escapeRadius, smoothColoring) {
         let z = _z;
         let n = 0;
         while(Complex.abs(z) <= escapeRadius && n < iterations) {
@@ -232,6 +287,11 @@ Fractal.iterate = {
             
             n++;
         }
+
+        if(smoothColoring && n != iterations) {
+            n += 1 - Math.log(Math.log(Complex.abs(z))) / Math.log(params.e);
+        }
+
         return n;
     }
 };

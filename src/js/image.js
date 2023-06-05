@@ -5,7 +5,7 @@ IMAGE CLASS: RENDERING OF A FRACTAL WITH ITERATIONS, FRAME, AND CANVAS SIZE
 class Image {
     constructor(
         fractal,
-        iterations, escapeRadius,
+        iterations, escapeRadius, smoothColoring,
         srcFrame,
         palette, itersPerCycle,
         width, height
@@ -15,6 +15,7 @@ class Image {
 
         this.iterations = iterations;
         this.escapeRadius = escapeRadius;
+        this.smoothColoring = smoothColoring;
 
         this.srcFrame = srcFrame;
         this.frame = srcFrame.fitToCanvas(width, height);
@@ -53,7 +54,7 @@ class Image {
     copy() {
         return new Image(
             this.fractal,
-            this.iterations, this.escapeRadius,
+            this.iterations, this.escapeRadius, this.smoothColoring,
             this.srcFrame,
             this.palette, this.itersPerCycle,
             this.width, this.height,

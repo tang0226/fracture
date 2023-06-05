@@ -24,7 +24,8 @@ onmessage = function(event) {
                     img.fractal.params,
                     Complex(img.frame.reMin + currX * img.complexIter, im),
                     img.iterations,
-                    img.escapeRadius
+                    img.escapeRadius,
+                    img.smoothColoring
                 );
 
                 if(val == img.iterations) {

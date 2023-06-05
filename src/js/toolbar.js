@@ -27,6 +27,7 @@ const toolbar = {
         iterationIncrement: document.getElementById("iteration-increment"),
         escapeRadius: document.getElementById("escape-radius"),
         clickZoomFactor: document.getElementById("click-zoom-factor"),
+        smoothColoring: document.getElementById("smooth-coloring"),
         palette: document.getElementById("palette"),
         itersPerCycle: document.getElementById("iters-per-cycle"),
         canvasWidth: document.getElementById("canvas-width"),
@@ -119,6 +120,9 @@ const toolbar = {
 
         this.clickZoomFactor = this.defaults.clickZoomFactor;
         this.elements.clickZoomFactor.value = this.clickZoomFactor;
+
+        this.smoothColoring = currImg.smoothColoring;
+        this.elements.smoothColoring.checked = currImg.smoothColoring;
 
         this.palette = currImg.palette;
         this.elements.palette.value = currImg.palette.string;
@@ -431,6 +435,10 @@ const toolbar = {
     },
 
 
+    // Smooth coloring
+    updateSmoothColoring() {
+        this.smoothColoring = this.elements.smoothColoring.checked;
+    },
 
     // Palette
     updatePalette() {
@@ -624,6 +632,9 @@ const toolbar = {
 
             // Update image escape radius
             currImg.escapeRadius = this.escapeRadius;
+
+            // Update image smooth coloring
+            currImg.smoothColoring = this.smoothColoring;
         }
 
         // Update last fractal parameters for future checks
@@ -690,6 +701,10 @@ const toolbar = {
         // Sync escape radius
         this.elements.escapeRadius.value = currImg.escapeRadius;
         this.escapeRadius = currImg.escapeRadius;
+
+        // Sync smooth coloring
+        this.elements.smoothColoring.checked = currImg.smoothColoring;
+        this.smoothcoloring = currImg.smoothColoring;
 
         // Sync IPC
         this.elements.itersPerCycle.value = currImg.itersPerCycle;

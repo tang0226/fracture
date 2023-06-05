@@ -76,7 +76,7 @@ Complex.exp = function(c, e) {
 // The absolute value of a complex number is its
 // Euclidean distance from the origin
 Complex.abs = function(c) {
-    return (c.re ** 2 + c.im ** 2) ** 0.5;
+    return Math.sqrt(c.re ** 2 + c.im ** 2);
 };
 
 // The complex conjugate a+bi is a-bi
