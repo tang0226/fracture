@@ -1,12 +1,12 @@
-var canvas = document.getElementById("canvas");
-var canvasCtx = canvas.getContext("2d");
-var controlsCanvas = document.getElementById("controls-canvas");
-var controlsCanvasCtx = controlsCanvas.getContext("2d");
+const canvas = document.getElementById("canvas");
+const canvasCtx = canvas.getContext("2d");
+const controlsCanvas = document.getElementById("controls-canvas");
+const controlsCanvasCtx = controlsCanvas.getContext("2d");
 
 var canvasWidth = 600;
 var canvasHeight = 600;
 
-var setCanvasDim = function(w, h) {
+function setCanvasDim(w, h) {
     canvas.width = w;
     canvas.height = h;
     controlsCanvas.width = w;
@@ -20,90 +20,108 @@ setCanvasDim(canvasWidth, canvasHeight);
 
 
 // Frames
-var defaultView = new Frame(Complex(0, 0), 4, 4);
+const defaultView = new Frame(Complex(0, 0), 4, 4);
+
+
+// Palette
+
+const defaultPalette = new Palette(
+    "2;\n0, 0 0 0;\n1, 255 255 255;"
+);
+
 
 
 // Images
-var defaultImages = {
+const defaultImages = {
     Mandelbrot: new Image(
         new Fractal("Mandelbrot"),
-        100, 2,
+        1000, 256, true,
         new Frame(Complex(-0.5, 0), 4, 4),
+        defaultPalette, 200,
         canvasWidth, canvasHeight
     ),
     Julia: new Image(
         new Fractal("Julia", {c: Complex(0, 1)}),
-        100, 2,
+        1000, 256, true,
         defaultView,
+        defaultPalette, 200,
         canvasWidth, canvasHeight
     ),
     Multibrot: new Image(
         new Fractal("Multibrot", {e: 3}),
-        100, 2,
+        1000, 256, true,
         defaultView,
+        defaultPalette, 200,
         canvasWidth, canvasHeight
     ),
     Multijulia: new Image(
         new Fractal("Multijulia", {e: 3, c: Complex(-0.12, -0.8)}),
-        100, 2,
+        1000, 256, true,
         defaultView,
+        defaultPalette, 200,
         canvasWidth, canvasHeight
     ),
     Tricorn: new Image(
         new Fractal("Tricorn"),
-        100, 2,
+        1000, 256, true,
         new Frame(
             Complex(-0.25, 0),
             4, 4
         ),
+        defaultPalette, 200,
         canvasWidth, canvasHeight
     ),
     TricornJulia: new Image(
         new Fractal("TricornJulia", {c: Complex(-1, 0)}),
-        100, 2,
-        new Frame(
-            Complex(-0.25, 0),
-            4, 4
-        ),
+        1000, 256, true,
+        defaultView,
+        defaultPalette, 200,
         canvasWidth, canvasHeight
     ),
     Multicorn: new Image(
         new Fractal("Multicorn", {e: 3}),
-        100, 2,
+        1000, 256, true,
         defaultView,
+        defaultPalette, 200,
         canvasWidth, canvasHeight
     ),
     MulticornJulia: new Image(
         new Fractal("MulticornJulia", {e: 3, c: Complex(-1, -1)}),
-        100, 2,
+        1000, 256, true,
         defaultView,
+        defaultPalette, 200,
         canvasWidth, canvasHeight
     ),
     BurningShip: new Image(
         new Fractal("BurningShip"),
-        100, 2,
+        1000, 256, true,
         new Frame(Complex(0, -0.5), 4, 4),
+        defaultPalette, 200,
         canvasWidth, canvasHeight
     ),
     BurningShipJulia: new Image(
         new Fractal("BurningShipJulia", {c: Complex(-1.5, 0)}),
-        100, 2,
+        1000, 256, true,
         defaultView,
+        defaultPalette, 200,
         canvasWidth, canvasHeight
     ),
     Multiship: new Image(
         new Fractal("Multiship", {e: 3}),
-        100, 2,
+        1000, 256, true,
         defaultView,
+        defaultPalette, 200,
         canvasWidth, canvasHeight
     ),
     MultishipJulia: new Image(
         new Fractal("MultishipJulia", {e: 3, c: Complex(-1.326667, 0)}),
-        100, 2,
+        1000, 256, true,
         defaultView,
+        defaultPalette, 200,
         canvasWidth, canvasHeight
     )
 };
+
 
 
 // Initial image settings:
@@ -115,7 +133,7 @@ var currMode = "default";
 var renderInProgress = true;
 
 // Render worker
-var renderWorker = new Worker("./js/render.js");
+const renderWorker = new Worker("./js/render.js");
 
 renderWorker.onmessage = function(event) {
     let data = event.data;
@@ -130,7 +148,7 @@ renderWorker.onmessage = function(event) {
     }
 };
 
-var draw = function() {
+function draw() {
     renderWorker.postMessage({
         type: "draw",
         img: currImg
@@ -149,7 +167,7 @@ var mouseDown = false;
 
 
 // Mouse functions
-var resetDrag = function() {
+function resetDrag() {
     mouseDown = false;
     startDragX = null;
     startDragY = null;
@@ -227,6 +245,7 @@ controlsCanvas.onmouseup = function() {
             }
             toolbar.syncFractal();
             toolbar.syncImageParams();
+            toolbar.setImgPalette();
         }
 
         // Center the frame
@@ -297,7 +316,7 @@ controlsCanvas.onmouseup = function() {
     
     currImg.fitToCanvas(canvasWidth, canvasHeight);
     toolbar.updateZoom();
-    draw();
+    toolbar.redraw();
 
     // Reset drag
     resetDrag();
@@ -331,10 +350,10 @@ controlsCanvas.onmouseout = function() {
 
 
 // Keys variables
-var keys = {};
+const keys = {};
 
 // Keys functions
-var resetKeys = function() {
+function resetKeys() {
     for(let key in keys) {
         keys[key] = false;
     }
@@ -345,7 +364,7 @@ window.onkeydown = function(event) {
     if(event.key == "Escape") {
         resetDrag();
     }
-    if(event.key == "Enter") {
+    if(event.key == "Enter" && document.activeElement.nodeName != "TEXTAREA") {
         document.activeElement.blur();
         toolbar.redraw();
     }

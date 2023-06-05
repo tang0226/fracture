@@ -13,7 +13,7 @@ canvas {
     z-index: 1;
 }
 
-#toolbar {
+#toolbar, #status-section {
     width: 600px;
     border: 1px solid black;
     border-radius: 10px;
@@ -21,14 +21,14 @@ canvas {
     padding: 10px;
 }
 
-#toolbar section, #toolbar div, #toolbar input, #toolbar select {
+section, div, input, select {
     margin-top: 5px;
     font-family: "Arial";
     font-size: 1em;
 }
 
 hr {
-    margin-top: 10px;
+    margin-top: 5px;
     margin-bottom: 0px;
 }
 
@@ -42,6 +42,25 @@ hr {
 
 .alert {
     color: red;
+}
+
+.nav {
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin: 0px;
+}
+
+.active {
+    border: 1px solid black;
+    border-radius: 5px;
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.2);
+}
+
+.inactive {
+    box-shadow: inset 2px 2px 2px 2px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
 }
 
 .center {

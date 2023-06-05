@@ -2,9 +2,23 @@
 TOOLBAR OBJECT
 ******************************/
 
-var toolbar = {
+const toolbar = {
     // Elements
     elements: {
+        // Navigation
+        nav: {
+            fractal: document.getElementById("fractal-nav"),
+            frame: document.getElementById("frame-nav"),
+            image: document.getElementById("image-nav")
+        },
+
+        // Sections
+        sections: {
+            fractal: document.getElementById("fractal-section"),
+            frame: document.getElementById("frame-section"),
+            image: document.getElementById("image-section")
+        },
+
         // Inputs
         fractalType: document.getElementById("fractal-type"),
         exponent: document.getElementById("exponent"),
@@ -13,6 +27,9 @@ var toolbar = {
         iterationIncrement: document.getElementById("iteration-increment"),
         escapeRadius: document.getElementById("escape-radius"),
         clickZoomFactor: document.getElementById("click-zoom-factor"),
+        smoothColoring: document.getElementById("smooth-coloring"),
+        palette: document.getElementById("palette"),
+        itersPerCycle: document.getElementById("iters-per-cycle"),
         canvasWidth: document.getElementById("canvas-width"),
         canvasHeight: document.getElementById("canvas-height"),
         downloadType: document.getElementById("download-type"),
@@ -20,6 +37,7 @@ var toolbar = {
         // Buttons
         increaseIterations: document.getElementById("increase-iterations"),
         decreaseIterations: document.getElementById("decrease-iterations"),
+        resetZoom: document.getElementById("reset-zoom"),
         redraw: document.getElementById("redraw"),
         download: document.getElementById("download"),
 
@@ -30,6 +48,8 @@ var toolbar = {
         iterationIncrementAlert: document.getElementById("iteration-increment-alert"),
         escapeRadiusAlert: document.getElementById("escape-radius-alert"),
         clickZoomFactorAlert: document.getElementById("click-zoom-factor-alert"),
+        paletteAlert: document.getElementById("palette-alert"),
+        ipcAlert: document.getElementById("ipc-alert"),
         canvasWidthAlert: document.getElementById("canvas-width-alert"),
         canvasHeightAlert: document.getElementById("canvas-height-alert"),
 
@@ -64,6 +84,8 @@ var toolbar = {
         iterationIncrement: true,
         escapeRadius: true,
         clickZoomFactor: true,
+        palette: true,
+        itersPerCycle: true,
         canvasWidth: true,
         canvasHeight: true
     },
@@ -71,6 +93,9 @@ var toolbar = {
 
     // For currently undefined variables
     init() {
+        // Navigation
+        this.currSection = "fractal";
+
         // Internal input variables
         this.fractalType = this.lastFractalType = currImg.fractal.type;
         this.elements.fractalType.value = this.fractalType;
@@ -96,66 +121,19 @@ var toolbar = {
         this.clickZoomFactor = this.defaults.clickZoomFactor;
         this.elements.clickZoomFactor.value = this.clickZoomFactor;
 
+        this.smoothColoring = currImg.smoothColoring;
+        this.elements.smoothColoring.checked = currImg.smoothColoring;
+
+        this.palette = currImg.palette;
+        this.elements.palette.value = currImg.palette.string;
+
+        this.itersPerCycle = currImg.itersPerCycle;
+        this.elements.itersPerCycle.value = currImg.itersPerCycle;
+
         this.elements.canvasWidth.value = canvasWidth;
         this.elements.canvasHeight.value = canvasHeight;
         this.canvasWidth = canvasWidth;
         this.canvasHeight = canvasHeight;
-
-        // Inputs
-        this.elements.fractalType.setAttribute(
-            "onchange",
-            "toolbar.updateFractalType()"
-        );
-        this.elements.exponent.setAttribute(
-            "onchange",
-            "toolbar.updateExponent()"
-        );
-        this.elements.juliaConstant.setAttribute(
-            "onchange",
-            "toolbar.updateJuliaConstant()"
-        );
-        this.elements.iterations.setAttribute(
-            "onchange",
-            "toolbar.updateIterations()"
-        );
-        this.elements.iterationIncrement.setAttribute(
-            "onchange",
-            "toolbar.updateIterationIncrement()"
-        );
-        this.elements.escapeRadius.setAttribute(
-            "onchange",
-            "toolbar.updateEscapeRadius()"
-        );
-        this.elements.clickZoomFactor.setAttribute(
-            "onchange",
-            "toolbar.updateCZF()"
-        );
-        this.elements.canvasWidth.setAttribute(
-            "onchange",
-            "toolbar.updateCanvasWidth()"
-        );
-        this.elements.canvasHeight.setAttribute(
-            "onchange",
-            "toolbar.updateCanvasHeight()"
-        );
-
-        // Buttons
-        this.elements.increaseIterations.setAttribute(
-            "onclick",
-            "toolbar.increaseIterations()"
-        );
-        this.elements.decreaseIterations.setAttribute(
-            "onclick",
-            "toolbar.decreaseIterations()"
-        );
-        this.elements.redraw.setAttribute(
-            "onclick",
-            "toolbar.redraw()"
-        );
-        this.elements.download.setAttribute(
-            "onclick",
-            "toolbar.download()"
-        );
 
         // Display
         this.resetMouseComplexCoords();
@@ -164,10 +142,36 @@ var toolbar = {
         this.updateZoom();
     },
 
+    
+    // Navigation
+    selectSection(newSection) {
+        // Hide current section
+        this.elements.sections[this.currSection]
+            .classList.add("hide");
+
+        // Show new section
+        this.elements.sections[newSection]
+            .classList.remove("hide");
+
+        // Give inactive class to old navbar div
+        this.elements.nav[this.currSection]
+            .classList.remove("active");
+        this.elements.nav[this.currSection]
+            .classList.add("inactive");
+
+        // Give active class to new navbar div
+        this.elements.nav[newSection]
+            .classList.remove("inactive");
+        this.elements.nav[newSection]
+            .classList.add("active");
+        
+        this.currSection = newSection;
+    },
+
 
     // Render time
     displayRenderTime(time) {
-        this.elements.renderTime.innerHTML = time.toString() + " ms";
+        this.elements.renderTime.innerHTML = time + " ms";
     },
 
 
@@ -178,7 +182,7 @@ var toolbar = {
     },
 
 
-    // Mouse complex coordinates
+    // Mouse coordinates
     displayMouseComplexCoords() {
         let complexCoords = currImg.frame.toComplexCoords(
             mouseX, mouseY,
@@ -231,15 +235,27 @@ var toolbar = {
         let toSet = Number(this.elements.exponent.value);
 
         // Sanitize
-        if(Number.isNaN(toSet) || toSet < 1 || !Number.isInteger(toSet)) {
-            this.elements.exponentAlert.classList.remove("hide");
-            this.inputStatus.exponent = false;
+        let newStatus = true;
+        if(Number.isNaN(toSet)) {
+            this.elements.exponentAlert.innerHTML =
+                "Exponent must be a number";
+            newStatus = false;
+        }
+        else if(toSet <= 1) {
+            this.elements.exponentAlert.innerHTML =
+                "Exponent must be greater than 1";
+            newStatus = false;
+        }
+        else if(!Number.isInteger(toSet)) {
+            this.elements.exponentAlert.innerHTML =
+                "Exponent must be an integer";
+            newStatus = false;
         }
         else {
             this.exponent = toSet;
-            this.elements.exponentAlert.classList.add("hide");
-            this.inputStatus.exponent = true;
+            this.elements.exponentAlert.innerHTML = "";
         }
+        this.inputStatus.exponent = newStatus;
     },
 
     // When Julia constant input is changed
@@ -248,12 +264,13 @@ var toolbar = {
 
         // Sanitize
         if(toSet == undefined) {
-            this.elements.juliaConstantAlert.classList.remove("hide");
+            this.elements.juliaConstantAlert.innerHTML =
+                "Julia constant must be of the form a+bi";
             this.inputStatus.juliaConstant = false;
         }
         else {
             this.juliaConstant = toSet;
-            this.elements.juliaConstantAlert.classList.add("hide");
+            this.elements.juliaConstantAlert.innerHTML = "";
             this.inputStatus.juliaConstant = true;
         }
     },
@@ -264,7 +281,7 @@ var toolbar = {
 
     // Display internal iterations
     displayIterations() {
-        this.elements.iterations.value = this.iterations.toString();
+        this.elements.iterations.value = this.iterations;
     },
 
     // When iterations input is changed
@@ -272,18 +289,32 @@ var toolbar = {
         let toSet = Number(this.elements.iterations.value);
 
         // Sanitize
-        if(Number.isNaN(toSet) || toSet < 1 || !Number.isInteger(toSet)) {
-            this.elements.iterationsAlert.classList.remove("hide");
-            this.inputStatus.iterations = false;
+        let newStatus = true;
+        
+        if(Number.isNaN(toSet)) {
+            this.elements.iterationsAlert.innerHTML =
+                "Iterations must be a number";
+            newStatus = false;
+        }
+        else if(toSet < 1) {
+            this.elements.iterationsAlert.innerHTML =
+                "Iterations must be greater than 1";
+            newStatus = false;
+        }
+        else if(!Number.isInteger(toSet)) {
+            this.elements.iterationsAlert.innerHTML =
+                "Iterations must be an integer";
+            newStatus = true;
         }
         else {
             this.iterations = toSet;
-            this.elements.iterationsAlert.classList.add("hide");
-            this.inputStatus.iterations = true;
+            this.elements.iterationsAlert.innerHTML = "";
+            this.harmonizeItersAndIPC("iterations");
         }
+        this.inputStatus.iterations = newStatus;
     },
 
-    // Set internal and displayed iterations 
+    // Sets internal and displayed iterations 
     setIterations(iterations) {
         this.iterations = iterations;
         this.displayIterations();
@@ -294,25 +325,34 @@ var toolbar = {
         let toSet = Number(this.elements.iterationIncrement.value);
 
         // Sanitize
-        if(Number.isNaN(toSet) || !Number.isInteger(toSet)) {
-            this.elements.iterationIncrementAlert.classList.remove("hide");
-            this.inputStatus.iterationIncrement = false;
+        let newStatus = true;
+        if(Number.isNaN(toSet)) {
+            this.elements.iterationIncrementAlert.innerHTML =
+                "Iteration increment must be a number";
+            newStatus = false;
+        }
+        else if(!Number.isInteger(toSet)) {
+            this.elements.iterationIncrementAlert.innerHTML =
+                "Iteration increment must be an integer";
+            newStatus = false;
         }
         else {
             this.iterationIncrement = toSet;
-            this.elements.iterationIncrementAlert.classList.add("hide");
-            this.inputStatus.iterationIncrement = true;
+            this.elements.iterationIncrementAlert.innerHTML = "";
         }
+        this.inputStatus.iterationIncrement = newStatus;
     },
 
     // For +iterations button
     increaseIterations() {
         this.setIterations(this.iterations + this.iterationIncrement);
+        this.harmonizeItersAndIPC("iterations");
     },
 
     // For -iterations button
     decreaseIterations() {
         this.setIterations(this.iterations - this.iterationIncrement);
+        this.harmonizeItersAndIPC("iterations");
     },
 
 
@@ -321,15 +361,22 @@ var toolbar = {
         let toSet = Number(this.elements.escapeRadius.value);
 
         // Sanitize
-        if(Number.isNaN(toSet) || toSet < 2) {
-            this.elements.escapeRadiusAlert.classList.remove("hide");
-            this.inputStatus.escapeRadius = false;
+        let newStatus = true;
+        if(Number.isNaN(toSet)) {
+            this.elements.escapeRadiusAlert.innerHTML =
+                "Escape radius must be a number";
+                newStatus = false;
+        }
+        else if(toSet < 2) {
+            this.elements.escapeRadiusAlert.innerHTML =
+                "Escape radius must be at least 2";
+            newStatus = false;
         }
         else {
             this.escapeRadius = toSet;
-            this.elements.escapeRadiusAlert.classList.add("hide");
-            this.inputStatus.escapeRadius = true;
+            this.elements.escapeRadiusAlert.innerHTML = "";
         }
+        this.inputStatus.escapeRadius = newStatus;
     },
 
 
@@ -338,7 +385,29 @@ var toolbar = {
 
     // Sync internal and external zoom with current image
     updateZoom() {
-        this.elements.zoom.innerHTML = currImg.frame.toZoom().toString();
+        this.elements.zoom.innerHTML = currImg.frame.toZoom();
+    },
+
+    // When zoom reset button is pressed
+    resetZoom() {
+        // Get the default image for the current fractal
+        let def = defaultImages[currImg.fractal.type];
+
+        // Give the current image these default parameters
+        // (because deep zooms often have differing parameters from shallow zooms)
+        currImg.setFrame(def.frame);
+        currImg.iterations = def.iterations;
+        currImg.escapeRadius = def.escapeRadius;
+        currImg.itersPerCycle = def.itersPerCycle;
+
+        // Sync external toolbar input elements
+        this.syncImageParams();
+
+        // Redraw the image
+        this.redraw();
+
+        // Display the updated zoom
+        this.updateZoom();
     },
 
     // When click zoom factor input is changed
@@ -346,14 +415,97 @@ var toolbar = {
         let toSet = Number(this.elements.clickZoomFactor.value);
 
         // Sanitize
-        if(Number.isNaN(toSet) || toSet <= 0) {
-            this.elements.clickZoomFactorAlert.classList.remove("hide");
-            this.inputStatus.clickZoomFactor = false;
+        let newStatus = true;
+        if(Number.isNaN(toSet)) {
+            this.elements.clickZoomFactorAlert.innerHTML =
+                "Click zoom factor must be a number";
+            newStatus = false;
+        }
+        else if(toSet <= 0) {
+            this.elements.clickZoomFactorAlert.innerHTML =
+                "Click zoom factor must be positive";
+            newStatus = false;
         }
         else {
             this.clickZoomFactor = toSet;
-            this.elements.clickZoomFactorAlert.classList.add("hide");
+            this.elements.clickZoomFactorAlert.innerHTML = "";
             this.inputStatus.clickZoomFactor = true;
+        }
+        this.inputStatus.clickZoomFactor = newStatus;
+    },
+
+
+    // Smooth coloring
+    updateSmoothColoring() {
+        this.smoothColoring = this.elements.smoothColoring.checked;
+    },
+
+    // Palette
+    updatePalette() {
+        let toSet;
+
+        try {
+            toSet = new Palette(this.elements.palette.value);
+        }
+        catch(e) {
+            this.elements.paletteAlert.innerHTML =
+                "There is an error in the palette";
+            this.inputStatus.palette = false;
+            return;
+        }
+
+        this.elements.paletteAlert.innerHTML = "";
+        this.palette = toSet;
+        this.inputStatus.palette = true;
+    },
+
+    // When iterations per cycle input is changed
+    updateIPC() {
+        let toSet = Number(this.elements.itersPerCycle.value);
+
+        // Sanitize
+        let newStatus = true;
+        if(Number.isNaN(toSet)) {
+            this.elements.ipcAlert.innerHTML =
+                "Iterations per cycle must be a number";
+            newStatus = false;
+        }
+        else if(toSet < 2) {
+            this.elements.ipcAlert.innerHTML =
+                "Iterations per cycle must be at least 2";
+            newStatus = false;
+        }
+        else if(!Number.isInteger(toSet)) {
+            this.elements.ipcAlert.innerHTML =
+                "Iterations per cycle must be an integer";
+            newStatus = false;
+        }
+        else {
+            this.itersPerCycle = toSet;
+            this.harmonizeItersAndIPC("itersPerCycle");
+            this.elements.ipcAlert.innerHTML = "";
+        }
+        this.inputStatus.itersPerCycle = newStatus;
+    },
+
+    setItersPerCycle(itersPerCycle) {
+        this.itersPerCycle = itersPerCycle;
+        this.elements.itersPerCycle.value = itersPerCycle;
+    },
+
+    setImgPalette() {
+        currImg.palette = this.palette;
+        currImg.itersPerCycle = this.itersPerCycle;
+    },
+
+    harmonizeItersAndIPC(priority) {
+        if(this.iterations < this.itersPerCycle) {
+            if(priority == "iterations") {
+                this.setItersPerCycle(this.iterations);
+            }
+            else {
+                this.setIterations(this.itersPerCycle);
+            }
         }
     },
 
@@ -364,30 +516,54 @@ var toolbar = {
         let toSet = Number(this.elements.canvasWidth.value);
 
         // Sanitize
-        if(Number.isNaN(toSet) || toSet < 1 || !Number.isInteger(toSet)) {
-            this.elements.canvasWidthAlert.classList.remove("hide");
-            this.inputStatus.canvasWidth = false;
+        let newStatus = true;
+        if(Number.isNaN(toSet)) {
+            this.elements.canvasWidthAlert.innerHTML =
+                "Canvas width must be a number";
+            newStatus = false;
+        }
+        else if(toSet < 1) {
+            this.elements.canvasWidthAlert.innerHTML =
+                "Canvas width must be positive";
+            newStatus = false;
+        }
+        else if(!Number.isInteger(toSet)) {
+            this.elements.canvasWidthAlert.innerHTML =
+                "Canvas width must be an integer";
+            newStatus = false;
         }
         else {
             this.canvasWidth = toSet;
-            this.elements.canvasWidthAlert.classList.add("hide");
-            this.inputStatus.canvasWidth = true;
+            this.elements.canvasWidthAlert.innerHTML = "";
         }
+        this.inputStatus.canvasWidth = newStatus;
     },
 
     updateCanvasHeight() {
         let toSet = Number(this.elements.canvasHeight.value);
 
         // Sanitize
-        if(Number.isNaN(toSet) || toSet < 1 || !Number.isInteger(toSet)) {
-            this.elements.canvasHeightAlert.classList.remove("hide");
-            this.inputStatus.canvasHeight = false;
+        let newStatus = true;
+        if(Number.isNaN(toSet)) {
+            this.elements.canvasHeightAlert.innerHTML =
+                "Canvas height must be a number";
+            newStatus = false;
+        }
+        else if(toSet < 1) {
+            this.elements.canvasHeightAlert.innerHTML =
+                "Canvas height must be positive";
+            newStatus = false;
+        }
+        else if(!Number.isInteger(toSet)) {
+            this.elements.canvasHeightAlert.innerHTML =
+                "Canvas height must be an integer";
+            newStatus = false;
         }
         else {
             this.canvasHeight = toSet;
-            this.elements.canvasHeightAlert.classList.add("hide");
-            this.inputStatus.canvasHeight = true;
+            this.elements.canvasHeightAlert.innerHTML = "";
         }
+        this.inputStatus.canvasHeight = newStatus;
     },
 
 
@@ -414,13 +590,13 @@ var toolbar = {
         // If so, exit Julia mode
         let fractalChanged = false;
         
-        // Check for new fractal type
+        // Update fractal and check for changes
         if(this.fractalType != this.lastFractalType) {
             currImg = defaultImages[this.fractalType].copy();
             fractalChanged = true;
         }
 
-        // Check for new exponent
+        // Update exponent and check for changes
         if(currImg.fractal.requiresExponent) {
             currImg.fractal.params.e = this.exponent;
 
@@ -432,7 +608,7 @@ var toolbar = {
             }
         }
 
-        // Check for new Julia constant
+        // Update Julia constant and check for changes
         if(currImg.fractal.requiresJuliaConstant) {
             currImg.fractal.params.c = this.juliaConstant;
             if(!Complex.equals(this.juliaConstant, this.lastJuliaConstant)) {
@@ -442,7 +618,9 @@ var toolbar = {
         }
 
         if(fractalChanged) {
+            // New image takes priority for parameters
             this.syncImageParams();
+
             if(currMode == "julia") {
                 currMode = "default";
                 storedImg = null;
@@ -454,12 +632,18 @@ var toolbar = {
 
             // Update image escape radius
             currImg.escapeRadius = this.escapeRadius;
+
+            // Update image smooth coloring
+            currImg.smoothColoring = this.smoothColoring;
         }
 
         // Update last fractal parameters for future checks
         this.lastFractalType = this.fractalType;
         this.lastExponent = this.exponent;
         this.lastJuliaConstant = this.juliaConstant;
+
+        // Update palette and ipc
+        this.setImgPalette();
 
         // Prepare the image to be redrawn
         currImg.fitToCanvas(canvasWidth, canvasHeight);
@@ -483,7 +667,7 @@ var toolbar = {
 
 
 
-    // Sync
+    // Syncing - changing internals to match the current image
     syncFractal() {
         // Sync fractal type
 
@@ -498,7 +682,7 @@ var toolbar = {
 
         // Sync Exponent
         if(currFractal.params.e) {
-            this.elements.exponent.value = currFractal.params.e.toString();
+            this.elements.exponent.value = currFractal.params.e;
             this.exponent = this.lastExponent = currFractal.params.e;
         }
 
@@ -511,12 +695,20 @@ var toolbar = {
 
     syncImageParams() {
         // Sync iterations
-        this.elements.iterations.value = currImg.iterations.toString();
+        this.elements.iterations.value = currImg.iterations;
         this.iterations = currImg.iterations;
 
         // Sync escape radius
-        this.elements.escapeRadius.value = currImg.escapeRadius.toString();
+        this.elements.escapeRadius.value = currImg.escapeRadius;
         this.escapeRadius = currImg.escapeRadius;
+
+        // Sync smooth coloring
+        this.elements.smoothColoring.checked = currImg.smoothColoring;
+        this.smoothcoloring = currImg.smoothColoring;
+
+        // Sync IPC
+        this.elements.itersPerCycle.value = currImg.itersPerCycle;
+        this.itersPerCycle = currImg.itersPerCycle;
         
         // Sync zoom
         this.updateZoom();

@@ -1,6 +1,6 @@
-importScripts("./complex.js", "./fractal.js");
+importScripts("./complex.js", "./fractal.js", "./palette.js");
 
-var scale = function(n, minFrom, maxFrom, minTo, maxTo) {
+function scale(n, minFrom, maxFrom, minTo, maxTo) {
     return ((n / (maxFrom - minFrom)) * (maxTo - minTo)) + minTo;
 };
 
@@ -12,41 +12,44 @@ onmessage = function(event) {
 
         let img = data.img;
         let iterate = Fractal.iterate[img.fractal.type];
-
+        let ipc = img.itersPerCycle;
         let imgData = new ImageData(img.width, img.height);
 
-        let im = img.frame.imMin;
         let i = 0;
         for(let currY = 0; currY < img.height; currY++) {
-            let re = img.frame.reMin;
+            let im = img.frame.imMin + currY * img.complexIter;
 
             for(let currX = 0; currX < img.width; currX++) {
                 let val = iterate(
                     img.fractal.params,
-                    Complex(re, im),
+                    Complex(img.frame.reMin + currX * img.complexIter, im),
                     img.iterations,
-                    img.escapeRadius
+                    img.escapeRadius,
+                    img.smoothColoring
                 );
 
-                let bw;
                 if(val == img.iterations) {
                     // Part of set, color black
-                    bw = 0;
+                    imgData.data[i] = 0;
+                    imgData.data[i + 1] = 0;
+                    imgData.data[i + 2] = 0;
+                    imgData.data[i + 3] = 255;
                 }
                 else {
+
+                    // Format for palette
+                    val %= ipc;
+
                     // Color scale
-                    bw = scale(val, 0, img.iterations, 0, 255);
+                    let color = Palette.getColorAt(img.palette, val / ipc);
+                    imgData.data[i] = color[0];
+                    imgData.data[i + 1] = color[1];
+                    imgData.data[i + 2] = color[2];
+                    imgData.data[i + 3] = 255;
                 }
 
-                imgData.data[i] = bw;
-                imgData.data[i + 1] = bw;
-                imgData.data[i + 2] = bw;
-                imgData.data[i + 3] = 255;
-
-                re += img.complexIter;
                 i += 4;
             }
-            im += img.complexIter;
 
             // Update render time
             renderTime = new Date() - startTime;
