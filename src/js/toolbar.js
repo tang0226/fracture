@@ -171,7 +171,24 @@ const toolbar = {
 
     // Render time
     displayRenderTime(time) {
-        this.elements.renderTime.innerHTML = time + " ms";
+        let t = time;
+        let s = (t % 1000) + " ms";
+
+        if(t >= 1000) {
+            t = Math.floor(t / 1000);
+            s = (t % 60) + " s " + s;
+
+            if(t >= 60) {
+                t = Math.floor(t / 60);
+                s = (t % 60) + " min " + s;
+
+                if(t >= 60) {
+                    s = Math.floor(t / 60) + " h " + s;
+                }
+            }
+        }
+        
+        this.elements.renderTime.innerHTML = s;
     },
 
 
