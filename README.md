@@ -20,7 +20,7 @@ Main page is located at main.html ([view online](https://tang0226.github.io/frac
 * Use Alt + click to view a point's corresponding Juila set or to switch back to the original image
 * Smooth coloring
 * Downloadable images
-* NEW: Custom palettes 
+* Custom palettes 
 * More features and fractals coming!
 
 ## Code / features todo list:
@@ -40,10 +40,6 @@ Main page is located at main.html ([view online](https://tang0226.github.io/frac
     * Feedback from previous iterations
 * Prevent scientific notation for complex coordinates (especially close to im = 0)
 * Add help section/popup
-* Dynamically built functions to improve rendering time?
-  * This can also facilitate new options such as:
-    * Hybrid fractals
-    * More flexible palettes
 * "Touch up" function: only recalculate image if necessary (i.e. something about the fractal changed); This will allow for faster palette manipulation to fine-tune a render.
 * Friendly palette UI (instead of text)
 * Streamline toolbar structure
