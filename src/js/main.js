@@ -178,10 +178,6 @@ function resetDrag() {
 // Mouse Events
 
 controlsCanvas.onmousedown = function(event) {
-    if(renderInProgress) {
-        return;
-    }
-
     if(event.buttons == 1) {
         if(!mouseDown) {
             startDragX = mouseX;
@@ -196,11 +192,9 @@ controlsCanvas.onmousedown = function(event) {
 // and keyboard events, draw the new image
 controlsCanvas.onmouseup = function() {
     // Glitch-proofing
-    if(!mouseDown) {
-        return;
-    }
-
-    if(renderInProgress) {
+    if(!mouseDown || renderInProgress || !toolbar.inputStatus.palette) {
+        // Reset drag
+        resetDrag();
         return;
     }
 
@@ -243,9 +237,6 @@ controlsCanvas.onmouseup = function() {
                 currImg = storedImg.copy();
                 storedImg = null;
             }
-            toolbar.syncFractal();
-            toolbar.syncImageParams();
-            toolbar.setImgPalette();
         }
 
         // Center the frame
@@ -315,8 +306,12 @@ controlsCanvas.onmouseup = function() {
     }
     
     currImg.fitToCanvas(canvasWidth, canvasHeight);
-    toolbar.updateZoom();
-    toolbar.redraw();
+    toolbar.matchFractal();
+    toolbar.matchImageParams();
+    toolbar.setImgPalette();
+    toolbar.clearErrors();
+    
+    draw();
 
     // Reset drag
     resetDrag();
