@@ -21,6 +21,10 @@ canvas {
     padding: 10px;
 }
 
+#progress-bar {
+    width: 600px;
+}
+
 section, div, input, select {
     margin-top: 5px;
     font-family: "Arial";
