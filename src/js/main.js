@@ -229,6 +229,10 @@ controlsCanvas.onmouseup = function() {
                         currImg.fractal.params.e = storedImg.fractal.params.e;
                     }
                 }
+
+                else {
+                    return;
+                }
             }
 
             else {
