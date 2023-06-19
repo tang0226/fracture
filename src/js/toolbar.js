@@ -28,7 +28,7 @@ const toolbar = {
         escapeRadius: document.getElementById("escape-radius"),
         clickZoomFactor: document.getElementById("click-zoom-factor"),
         smoothColoring: document.getElementById("smooth-coloring"),
-        palette: document.getElementById("palette"),
+        gradient: document.getElementById("gradient"),
         itersPerCycle: document.getElementById("iters-per-cycle"),
         canvasWidth: document.getElementById("canvas-width"),
         canvasHeight: document.getElementById("canvas-height"),
@@ -49,7 +49,7 @@ const toolbar = {
             iterationIncrement: document.getElementById("iteration-increment-alert"),
             escapeRadius: document.getElementById("escape-radius-alert"),
             clickZoomFactor: document.getElementById("click-zoom-factor-alert"),
-            palette: document.getElementById("palette-alert"),
+            gradient: document.getElementById("gradient-alert"),
             itersPerCycle: document.getElementById("ipc-alert"),
             canvasWidth: document.getElementById("canvas-width-alert"),
             canvasHeight: document.getElementById("canvas-height-alert")
@@ -86,7 +86,7 @@ const toolbar = {
         iterationIncrement: true,
         escapeRadius: true,
         clickZoomFactor: true,
-        palette: true,
+        gradient: true,
         itersPerCycle: true,
         canvasWidth: true,
         canvasHeight: true
@@ -126,8 +126,8 @@ const toolbar = {
         this.smoothColoring = currImg.smoothColoring;
         this.elements.smoothColoring.checked = currImg.smoothColoring;
 
-        this.palette = currImg.palette;
-        this.elements.palette.value = currImg.palette.string;
+        this.gradient = currImg.gradient;
+        this.elements.gradient.value = currImg.gradient.string;
 
         this.itersPerCycle = currImg.itersPerCycle;
         this.elements.itersPerCycle.value = currImg.itersPerCycle;
@@ -459,23 +459,23 @@ const toolbar = {
         this.smoothColoring = this.elements.smoothColoring.checked;
     },
 
-    // Palette
-    updatePalette() {
+    // Gradient
+    updateGradient() {
         let toSet;
 
         try {
-            toSet = new Palette(this.elements.palette.value);
+            toSet = new Gradient(this.elements.gradient.value);
         }
         catch(e) {
-            this.elements.alerts.palette.innerHTML =
-                "There is an error in the palette";
-            this.inputStatus.palette = false;
+            this.elements.alerts.gradient.innerHTML =
+                "There is an error in the gradient";
+            this.inputStatus.gradient = false;
             return;
         }
 
-        this.elements.alerts.palette.innerHTML = "";
-        this.palette = toSet;
-        this.inputStatus.palette = true;
+        this.elements.alerts.gradient.innerHTML = "";
+        this.gradient = toSet;
+        this.inputStatus.gradient = true;
     },
 
     // When iterations per cycle input is changed
@@ -512,8 +512,8 @@ const toolbar = {
         this.elements.itersPerCycle.value = itersPerCycle;
     },
 
-    setImgPalette() {
-        currImg.palette = this.palette;
+    setImgGradient() {
+        currImg.gradient = this.gradient;
         currImg.itersPerCycle = this.itersPerCycle;
     },
 
@@ -661,8 +661,8 @@ const toolbar = {
         this.lastExponent = this.exponent;
         this.lastJuliaConstant = this.juliaConstant;
 
-        // Update palette and ipc
-        this.setImgPalette();
+        // Update gradient and ipc
+        this.setImgGradient();
 
         // Prepare the image to be redrawn
         currImg.fitToCanvas(canvasWidth, canvasHeight);

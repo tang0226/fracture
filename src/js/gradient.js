@@ -1,4 +1,4 @@
-class Palette {
+class Gradient {
     constructor(input) {
         this.string = input;
     
@@ -81,7 +81,7 @@ class Palette {
     }        
 }
 
-Palette.getColorAt = function(p, pos) {
+Gradient.getColorAt = function(p, pos) {
     let l = p.points.length;
 
     // Binary search

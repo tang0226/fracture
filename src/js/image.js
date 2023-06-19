@@ -7,7 +7,7 @@ class Image {
         fractal,
         iterations, escapeRadius, smoothColoring,
         srcFrame,
-        palette, itersPerCycle,
+        gradient, itersPerCycle,
         width, height
     ) {
         
@@ -20,7 +20,7 @@ class Image {
         this.srcFrame = srcFrame;
         this.frame = srcFrame.fitToCanvas(width, height);
 
-        this.palette = palette;
+        this.gradient = gradient;
         this.itersPerCycle = itersPerCycle;
 
         this.width = width;
@@ -56,7 +56,7 @@ class Image {
             this.fractal,
             this.iterations, this.escapeRadius, this.smoothColoring,
             this.srcFrame,
-            this.palette, this.itersPerCycle,
+            this.gradient, this.itersPerCycle,
             this.width, this.height,
         );
     }
