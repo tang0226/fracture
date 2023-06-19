@@ -61,6 +61,7 @@ const toolbar = {
         progressBar: document.getElementById("progress-bar"),
         mouseComplexCoords: document.getElementById("mouse-complex-coords"),
         zoom: document.getElementById("zoom"),
+        gradientCanvas: document.getElementById("gradient-canvas"),
 
         // Containers
         exponentContainer: document.getElementById("exponent-container"),
@@ -128,6 +129,9 @@ const toolbar = {
 
         this.gradient = currImg.gradient;
         this.elements.gradient.value = currImg.gradient.string;
+
+        this.gradientCanvasCtx = this.elements.gradientCanvas.getContext("2d");
+        this.drawGradient();
 
         this.itersPerCycle = currImg.itersPerCycle;
         this.elements.itersPerCycle.value = currImg.itersPerCycle;
@@ -475,7 +479,18 @@ const toolbar = {
 
         this.elements.alerts.gradient.innerHTML = "";
         this.gradient = toSet;
+        this.drawGradient();
         this.inputStatus.gradient = true;
+    },
+
+    drawGradient() {
+        let w = this.elements.gradientCanvas.width;
+        for(let x = 0; x < w; x++) {
+            let color = Gradient.getColorAt(this.gradient, x / w);
+            this.gradientCanvasCtx.fillStyle = 
+                `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+            this.gradientCanvasCtx.fillRect(x, 0, 1, this.elements.gradientCanvas.width);
+        }
     },
 
     // When iterations per cycle input is changed
