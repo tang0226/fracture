@@ -127,7 +127,7 @@ const toolbar = {
         this.elements.smoothColoring.checked = currImg.smoothColoring;
 
         this.gradient = currImg.gradient;
-        this.elements.gradient.value = currImg.gradient.string;
+        this.elements.gradient.value = Gradient.prettify(currImg.gradient.string);
 
         this.itersPerCycle = currImg.itersPerCycle;
         this.elements.itersPerCycle.value = currImg.itersPerCycle;

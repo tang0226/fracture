@@ -26,7 +26,7 @@ const defaultView = new Frame(Complex(0, 0), 4, 4);
 // Gradient
 
 const defaultGradient = new Gradient(
-    "13;\
+    "12;\
     0, 0 0 0;\
     1, 255 0 0;\
     2, 0 0 0;\

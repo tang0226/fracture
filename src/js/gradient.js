@@ -81,6 +81,10 @@ class Gradient {
     }        
 }
 
+Gradient.prettify = function(string) {
+    return string.split(";").map(l => l.trim()).join(";\n");
+};
+
 Gradient.getColorAt = function(p, pos) {
     let l = p.points.length;
 
