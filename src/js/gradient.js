@@ -1,6 +1,6 @@
 class Gradient {
     constructor(input) {
-        this.string = input;
+        this.string = Gradient.prettify(input);
     
         let lines = input.split(";").map(l => l.trim());
         
