@@ -74,7 +74,7 @@ const toolbar = {
         exponent: 3,
         juliaConstant: Complex(0, 1),
         iterations: 100,
-        iterationIncrement: 100,
+        iterationIncrement: 1000,
         escapeRadius: 2,
         clickZoomFactor: 4,
     },
