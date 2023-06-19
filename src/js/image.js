@@ -3,28 +3,21 @@ IMAGE CLASS: RENDERING OF A FRACTAL WITH ITERATIONS, FRAME, AND CANVAS SIZE
 ******************************/
 
 class Image {
-    constructor(
-        fractal,
-        iterations, escapeRadius, smoothColoring,
-        srcFrame,
-        gradient, itersPerCycle,
-        width, height
-    ) {
-        
-        this.fractal = fractal;
+    constructor(data) {
+        this.fractal = data.fractal;
 
-        this.iterations = iterations;
-        this.escapeRadius = escapeRadius;
-        this.smoothColoring = smoothColoring;
+        this.iterations = data.iterations;
+        this.escapeRadius = data.escapeRadius;
+        this.smoothColoring = data.smoothColoring;
 
-        this.srcFrame = srcFrame;
-        this.frame = srcFrame.fitToCanvas(width, height);
+        this.srcFrame = data.srcFrame;
+        this.frame = data.srcFrame.fitToCanvas(data.width, data.height);
 
-        this.gradient = gradient;
-        this.itersPerCycle = itersPerCycle;
+        this.gradient = data.gradient;
+        this.itersPerCycle = data.itersPerCycle;
 
-        this.width = width;
-        this.height = height;
+        this.width = data.width;
+        this.height = data.height;
         
         // Distance between / width of pixels on the complex plane
         this.complexIter = 
@@ -52,12 +45,16 @@ class Image {
 
     // Return a deep copy of self: critical for fractal picking
     copy() {
-        return new Image(
-            this.fractal,
-            this.iterations, this.escapeRadius, this.smoothColoring,
-            this.srcFrame,
-            this.gradient, this.itersPerCycle,
-            this.width, this.height,
-        );
+        return new Image({
+            fractal: this.fractal,
+            iterations: this.iterations,
+            escapeRadius: this.escapeRadius,
+            smoothColoring: this.smoothColoring,
+            srcFrame: this.srcFrame,
+            gradient: this.gradient,
+            itersPerCycle: this.itersPerCycle,
+            width: this.width,
+            height: this.height,
+        });
     }
 }
