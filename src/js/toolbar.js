@@ -29,6 +29,7 @@ const toolbar = {
         clickZoomFactor: document.getElementById("click-zoom-factor"),
         smoothColoring: document.getElementById("smooth-coloring"),
         gradient: document.getElementById("gradient"),
+        interpolationType: document.getElementById("interpolation-type"),
         itersPerCycle: document.getElementById("iters-per-cycle"),
         canvasWidth: document.getElementById("canvas-width"),
         canvasHeight: document.getElementById("canvas-height"),
@@ -491,6 +492,11 @@ const toolbar = {
                 `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
             this.gradientCanvasCtx.fillRect(x, 0, 1, this.elements.gradientCanvas.width);
         }
+    },
+
+    updateInterpolationType() {
+        this.gradient.interpolationType = this.elements.interpolationType.value;
+        this.drawGradient();
     },
 
     // When iterations per cycle input is changed

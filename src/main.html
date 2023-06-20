@@ -133,6 +133,16 @@
                     <div id="gradient-alert" class="alert"></div>
                 </div>
 
+                <div id="interpolation-container">
+                    Interpolation type:
+                    <select id="interpolation-type" onchange="toolbar.updateInterpolationType()">
+                        <option value="linear">Linear</option>
+                        <option value="sine">Sine</option>
+                        <option value="quadratic">Quadratic</option>
+                        <option value="cubic">Cubic</option>
+                    </select>
+                </div>
+
                 <div id="ipc-container">
                     Iterations per cycle:
                     <input type="text" id="iters-per-cycle" onchange="toolbar.updateIPC()"/>
