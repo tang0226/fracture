@@ -105,6 +105,21 @@ Gradient.getColorAt = function(p, pos) {
             let frac =
                 (pos - p.points[min].pos) /
                 (p.points[max].pos - p.points[min].pos);
+
+            switch(p.interpolationType) {
+                case "sine":
+                    frac = (Math.sin(Math.PI * (frac - 0.5)) + 1) / 2;
+                break;
+                case "quadratic":
+                    frac = (2 * frac - 1) * Math.abs(2 * frac - 1) / 2 + 0.5;
+                break;
+                case "cubic":
+                    frac = (2 * frac - 1) ** 3 / 2 + 0.5;
+                break;
+                case "quintic":
+                    frac = (2 * frac - 1) ** 5 / 2 + 0.5;
+            }
+            
             let maxPoint = p.points[max];
             return p.points[min].color.map((c, i) =>
                 c + (maxPoint.color[i] - c) * frac
