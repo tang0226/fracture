@@ -119,7 +119,7 @@ Gradient.getColorAt = function(p, pos) {
                 case "quintic":
                     frac = (2 * frac - 1) ** 5 / 2 + 0.5;
             }
-
+            
             let maxPoint = p.points[max];
             return p.points[min].color.map((c, i) =>
                 c + (maxPoint.color[i] - c) * frac
