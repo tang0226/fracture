@@ -1,5 +1,5 @@
 class Gradient {
-    constructor(input) {
+    constructor(input, interpolationType) {
         this.string = Gradient.prettify(input);
     
         let lines = input.split(";").map(l => l.trim());
@@ -78,6 +78,8 @@ class Gradient {
                 color: this.points[0].color
             });
         }
+
+        this.interpolationType = interpolationType;
     }        
 }
 
@@ -98,10 +100,26 @@ Gradient.getColorAt = function(p, pos) {
         else if(pos <= p.points[Math.ceil((min + max) / 2)].pos) {
             max = Math.ceil((min + max) / 2);
         }
+
         if(max - min == 1) {
             let frac =
                 (pos - p.points[min].pos) /
                 (p.points[max].pos - p.points[min].pos);
+
+            switch(p.interpolationType) {
+                case "sine":
+                    frac = (Math.sin(Math.PI * (frac - 0.5)) + 1) / 2;
+                break;
+                case "quadratic":
+                    frac = (2 * frac - 1) * Math.abs(2 * frac - 1) / 2 + 0.5;
+                break;
+                case "cubic":
+                    frac = (2 * frac - 1) ** 3 / 2 + 0.5;
+                break;
+                case "quintic":
+                    frac = (2 * frac - 1) ** 5 / 2 + 0.5;
+            }
+
             let maxPoint = p.points[max];
             return p.points[min].color.map((c, i) =>
                 c + (maxPoint.color[i] - c) * frac

@@ -117,6 +117,19 @@
                     <div id="escape-radius-alert" class="alert"></div>
                 </div>
             </section>
+            
+            <section id="frame-section" class="hide">
+                <div id="zoom-container">
+                    Zoom: <div id="zoom" class="inline"></div>
+                    <input type="button" style="margin-left: 20px" class="inline" value="Reset" onclick="toolbar.resetZoom()"/>
+                </div>
+
+                <div>
+                    Click zoom factor:
+                    <input id="click-zoom-factor" onchange="toolbar.updateCZF()"/>
+                    <div id="click-zoom-factor-alert" class="alert"></div>
+                </div>
+            </section>
 
             <section id="image-section" class="hide">
                 <div id="smooth-coloring-container">
@@ -131,6 +144,16 @@
                     <canvas id="gradient-canvas" width="600" height="50"></canvas>
                     <textarea id="gradient" cols="40" rows="5" onchange="toolbar.updateGradient()"></textarea>
                     <div id="gradient-alert" class="alert"></div>
+                </div>
+
+                <div id="interpolation-container">
+                    Interpolation type:
+                    <select id="interpolation-type" onchange="toolbar.updateInterpolationType()">
+                        <option value="linear">Linear</option>
+                        <option value="sine">Sine</option>
+                        <option value="quadratic">Quadratic</option>
+                        <option value="cubic">Cubic</option>
+                    </select>
                 </div>
 
                 <div id="ipc-container">
@@ -151,19 +174,6 @@
                     Height (px):
                     <input type="text" id="canvas-height" onchange="toolbar.updateCanvasHeight()"/>
                     <div id="canvas-height-alert" class="alert"></div>
-                </div>
-            </section>
-
-            <section id="frame-section" class="hide">
-                <div id="zoom-container">
-                    Zoom: <div id="zoom" class="inline"></div>
-                    <input type="button" style="margin-left: 20px" class="inline" value="Reset" onclick="toolbar.resetZoom()"/>
-                </div>
-
-                <div>
-                    Click zoom factor:
-                    <input id="click-zoom-factor" onchange="toolbar.updateCZF()"/>
-                    <div id="click-zoom-factor-alert" class="alert"></div>
                 </div>
             </section>
         </section>

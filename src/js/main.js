@@ -38,7 +38,8 @@ const defaultGradient = new Gradient(
     8, 0 0 0;\
     9, 0 0 255;\
     10, 0 0 0;\
-    11, 255 0 255;"
+    11, 255 0 255;",
+    "linear"
 );
 
 
