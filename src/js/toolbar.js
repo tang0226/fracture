@@ -469,7 +469,10 @@ const toolbar = {
         let toSet;
 
         try {
-            toSet = new Gradient(this.elements.gradient.value);
+            toSet = new Gradient(
+                this.elements.gradient.value,
+                this.elements.interpolationType.value
+            );
         }
         catch(e) {
             this.elements.alerts.gradient.innerHTML =
