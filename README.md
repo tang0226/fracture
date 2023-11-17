@@ -1,4 +1,5 @@
 # Fracture: fractal viewer built with HTML canvas
+## NOTE: This app works, but the code has become overcomplicated and difficult to build on. I am currently planning a complete overhaul of the codebase (in particular the JavaScript related to the UI). After that, I will hopefully be able to add features more easily.
 Main page is located at main.html ([view online](https://tang0226.github.io/fracture/src/main)).
 * Displays these fractals:
   * Mandelbrot set and Julia sets
