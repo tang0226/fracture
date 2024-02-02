@@ -149,6 +149,7 @@ renderWorker.onmessage = function(event) {
 };
 
 function draw() {
+    document.getElementById("settings-json").value = JSON.stringify(currImg);
     renderWorker.postMessage({
         type: "draw",
         img: currImg
