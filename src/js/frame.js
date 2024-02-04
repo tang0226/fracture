@@ -4,11 +4,11 @@ FRAME CLASS: REGION ON THE COMPLEX PLANE
 
 class Frame {
     constructor(center, reWidth, imHeight) {
-        this.center = center;
+        this.center = [...center];
         this.reWidth = reWidth;
         this.imHeight = imHeight;
-        this.reMin = this.center.re - reWidth / 2;
-        this.imMin = this.center.im - imHeight / 2;
+        this.reMin = this.center[0] - reWidth / 2;
+        this.imMin = this.center[1] - imHeight / 2;
     }
 
     // Translate xy coordinates on the canvas
