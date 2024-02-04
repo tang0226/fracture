@@ -3,15 +3,149 @@ FRACTALS: THEORETICAL MATHEMATICAL SETS IN THE COMPLEX PLANE
 ******************************/
 
 class Fractal {
-    constructor(type, params) {
-        this.type = type;
-        for(let prop in Fractal.data[type]) {
-            this[prop] = Fractal.data[type][prop];
+    constructor(name, constants) {
+        this.name = name;
+        this.constants = constants;
+
+        switch (name) {
+            case "Mandelbrot":
+                this.meta = {
+                    type: "escape-time",
+                    iterationType: "mandelbrot",
+                    juliaEquivalent: "Julia",
+                };
+
+                this.iterFunc = function(c, renderSettings) {
+                    let z = [0, 0];
+
+                    let iters = renderSettings.fractalSettings.iters;
+                    let er = renderSettings.fractalSettings.escapeRadius;
+
+                    let n = 0;
+                    while (Complex.abs(z) <= er && n < iters) {
+                        let temp = z[0] * z[0] - z[1] * z[1] + c[0];
+                        z[1] = 2 * z[0] * z[1] + c[1];
+                        z[0] = temp;
+        
+                        n++;
+                    }
+                    
+                    if (renderSettings.colorSettings.smoothColoring && n != iters) {
+                        n += 1 - Math.log(Math.log(Complex.abs(z))) / Math.log(2);
+                    }
+                    
+                    return n;
+                }
+                break;
+
+            case "Julia":
+                this.meta = {
+                    type: "escape-time",
+                    iterationType: "julia",
+                    reqJuliaConst: true,
+                    mandelEquivalent: "Mandelbrot",
+                };
+        
+                this.iterFunc = function(z0, renderSettings) {
+                    let z = [z0[0], z0[1]];
+
+                    let iters = renderSettings.fractalSettings.iters;
+                    let er = renderSettings.fractalSettings.escapeRadius;
+
+                    let n = 0;
+                    while (Complex.abs(z) <= er && n < iters) {
+                        let temp = z[0] * z[0] - z[1] * z[1] + this.constants.c[0];
+                        z[1] = 2 * z[0] * z[1] + this.constants.c[1];
+                        z[0] = temp;
+        
+                        n++;
+                    }
+                    
+                    if (renderSettings.colorSettings.smoothColoring && n != iters) {
+                        n += 1 - Math.log(Math.log(Complex.abs(z))) / Math.log(2);
+                    }
+                    
+                    return n;
+                };
+                break;
+            
+            case "Multibrot":
+                this.meta = {
+                    type: "escape-time",
+                    iterationType: "mandelbrot",
+                    reqExponent: true,
+                    juliaEquivalent: "MultibrotJulia",
+                };
+
+                this.iterFunc = function(c, renderSettings) {
+                    let z = [0, 0];
+
+                    let iters = renderSettings.fractalSettings.iters;
+                    let er = renderSettings.fractalSettings.escapeRadius;
+
+                    let n = 0;
+                    while(Complex.abs(z) <= er && n < iters) {
+                        z = Complex.add(
+                            Complex.exp(z, this.constants.e), c
+                        );
+            
+                        n++;
+                    }
+            
+                    if(renderSettings.colorSettings.smoothColoring && n != iters) {
+                        n += 1 - Math.log(Math.log(Complex.abs(z))) / Math.log(this.constants.e);
+                    }
+            
+                    return n;
+                };
+                break;
+
+            case "Multijulia":
+                this.meta = {
+                    type: "escape-time",
+                    iterationType: "julia",
+                    reqJuliaConst: true,
+                    reqExponent: true,
+                    mandelEquivalent: "Multibrot",
+                };
+
+                this.iterFunc = function(z0, renderSettings){
+                    let z = [z0[0], z0[1]];
+
+                    let iters = renderSettings.fractalSettings.iters;
+                    let er = renderSettings.fractalSettings.escapeRadius;
+
+                    let n = 0;
+                    while(Complex.abs(z) <= er && n < iters) {
+                        z = Complex.add(
+                            Complex.exp(z, this.constants.e), this.constants.c
+                        );
+            
+                        n++;
+                    }
+            
+                    if(smoothColoring && n != iterations) {
+                        n += 1 - Math.log(Math.log(Complex.abs(z))) / Math.log(this.constants.e);
+                    }
+            
+                    return n;
+                };
         }
-        this.params = params || {};
+    }
+
+    copy() {
+        return new Fractal(this.type, this.constants);
     }
 }
 
+// Reconstruct serialized object to restore class methods
+Fractal.reconstruct = function(fractal) {
+    return new Fractal(fractal.type, fractal.constants);
+};
+
+
+
+/**
 Fractal.data = {
     Mandelbrot: {
         requiresJuliaConstant: false,
@@ -309,3 +443,4 @@ Fractal.requiresJuliaConstant = function(fractalType) {
 Fractal.juliaEquivalent = function(fractalType) {
     return this.data[fractalType].juliaEquivalent;
 };
+*/
