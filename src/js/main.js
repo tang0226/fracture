@@ -18,6 +18,20 @@ function setCanvasDim(w, h) {
 setCanvasDim(canvasWidth, canvasHeight);
 
 
+var iterations = new Input("iterations", {
+  dispStyle: "inline",
+  containerId: "iterations-container",
+  eventCallbacks: {
+    blur: function() {
+      this.update();
+      console.log(this.val);
+    },
+    click: function() {
+      console.log(this.val);
+    },
+  },
+});
+
 
 // Frames
 const defaultView = new Frame(Complex(0, 0), 4, 4);

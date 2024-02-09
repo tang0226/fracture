@@ -1,24 +1,55 @@
+/******************************
+INPUT CLASS: Object for manipulating HTML inputs
+******************************/ 
+
 class Input {
-  constructor(eleId, type, params) {
+  constructor(eleId, params) {
     this.eleId = eleId;
     this.element = document.getElementById(eleId);
-    switch (type) {
-      case "text":
-        
-        break;
+    
+    this.type = this.element.type;
+    this.dispStyle = params.dispStyle || "block";
+    
+    this.val = params.val || this.element.value;
+    
+    this.container = document.getElementById(params.containerId);
+    this.linkedElements = params.linkedElements;
+
+    this.eventCallbacks = params.eventCallbacks;
+
+    if (this.eventCallbacks) {
+      let keys = Object.keys(this.eventCallbacks)
+      for(let i in keys) {
+        let key = keys[i];
+        let callback = this.eventCallbacks[key];
+        this.element.addEventListener(
+          key, callback.bind(this)
+        );
+      }
     }
   }
 
   show() {
-    
+    if (this.container) {
+      this.container.style.display = "block";
+    }
+    this.element.style.display = this.dispStyle;
   }
 
   hide() {
-
+    if (this.container) {
+      this.container.style.display = "none";
+    }
+    this.element.style.display = "none";
   }
 
-  set(){
+  set(val){
+    this.val = val;
+    this.element.value = val;
+  }
 
+  update() {
+    this.val = this.element.value;
   }
 }
 
