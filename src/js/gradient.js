@@ -106,3 +106,8 @@ class Gradient {
     }
   }
 }
+
+// Reconstruct serialized object to restore class methods
+Gradient.reconstruct = function(gradient) {
+  return new Gradient(gradient.string);
+}
