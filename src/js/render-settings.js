@@ -21,27 +21,23 @@ class RenderSettings {
     // reconstruction and deep copying
     this.params = params;
 
-    this.fractal = params.fractal.copy();
+    this.width = params.width;
+    this.height = params.height;
 
-    this.fractalSettings = {
-      iters: params.fractalSettings.iters,
-      escapeRadius: params.fractalSettings.escapeRadius,
-    };
+    this.fractal = Fractal.reconstruct(params.fractal);
 
-    this.srcFrame = params.srcFrame.copy();
-    this.frame = this.srcFrame.fitToCanvas(width, height);
+    this.fractalSettings = {...params.fractalSettings};
 
-    this.gradient = params.gradient.copy();
+    this.srcFrame = Frame.reconstruct(params.srcFrame);
+    this.frame = this.srcFrame.fitToCanvas(params.width, params.height);
+
+    this.gradient = Gradient.reconstruct(params.gradient);
     this.gradientSettings = {
       itersPerCycle: params.gradientSettings.itersPerCycle,
     };
 
-    this.colorSettings = {
-      smoothColoring: params.smoothColoring,
-    };
+    this.colorSettings = {...params.colorSettings};
 
-    this.width = width;
-    this.height = height;
     
     // Distance between / width of pixels on the complex plane
     this.complexIter = 
@@ -73,6 +69,7 @@ class RenderSettings {
   }
 }
 
+// Reconstruct serialized object to restore class methods
 RenderSettings.reconstruct = function(renderSettings) {
   return new RenderSettings(renderSettings.params);
 };
