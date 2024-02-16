@@ -43,3 +43,8 @@ class Frame {
     }
   }  
 }
+
+// Reconstruct serialized object to restore class methods
+Frame.reconstruct = function(frame) {
+  return new Frame(frame.center, frame.reWidth, frame.imHeight);
+};
