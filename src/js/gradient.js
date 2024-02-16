@@ -105,6 +105,10 @@ class Gradient {
       }
     }
   }
+
+  copy() {
+    return new Gradient(this.string);
+  }
 }
 
 // Reconstruct serialized object to restore class methods

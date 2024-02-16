@@ -4,7 +4,7 @@ FRAME CLASS: REGION ON THE COMPLEX PLANE
 
 class Frame {
   constructor(center, reWidth, imHeight) {
-    this.center = [...center];
+    this.center = center;
     this.reWidth = reWidth;
     this.imHeight = imHeight;
     this.reMin = this.center[0] - reWidth / 2;
@@ -41,10 +41,14 @@ class Frame {
         this.imHeight
       );
     }
-  }  
+  }
+
+  copy() {
+    return new Frame([...this.center], this.reWidth, this.imHeight);
+  }
 }
 
 // Reconstruct serialized object to restore class methods
 Frame.reconstruct = function(frame) {
-  return new Frame(frame.center, frame.reWidth, frame.imHeight);
+  return new Frame([...frame.center], frame.reWidth, frame.imHeight);
 };

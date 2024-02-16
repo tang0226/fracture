@@ -16,7 +16,7 @@ RENDER SETTINGS CLASS: RENDERING OF A FRACTAL WITH ITERATIONS, FRAME, AND CANVAS
 **/
 
 class RenderSettings {
-  constructor(params) {
+  constructor(params, reconstruct = false) {
     // Never called, only a placeholder for 
     // reconstruction and deep copying
     this.params = params;
@@ -24,14 +24,21 @@ class RenderSettings {
     this.width = params.width;
     this.height = params.height;
 
-    this.fractal = Fractal.reconstruct(params.fractal);
+    if (reconstruct) {
+      this.fractal = Fractal.reconstruct(params.fractal);
+      this.srcFrame = Frame.reconstruct(params.srcFrame);
+      this.gradient = Gradient.reconstruct(params.gradient);
+    }
+    else {
+      this.fractal = params.fractal.copy();
+      this.srcFrame = params.srcFrame.copy();
+      this.gradient = params.gradient.copy();
+    }
 
     this.fractalSettings = {...params.fractalSettings};
 
-    this.srcFrame = Frame.reconstruct(params.srcFrame);
     this.frame = this.srcFrame.fitToCanvas(params.width, params.height);
 
-    this.gradient = Gradient.reconstruct(params.gradient);
     this.gradientSettings = {
       itersPerCycle: params.gradientSettings.itersPerCycle,
     };
@@ -48,14 +55,14 @@ class RenderSettings {
 
   // Fit drawing frame to canvas and
   // update dependent parameters
-  fitToCanvas(width, height) {
-    this.width = width;
-    this.height = height;
-    this.frame = this.srcFrame.fitToCanvas(width, height);
+  fitToCanvas(w, h) {
+    this.width = w;
+    this.height = h;
+    this.frame = this.srcFrame.fitToCanvas(w, h);
     this.complexIter = 
-      width > height ?
-      this.frame.reWidth / width :
-      this.frame.imHeight / height;
+      w > h ?
+      this.frame.reWidth / w :
+      this.frame.imHeight / h;
   }
 
   // Set the source frame
@@ -71,5 +78,5 @@ class RenderSettings {
 
 // Reconstruct serialized object to restore class methods
 RenderSettings.reconstruct = function(renderSettings) {
-  return new RenderSettings(renderSettings.params);
+  return new RenderSettings(renderSettings.params, true);
 };
