@@ -1,4 +1,6 @@
-importScripts("./complex.js", "./fractal.js", "./palette.js");
+importScripts(
+  "./render-settings.js",
+);
 
 function scale(n, minFrom, maxFrom, minTo, maxTo) {
   return ((n / (maxFrom - minFrom)) * (maxTo - minTo)) + minTo;
@@ -6,12 +8,13 @@ function scale(n, minFrom, maxFrom, minTo, maxTo) {
 
 onmessage = function(event) {
   let data = event.data;
-  if(data.type == "draw") {
+  if (data.type == "draw") {
     let startTime = new Date();
     let renderTime;
 
-    let img = data.img;
-    let iterate = Fractal.iterate[img.fractal.type];
+    let settings = RenderSettings.reconstruct(data.settings);
+    
+    /**
     let ipc = img.itersPerCycle;
     let imgData = new ImageData(img.width, img.height);
 
@@ -61,6 +64,7 @@ onmessage = function(event) {
       });
     }
 
+    **/
     postMessage({
       type: "done",
       imgData: imgData,

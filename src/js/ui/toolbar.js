@@ -1,7 +1,7 @@
 /******************************
 TOOLBAR OBJECT
 ******************************/
-
+/** 
 const toolbar = {
   // Elements
   elements: {
@@ -714,3 +714,4 @@ const toolbar = {
     this.updateZoom();
   }
 };
+*/

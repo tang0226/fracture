@@ -18,17 +18,19 @@ function setCanvasDim(w, h) {
 setCanvasDim(canvasWidth, canvasHeight);
 
 
-var iterations = new Input("iterations", {
+var iterations = new TextInput({
+  id: "iterations",
   dispStyle: "inline",
   containerId: "iterations-container",
   eventCallbacks: {
-    blur: function() {
+    blur() {
       this.update();
       console.log(this.val);
     },
-    click: function() {
+    
+    click() {
       console.log(this.val);
-    },
+    }
   },
 });
 
@@ -43,13 +45,8 @@ const defaultGradient = new Gradient(
   "2;\n0, 0 0 0;\n1, 255 255 255;"
 );
 
-console.log(defaultGradient.getColorAt(0.3))
 
-
-var m = new Fractal("Mandelbrot");
-console.log(m);
-
-
+/**
 // Images
 const defaultImages = {
   Mandelbrot: new Image(
@@ -403,3 +400,4 @@ window.onblur = function() {
 // Run:
 toolbar.init();
 draw();
+**/

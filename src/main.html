@@ -31,10 +31,10 @@
 
       <hr>
 
-      <input type="button" value="Redraw" onclick="toolbar.redraw()"/>
+      <input type="button" value="Redraw"/>
 
       <div id="download-container" class="right no-margin">
-        <input type="button" value="Download" onclick="toolbar.download()"/>
+        <input type="button" value="Download"/>
         
         <select id="download-type">
           <option value="png">PNG</option>
@@ -45,13 +45,13 @@
 
     <section id="toolbar">
       <div id="navbar">
-        <span id="fractal-nav" class="nav active" onclick="toolbar.selectSection('fractal')">
+        <span id="fractal-nav" class="nav active">
           <span>Fractal</span>
         </span>
-        <span id="frame-nav" class="nav inactive" onclick="toolbar.selectSection('frame')">
+        <span id="frame-nav" class="nav inactive">
           <span>Frame</span>
         </span>
-        <span id="image-nav" class="nav inactive" onclick="toolbar.selectSection('image')">
+        <span id="image-nav" class="nav inactive">
           <span>Image</span>
         </span>
       </div>
@@ -60,122 +60,118 @@
 
       <br/>
 
-      <section id="fractal-section">
-        <div id="fractal-select-container">
-          Fractal:
-          <select id="fractal-type" class="inline" onchange="toolbar.updateFractalType()">
-            <option value="Mandelbrot">Mandelbrot set</option>
-            <option value="Julia">Julia set</option>
-            <option value="Multibrot">Multibrot set</option>
-            <option value="Multijulia">Multijulia set</option>
-            <option value="Tricorn">Tricorn</option>
-            <option value="TricornJulia">Tricorn Julia</option>
-            <option value="Multicorn">Multicorn</option>
-            <option value="MulticornJulia">Multicorn Julia</option>
-            <option value="BurningShip">Burning Ship fractal</option>
-            <option value="BurningShipJulia">Burning Ship Julia set</option>
-            <option value="Multiship">Multiship fractal</option>
-            <option value="MultishipJulia">Multiship Julia set</option>
-          </select>
-        </div>
+      <div id="fractal-select-container">
+        Fractal:
+        <select id="fractal-type" class="inline">
+          <option value="Mandelbrot">Mandelbrot set</option>
+          <option value="Julia">Julia set</option>
+          <option value="Multibrot">Multibrot set</option>
+          <option value="Multijulia">Multijulia set</option>
+          <option value="Tricorn">Tricorn</option>
+          <option value="TricornJulia">Tricorn Julia</option>
+          <option value="Multicorn">Multicorn</option>
+          <option value="MulticornJulia">Multicorn Julia</option>
+          <option value="BurningShip">Burning Ship fractal</option>
+          <option value="BurningShipJulia">Burning Ship Julia set</option>
+          <option value="Multiship">Multiship fractal</option>
+          <option value="MultishipJulia">Multiship Julia set</option>
+        </select>
+      </div>
 
-        <div id="exponent-container" class="hide">
-          Exponent:
-          <input type="text" id="exponent" class="inline" onchange="toolbar.updateExponent()"/>
-          <div id="exponent-alert" class="alert"></div>
-        </div>
+      <div id="exponent-container" class="hide">
+        Exponent:
+        <input type="text" id="exponent" class="inline"/>
+        <div id="exponent-alert" class="alert"></div>
+      </div>
 
-        <div id="julia-constant-container" class="hide">
-          Julia constant:
-          <input type="text" id="julia-constant" class="inline" onchange="toolbar.updateJuliaConstant()"/>
-          <div id="julia-constant-alert" class="alert"></div>
-        </div>
+      <div id="julia-constant-container" class="hide">
+        Julia constant:
+        <input type="text" id="julia-constant" class="inline"/>
+        <div id="julia-constant-alert" class="alert"></div>
+      </div>
 
-        <hr>
+      <hr>
 
-        <input type="button" value="+" onclick="toolbar.increaseIterations()"/>
+      <input type="button" value="+"/>
 
-        <div id="iterations-container">
-          Iterations:
-          <input type="text" id="iterations" class="inline" onchange="toolbar.updateIterations()"/>
-          <div id="iterations-alert" class="alert"></div>
-        </div>
+      <div id="iterations-container">
+        Iterations:
+        <input type="text" id="iterations" class="inline"/>
+        <div id="iterations-alert" class="alert"></div>
+      </div>
 
-        <input type="button" value="-" onclick="toolbar.decreaseIterations()"/>
+      <input type="button" value="-"/>
 
-        <div>
-          Increment:
-          <input id="iteration-increment" type="text" class="inline" onchange="toolbar.updateIterationIncrement()"/>
-          <div id="iteration-increment-alert" class="alert"></div>
-        </div>
+      <div>
+        Increment:
+        <input id="iteration-increment" type="text" class="inline"/>
+        <div id="iteration-increment-alert" class="alert"></div>
+      </div>
 
-        <div id="escape-radius-container">
-          Escape radius:
-          <input type="text" id="escape-radius" class="inline" onchange="toolbar.updateEscapeRadius()"/>
-          <div id="escape-radius-alert" class="alert"></div>
-        </div>
-      </section>
+      <div id="escape-radius-container">
+        Escape radius:
+        <input type="text" id="escape-radius" class="inline"/>
+        <div id="escape-radius-alert" class="alert"></div>
+      </div>
 
-      <section id="image-section" class="hide">
-        <div id="smooth-coloring-container">
-          <input type="checkbox" id="smooth-coloring" onchange="toolbar.updateSmoothColoring()"/> Smooth coloring
-        </div>
+      <div id="zoom-container">
+        Zoom: <div id="zoom" class="inline"></div>
+        <input type="button" style="margin-left: 20px" class="inline" value="Reset"/>
+      </div>
 
-        <hr>
+      <div>
+        Click zoom factor:
+        <input id="click-zoom-factor"/>
+        <div id="click-zoom-factor-alert" class="alert"></div>
+      </div>
 
-        <div id="palette-container">
-          Palette:
-          <br/>
-          <textarea id="palette" cols="40" rows="5" onchange="toolbar.updatePalette()"></textarea>
-          <div id="palette-alert" class="alert"></div>
-        </div>
+      <div id="smooth-coloring-container">
+        <input type="checkbox" id="smooth-coloring"/> Smooth coloring
+      </div>
 
-        <div id="ipc-container">
-          Iterations per cycle:
-          <input type="text" id="iters-per-cycle" onchange="toolbar.updateIPC()"/>
-          <div id="ipc-alert" class="alert"></div>
-        </div>
+      <hr>
 
-        <hr>
+      <div id="palette-container">
+        Palette:
+        <br/>
+        <textarea id="palette" cols="40" rows="5"></textarea>
+        <div id="palette-alert" class="alert"></div>
+      </div>
 
-        <div id="canvas-width-container">
-          Width (px):
-          <input type="text" id="canvas-width" onchange="toolbar.updateCanvasWidth()"/>
-          <div id="canvas-width-alert" class="alert"></div>
-        </div>
+      <div id="ipc-container">
+        Iterations per cycle:
+        <input type="text" id="iters-per-cycle"/>
+        <div id="ipc-alert" class="alert"></div>
+      </div>
 
-        <div id="canvas-height-container">
-          Height (px):
-          <input type="text" id="canvas-height" onchange="toolbar.updateCanvasHeight()"/>
-          <div id="canvas-height-alert" class="alert"></div>
-        </div>
+      <hr>
 
-        <div>
-          <textarea id="settings-json" cols="80" rows="6"></textarea>
-        </div>
-      </section>
+      <div id="canvas-width-container">
+        Width (px):
+        <input type="text" id="canvas-width"/>
+        <div id="canvas-width-alert" class="alert"></div>
+      </div>
 
-      <section id="frame-section" class="hide">
-        <div id="zoom-container">
-          Zoom: <div id="zoom" class="inline"></div>
-          <input type="button" style="margin-left: 20px" class="inline" value="Reset" onclick="toolbar.resetZoom()"/>
-        </div>
+      <div id="canvas-height-container">
+        Height (px):
+        <input type="text" id="canvas-height"/>
+        <div id="canvas-height-alert" class="alert"></div>
+      </div>
 
-        <div>
-          Click zoom factor:
-          <input id="click-zoom-factor" onchange="toolbar.updateCZF()"/>
-          <div id="click-zoom-factor-alert" class="alert"></div>
-        </div>
-      </section>
+      <div>
+        <textarea id="settings-json" cols="80" rows="6"></textarea>
+      </div>
+
     </section>
 
-    <script src="./js/complex.js"></script>
-    <script src="./js/fractal.js"></script>
-    <script src="./js/frame.js"></script>
-    <script src="./js/gradient.js"></script>
-    <script src="./js/image.js"></script>
-    <script src="./js/input.js"></script>
-    <script src="./js/toolbar.js"></script>
+    <script src="./js/fractals/complex.js"></script>
+    <script src="./js/fractals/fractal.js"></script>
+    <script src="./js/fractals/frame.js"></script>
+    <script src="./js/fractals/gradient.js"></script>
+    <script src="./js/fractals/render-settings.js"></script>
+    <script src="./js/ui/element.js"></script>
+    <script src="./js/ui/inputs.js"></script>
+    <script src="./js/ui/toolbar.js"></script>
     <script src="./js/main.js"></script>
   </body>
 </html>
