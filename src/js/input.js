@@ -19,7 +19,7 @@ class Input {
 
     if (this.eventCallbacks) {
       let keys = Object.keys(this.eventCallbacks);
-      for(let i in keys) {
+      for (let i in keys) {
         let key = keys[i];
         let callback = this.eventCallbacks[key];
         this.element.addEventListener(

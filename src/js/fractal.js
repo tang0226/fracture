@@ -84,7 +84,7 @@ class Fractal {
           let er = renderSettings.fractalSettings.escapeRadius;
 
           let n = 0;
-          while(Complex.abs(z) <= er && n < iters) {
+          while (Complex.abs(z) <= er && n < iters) {
             z = Complex.add(
               Complex.exp(z, this.constants.e), c
             );
@@ -92,7 +92,7 @@ class Fractal {
             n++;
           }
       
-          if(renderSettings.colorSettings.smoothColoring && n != iters) {
+          if (renderSettings.colorSettings.smoothColoring && n != iters) {
             n += 1 - Math.log(Math.log(Complex.abs(z))) / Math.log(this.constants.e);
           }
       
@@ -116,7 +116,7 @@ class Fractal {
           let er = renderSettings.fractalSettings.escapeRadius;
 
           let n = 0;
-          while(Complex.abs(z) <= er && n < iters) {
+          while (Complex.abs(z) <= er && n < iters) {
             z = Complex.add(
               Complex.exp(z, this.constants.e), this.constants.c
             );
@@ -124,7 +124,7 @@ class Fractal {
             n++;
           }
       
-          if(smoothColoring && n != iterations) {
+          if (smoothColoring && n != iterations) {
             n += 1 - Math.log(Math.log(Complex.abs(z))) / Math.log(this.constants.e);
           }
       

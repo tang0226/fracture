@@ -27,7 +27,7 @@ class Frame {
 
   // Return a frame that matches canvas aspect ratio
   fitToCanvas(w, h) {
-    if(this.reWidth / this.imHeight > w / h) {
+    if (this.reWidth / this.imHeight > w / h) {
       return new Frame(
         this.center,
         this.reWidth,
