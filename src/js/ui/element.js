@@ -2,15 +2,15 @@ class Element {
   constructor(params) {
     this.id = params.id;
     this.element = document.getElementById(this.id);
-    
+    this.dispStyle = params.dispStyle || "block";
+
     if (params.containerId) {
       this.containerId = params.containerId;
       this.container = document.getElementById(this.containerId);  
+      this.containerDispStyle = params.containerDispStyle || "block";
     }
 
     if (params.linkedElements) this.linkedElements = params.linkedElements;
-
-    this.dispStyle = params.dispStyle || "block";
 
     if (params.eventCallbacks) {
       this.eventCallbacks = params.eventCallbacks;
@@ -34,7 +34,7 @@ class Element {
   }
 
   showContainer() {
-    this.container.style.display = "block";
+    this.container.style.display = this.containerDispStyle;
   }
 
   hideContainer() {
