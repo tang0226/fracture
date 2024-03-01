@@ -18,7 +18,7 @@ function setCanvasDim(w, h) {
   controlCanvas.setDim(w, h);
 }
 
-setCanvasDim(600, 600);
+setCanvasDim(window.innerWidth, window.innerHeight);
 
 
 /*window.addEventListener("resize", function() {
