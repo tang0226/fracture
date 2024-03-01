@@ -21,12 +21,8 @@ class TextInput extends Element {
     this.element.value = val;
   }
 
-  sync() {
-    this.val = this.element.value;
-  }
-
   update() {
-    this.element.value = this.val;
+    this.val = this.element.value;
   }
 }
 
@@ -37,3 +33,9 @@ class Button extends Element {
   }
 }
 
+class Dropdown extends TextInput {
+  constructor(params) {
+    super(params);
+    this.type = "select";
+  }
+}
