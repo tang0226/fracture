@@ -1,21 +1,25 @@
-const canvas = document.getElementById("main-canvas");
-const canvasCtx = canvas.getContext("2d");
-const controlCanvas = document.getElementById("control-canvas");
-const controlCanvasCtx = controlsCanvas.getContext("2d");
-
-var canvasWidth = 600;
-var canvasHeight = 600;
+const canvas = new Canvas({
+  id: "main-canvas",
+});
+const controlCanvas = new Canvas({
+  id: "control-canvas",
+  interactive: true,
+  eventCallbacks: {
+    mousemove: function(e) {
+      this.ctx.clearRect(0, 0, this.width, this.height);
+      this.ctx.fillStyle = "green";
+      this.ctx.fillRect(this.mouseX, this.mouseY, 20, 20);
+    }
+  }
+});
 
 function setCanvasDim(w, h) {
-  canvas.width = w;
-  canvas.height = h;
-  controlCanvas.width = w;
-  controlCanvas.height = h;
-  canvasWidth = w;
-  canvasHeight = h;
+  canvas.setDim(w, h);
+  controlCanvas.setDim(w, h);
 }
 
-console.log(canvas.clientWidth, canvas.clientHeight);
+setCanvasDim(600, 600);
+
 
 /*window.addEventListener("resize", function() {
   console.log(window.innerWidth, window.innerHeight);
