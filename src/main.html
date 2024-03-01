@@ -6,12 +6,10 @@
     <link rel="stylesheet" href="./global.css">
   </head>
   <body>
-    <section id="canvas-container">
-      <canvas id="canvas"></canvas>
-      <canvas id="controls-canvas"></canvas>
-    </section>
+    <canvas id="main-canvas"></canvas>
+    <canvas id="control-canvas" class="control-canvas"></canvas>  
 
-    <section id="status-section">
+    <section id="toolbar">
       <div id="mouse-coords-container">
         Mouse coordinates: <div id="mouse-complex-coords" class="inline"></div>
       </div>
@@ -40,20 +38,6 @@
           <option value="png">PNG</option>
           <option value="jpeg">JPEG</option>
         </select>
-      </div>
-    </section>
-
-    <section id="toolbar">
-      <div id="navbar">
-        <span id="fractal-nav" class="nav active">
-          <span>Fractal</span>
-        </span>
-        <span id="frame-nav" class="nav inactive">
-          <span>Frame</span>
-        </span>
-        <span id="image-nav" class="nav inactive">
-          <span>Image</span>
-        </span>
       </div>
 
       <br/>
@@ -116,7 +100,7 @@
 
       <div id="zoom-container">
         Zoom: <div id="zoom" class="inline"></div>
-        <input type="button" style="margin-left: 20px" class="inline" value="Reset"/>
+        <input type="button" class="inline" value="Reset"/>
       </div>
 
       <div>
@@ -159,7 +143,7 @@
       </div>
 
       <div>
-        <textarea id="settings-json" cols="80" rows="6"></textarea>
+        <textarea id="settings-json" cols="50" rows="6"></textarea>
       </div>
 
     </section>
@@ -171,6 +155,7 @@
     <script src="./js/fractals/render-settings.js"></script>
     <script src="./js/ui/element.js"></script>
     <script src="./js/ui/inputs.js"></script>
+    <script src="./js/ui/canvas.js"></script>
     <script src="./js/ui/toolbar.js"></script>
     <script src="./js/main.js"></script>
   </body>

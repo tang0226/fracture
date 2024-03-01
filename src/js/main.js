@@ -1,7 +1,7 @@
-const canvas = document.getElementById("canvas");
+const canvas = document.getElementById("main-canvas");
 const canvasCtx = canvas.getContext("2d");
-const controlsCanvas = document.getElementById("controls-canvas");
-const controlsCanvasCtx = controlsCanvas.getContext("2d");
+const controlCanvas = document.getElementById("control-canvas");
+const controlCanvasCtx = controlsCanvas.getContext("2d");
 
 var canvasWidth = 600;
 var canvasHeight = 600;
@@ -9,13 +9,20 @@ var canvasHeight = 600;
 function setCanvasDim(w, h) {
   canvas.width = w;
   canvas.height = h;
-  controlsCanvas.width = w;
-  controlsCanvas.height = h;
+  controlCanvas.width = w;
+  controlCanvas.height = h;
   canvasWidth = w;
   canvasHeight = h;
 }
 
-setCanvasDim(canvasWidth, canvasHeight);
+console.log(canvas.clientWidth, canvas.clientHeight);
+
+/*window.addEventListener("resize", function() {
+  console.log(window.innerWidth, window.innerHeight);
+  setCanvasDim(window.innerWidth, window.innerHeight);
+});*/
+
+//setCanvasDim(canvasWidth, canvasHeight);
 
 
 var iterations = new TextInput({
