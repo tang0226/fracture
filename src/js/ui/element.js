@@ -1,7 +1,8 @@
 class Element {
-  constructor(params) {
+  constructor(params, attachEvents = true) {
     this.id = params.id;
     this.element = document.getElementById(this.id);
+
     this.dispStyle = params.dispStyle || "block";
 
     if (params.containerId) {
@@ -12,14 +13,14 @@ class Element {
 
     if (params.linkedElements) this.linkedElements = params.linkedElements;
 
-    if (params.eventCallbacks) {
+    if (params.eventCallbacks && attachEvents) {
       this.eventCallbacks = params.eventCallbacks;
       let keys = Object.keys(this.eventCallbacks);
       for (let i in keys) {
         let key = keys[i];
         let callback = this.eventCallbacks[key];
         this.element.addEventListener(
-          key, callback.bind(this)
+          key.toLowerCase(), callback.bind(this)
         );
       }
     }

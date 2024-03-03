@@ -5,9 +5,20 @@ const controlCanvas = new Canvas({
   id: "control-canvas",
   interactive: true,
   eventCallbacks: {
-    mousemove: function(e) {
+    mouseMove: function(e) {
+      // console.log(this.mouseDown)
+      this.ctx.clearRect(0, 0, this.width, this.height);
+      this.ctx.fillStyle = this.mouseDown ? "green" : "red";
+      this.ctx.fillRect(this.mouseX, this.mouseY, 20, 20);
+    },
+    mouseDown: function(e) {
       this.ctx.clearRect(0, 0, this.width, this.height);
       this.ctx.fillStyle = "green";
+      this.ctx.fillRect(this.mouseX, this.mouseY, 20, 20);
+    },
+    mouseUp: function(e) {
+      this.ctx.clearRect(0, 0, this.width, this.height);
+      this.ctx.fillStyle = "red";
       this.ctx.fillRect(this.mouseX, this.mouseY, 20, 20);
     }
   }
