@@ -9,7 +9,7 @@ class TextElement extends Element {
   }
 
   set(text) {
-    this.text = text;
+    this.innerText = text;
     this.element.innerText = text;
   }
 }
