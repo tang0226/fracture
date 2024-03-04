@@ -32,24 +32,24 @@ class Canvas extends Element {
         this.lastMouseY = this.mouseY;
         this.mouseX = e.offsetX;
         this.mouseY = e.offsetY;
-        if (this.eventCallbacks.mouseMove) this.eventCallbacks.mouseMove();
+        if (this.eventCallbacks.mouseMove) this.eventCallbacks.mouseMove(e);
       }.bind(this));
   
       this.element.addEventListener("mousedown", function(e) {
         this.mouseDown = true;
         this.startDragX = e.offsetX;
         this.startDragY = e.offsetY;
-        if (this.eventCallbacks.mouseDown) this.eventCallbacks.mouseDown();
+        if (this.eventCallbacks.mouseDown) this.eventCallbacks.mouseDown(e);
       }.bind(this));
 
       this.element.addEventListener("mouseup", function(e) {
         this.mouseDown = false;
         this.startDragX = null;
         this.startDragY = null;
-        if (this.eventCallbacks.mouseUp) this.eventCallbacks.mouseUp();
+        if (this.eventCallbacks.mouseUp) this.eventCallbacks.mouseUp(e);
       }.bind(this));
   
-      this.element.addEventListener("mouseout", function() {
+      this.element.addEventListener("mouseout", function(e) {
         this.mouseDown = false;
         this.mouseX = null;
         this.mouseY = null;
@@ -57,7 +57,7 @@ class Canvas extends Element {
         this.lastMouseY = null;
         this.startDragX = null;
         this.startDragY = null;
-        if (this.eventCallbacks.mouseOut) this.eventCallbacks.mouseOut();
+        if (this.eventCallbacks.mouseOut) this.eventCallbacks.mouseOut(e);
       }.bind(this))
     }
   }
