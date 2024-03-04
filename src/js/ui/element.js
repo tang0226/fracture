@@ -34,6 +34,14 @@ class Element {
     }
   }
 
+  addLinkedObject(key, obj) {
+    this.linkedObjects[key] = obj;
+  }
+
+  addLinkedElement(key, element) {
+    this.linkedElements[key] = element;
+  }
+
   show() {
     this.element.style.display = this.dispStyle;
   }

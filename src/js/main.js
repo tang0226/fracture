@@ -69,7 +69,7 @@ const toolbar = {
 };
 
 // Define links here
-toolbar.iterations.linkedObjects.alert = toolbar.iterationsAlert;
+toolbar.iterations.addLinkedObject("alert", toolbar.iterationsAlert);
 
 // Frames
 const defaultView = new Frame(Complex(0, 0), 4, 4);
