@@ -11,6 +11,10 @@ class Element {
       this.containerDispStyle = params.containerDispStyle || "block";
     }
 
+    // Linked element objects
+    if (params.linkedObjects) this.linkedObjects = params.linkedObjects;
+    
+    // DOM elements
     if (params.linkedElements) this.linkedElements = params.linkedElements;
 
     if (params.eventCallbacks && attachEvents) {
