@@ -7,22 +7,22 @@ class TextInput extends Element {
     super(params);
     this.type = "text";
 
-    if (params.val) {
-      this.val = params.val;
-      this.element.value = this.val;
+    if (params.value) {
+      this.value = params.value;
+      this.element.value = this.value;
     }
     else {
-      this.val = this.element.value;
+      this.value = this.element.value;
     }
   }
 
   set(val){
-    this.val = val;
+    this.value = val;
     this.element.value = val;
   }
 
   update() {
-    this.val = this.element.value;
+    this.value = this.element.value;
   }
 }
 

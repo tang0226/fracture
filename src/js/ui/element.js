@@ -1,15 +1,19 @@
 class Element {
   constructor(params, attachEvents = true) {
-    this.id = params.id;
-    this.element = document.getElementById(this.id);
+    this.id = params.id || params.element.id;
+    this.element = params.element || document.getElementById(params.id);
 
     this.dispStyle = params.dispStyle || "block";
 
-    if (params.containerId) {
-      this.containerId = params.containerId;
-      this.container = document.getElementById(this.containerId);  
+    if (params.containerId || params.container) {
+      this.containerId = params.containerId || params.container.id;
+      this.container = params.container || document.getElementById(this.containerId);  
       this.containerDispStyle = params.containerDispStyle || "block";
     }
+    
+    if (params.hide) this.element.style.display = "none";
+    if (params.hideContainer) this.container.style.display = "none";
+    
 
     // Linked element objects
     if (params.linkedObjects) this.linkedObjects = params.linkedObjects;

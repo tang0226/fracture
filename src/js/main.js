@@ -39,23 +39,37 @@ setCanvasDim(window.innerWidth, window.innerHeight);
 
 //setCanvasDim(canvasWidth, canvasHeight);
 
-
-var iterations = new TextInput({
-  id: "iterations",
-  dispStyle: "inline",
-  containerId: "iterations-container",
-  eventCallbacks: {
-    blur() {
-      this.update();
-      console.log(this.val);
+// Define elements first, before links
+const toolbar = {
+  iterations: new TextInput({
+    id: "iterations",
+    dispStyle: "inline",
+    containerId: "iterations-container",
+    value: 1000,
+    linkedObjects: {},
+    eventCallbacks: {
+      blur() {
+        if (isNaN(Number(this.element.value))) {
+          this.linkedObjects.alert.show();
+          this.isClean = false;
+        }
+        else {
+          this.update();
+          this.linkedObjects.alert.hide();
+          this.isClean = true;
+        }
+      },
     },
-    
-    click() {
-      console.log(this.val);
-    }
-  },
-});
+  }),
+  iterationsAlert: new TextElement({
+    id: "iterations-alert",
+    innerText: "Iterations must be a positive integer",
+    hide: true,
+  }),
+};
 
+// Define links here
+toolbar.iterations.linkedObjects.alert = toolbar.iterationsAlert;
 
 // Frames
 const defaultView = new Frame(Complex(0, 0), 4, 4);
@@ -276,6 +290,7 @@ controlsCanvas.onmouseup = function() {
         }
       }
 
+      
       else {
         // Return to default mode
         currMode = "default";
