@@ -8,18 +8,18 @@ const controlCanvas = new Canvas({
     mouseMove: function(e) {
       // console.log(this.mouseDown)
       this.ctx.clearRect(0, 0, this.width, this.height);
-      this.ctx.fillStyle = this.mouseDown ? "green" : "red";
-      this.ctx.fillRect(this.mouseX, this.mouseY, 20, 20);
+      this.ctx.fillStyle = this.state.mouseDown ? "green" : "red";
+      this.ctx.fillRect(this.state.mouseX, this.state.mouseY, 20, 20);
     },
     mouseDown: function(e) {
       this.ctx.clearRect(0, 0, this.width, this.height);
       this.ctx.fillStyle = "green";
-      this.ctx.fillRect(this.mouseX, this.mouseY, 20, 20);
+      this.ctx.fillRect(this.state.mouseX, this.state.mouseY, 20, 20);
     },
     mouseUp: function(e) {
       this.ctx.clearRect(0, 0, this.width, this.height);
       this.ctx.fillStyle = "red";
-      this.ctx.fillRect(this.mouseX, this.mouseY, 20, 20);
+      this.ctx.fillRect(this.state.mouseX, this.state.mouseY, 20, 20);
     }
   }
 });
@@ -40,23 +40,22 @@ setCanvasDim(window.innerWidth, window.innerHeight);
 //setCanvasDim(canvasWidth, canvasHeight);
 
 // Define elements first, before links
-const toolbar = {
+const ui = {
   iterations: new TextInput({
     id: "iterations",
     dispStyle: "inline",
     containerId: "iterations-container",
     value: 1000,
-    linkedObjects: {},
     eventCallbacks: {
       blur() {
-        if (isNaN(Number(this.element.value))) {
-          this.linkedObjects.alert.show();
-          this.isClean = false;
+        if (isNaN(Number(this.element.value)) || Number(this.element.value) < 1) {
+          this.linked.alert.show();
+          this.state.isClean = false;
         }
         else {
           this.update();
-          this.linkedObjects.alert.hide();
-          this.isClean = true;
+          this.linked.alert.hide();
+          this.state.isClean = true;
         }
       },
     },
@@ -69,7 +68,7 @@ const toolbar = {
 };
 
 // Define links here
-toolbar.iterations.addLinkedObject("alert", toolbar.iterationsAlert);
+ui.iterations.addLinkedObject("alert", ui.iterationsAlert);
 
 // Frames
 const defaultView = new Frame(Complex(0, 0), 4, 4);

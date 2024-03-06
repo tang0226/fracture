@@ -18,45 +18,45 @@ class Canvas extends Element {
         }
       }
       
-      this.mouseX = null;
-      this.mouseY = null;
-      this.lastMouseX = null;
-      this.lastMouseY = null;
-      this.mouseDown = false;
-      this.startDragX = null;
-      this.startDragY = null;
+      this.state.mouseX = null;
+      this.state.mouseY = null;
+      this.state.lastMouseX = null;
+      this.state.lastMouseY = null;
+      this.state.mouseDown = false;
+      this.state.startDragX = null;
+      this.state.startDragY = null;
       
       // Bare-bones functionality event listeners are added here
       this.element.addEventListener("mousemove", function(e) {
-        this.lastMouseX = this.mouseX;
-        this.lastMouseY = this.mouseY;
-        this.mouseX = e.offsetX;
-        this.mouseY = e.offsetY;
+        this.state.lastMouseX = this.state.mouseX;
+        this.state.lastMouseY = this.state.mouseY;
+        this.state.mouseX = e.offsetX;
+        this.state.mouseY = e.offsetY;
         if (this.eventCallbacks.mouseMove) this.eventCallbacks.mouseMove(e);
       }.bind(this));
   
       this.element.addEventListener("mousedown", function(e) {
-        this.mouseDown = true;
-        this.startDragX = e.offsetX;
-        this.startDragY = e.offsetY;
+        this.state.mouseDown = true;
+        this.state.startDragX = e.offsetX;
+        this.state.startDragY = e.offsetY;
         if (this.eventCallbacks.mouseDown) this.eventCallbacks.mouseDown(e);
       }.bind(this));
 
       this.element.addEventListener("mouseup", function(e) {
-        this.mouseDown = false;
-        this.startDragX = null;
-        this.startDragY = null;
+        this.state.mouseDown = false;
+        this.state.startDragX = null;
+        this.state.startDragY = null;
         if (this.eventCallbacks.mouseUp) this.eventCallbacks.mouseUp(e);
       }.bind(this));
   
       this.element.addEventListener("mouseout", function(e) {
-        this.mouseDown = false;
-        this.mouseX = null;
-        this.mouseY = null;
-        this.lastMouseX = null;
-        this.lastMouseY = null;
-        this.startDragX = null;
-        this.startDragY = null;
+        this.state.mouseDown = false;
+        this.state.mouseX = null;
+        this.state.mouseY = null;
+        this.state.lastMouseX = null;
+        this.state.lastMouseY = null;
+        this.state.startDragX = null;
+        this.state.startDragY = null;
         if (this.eventCallbacks.mouseOut) this.eventCallbacks.mouseOut(e);
       }.bind(this))
     }

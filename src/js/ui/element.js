@@ -16,10 +16,9 @@ class Element {
     
 
     // Linked element objects
-    if (params.linkedObjects) this.linkedObjects = params.linkedObjects;
-    
-    // DOM elements
-    if (params.linkedElements) this.linkedElements = params.linkedElements;
+    this.linked = params.linked || {};
+
+    this.state = params.state || {};
 
     if (params.eventCallbacks && attachEvents) {
       this.eventCallbacks = params.eventCallbacks;
@@ -33,13 +32,9 @@ class Element {
       }
     }
   }
-
+  
   addLinkedObject(key, obj) {
-    this.linkedObjects[key] = obj;
-  }
-
-  addLinkedElement(key, element) {
-    this.linkedElements[key] = element;
+    this.linked[key] = obj;
   }
 
   show() {
