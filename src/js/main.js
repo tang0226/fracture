@@ -31,23 +31,120 @@ function setCanvasDim(w, h) {
 
 setCanvasDim(window.innerWidth, window.innerHeight);
 
+// Fractals
+const fractals = {
+  mandelbrot: new Fractal("Mandelbrot"),
+  julia: new Fractal("Julia", {
+    c: Complex(0, 1),
+  }),
+  multibrot: new Fractal("Multibrot", {
+    e: 3,
+  }),
+};
 
-/*window.addEventListener("resize", function() {
-  console.log(window.innerWidth, window.innerHeight);
-  setCanvasDim(window.innerWidth, window.innerHeight);
-});*/
+// Frames
+const defaultView = new Frame(Complex(0, 0), 4, 4);
 
-//setCanvasDim(canvasWidth, canvasHeight);
+
+// Gradent
+
+const defaultGradient = new Gradient(
+  "2;\n0, 0 0 0;\n1, 255 255 255;"
+);
+
 
 // Define elements first, before links
 const ui = {
+  fractalType: new Dropdown({
+    id: "fractal-type",
+    dispStyle: "inline",
+    containerId: "fractal-select-container",
+    value: "Mandelbrot",
+    eventCallbacks: {
+      change() {
+        this.update();
+        let newFractal = fractals[this.value.toLowerCase()];
+        this.state.fractal = newFractal.copy(); // check this
+        if (newFractal.meta.reqJuliaConst) {
+          this.linked.juliaConstant.showContainer();
+        }
+        else {
+          this.linked.juliaConstant.hideContainer();
+          this.linked.juliaConstant.set("");
+          this.linked.juliaConstant.jc = null;
+          this.linked.juliaConstantAlert.hide();
+          this.linked.juliaConstant.state.isClean = true;
+        }
+        if (newFractal.meta.reqExponent) {
+          this.linked.exponent.showContainer();
+        }
+        else {
+          this.linked.exponent.hideContainer();
+          this.linked.exponent.set("");
+          this.linked.exponent.e = null;
+          this.linked.exponentAlert.hide();
+          this.linked.exponent.state.isClean = true;
+        }
+      },
+    },
+  }),
+  juliaConstant: new TextInput({
+    id: "julia-constant",
+    dispStyle: "inline",
+    containerId: "julia-constant-container",
+    eventCallbacks: {
+      change() {
+        let newJc = Complex.parseString(this.element.value);
+        if (newJc) {
+          this.update();
+          this.state.c = newJc;
+          this.linked.alert.hide();
+          this.state.isClean = true;
+        }
+        else {
+          this.linked.alert.show();
+          this.state.isClean = false;
+        }
+      },
+    },
+  }),
+  juliaConstantAlert: new TextElement({
+    id: "julia-constant-alert",
+    innerText: "Julia constant must be of the form a+bi",
+    hide: true,
+  }),
+  exponent: new TextInput({
+    id: "exponent",
+    dispStyle: "inline",
+    containerId: "exponent-container",
+    eventCallbacks: {
+      change() {
+        let newExp = Number(this.element.value);
+        if (isNaN(newExp) || newExp < 2) {
+          this.linked.alert.show();
+          this.state.isQueen = false;
+        }
+        else {
+          this.update();
+          this.linked.alert.hide();
+          this.state.e = newExp;
+          this.state.isClean = true;
+        }
+      },
+    },
+  }),
+  exponentAlert: new TextElement({
+    id: "exponent-alert",
+    innerText: "Exponent must be an integer greater than 1",
+    hide: true,
+  }),
   iterations: new TextInput({
     id: "iterations",
     dispStyle: "inline",
     containerId: "iterations-container",
     value: 1000,
     eventCallbacks: {
-      blur() {
+      change() {
         if (isNaN(Number(this.element.value)) || Number(this.element.value) < 1) {
           this.linked.alert.show();
           this.state.isClean = false;
@@ -68,17 +165,14 @@ const ui = {
 };
 
 // Define links here
+ui.fractalType.addLinkedObject("juliaConstant", ui.juliaConstant);
+ui.fractalType.addLinkedObject("juliaConstantAlert", ui.juliaConstantAlert);
+ui.fractalType.addLinkedObject("exponent", ui.exponent);
+ui.fractalType.addLinkedObject("exponentAlert", ui.exponentAlert);
+ui.juliaConstant.addLinkedObject("alert", ui.juliaConstantAlert);
+ui.exponent.addLinkedObject("alert", ui.exponentAlert);
 ui.iterations.addLinkedObject("alert", ui.iterationsAlert);
 
-// Frames
-const defaultView = new Frame(Complex(0, 0), 4, 4);
-
-
-// Palette
-
-const defaultGradient = new Gradient(
-  "2;\n0, 0 0 0;\n1, 255 255 255;"
-);
 
 
 /**

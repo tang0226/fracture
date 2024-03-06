@@ -4,6 +4,7 @@ class Element {
     this.element = params.element || document.getElementById(params.id);
 
     this.dispStyle = params.dispStyle || "block";
+    this.element.style.display = this.dispStyle;    
 
     if (params.containerId || params.container) {
       this.containerId = params.containerId || params.container.id;

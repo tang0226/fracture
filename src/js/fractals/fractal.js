@@ -5,7 +5,7 @@ FRACTALS: THEORETICAL MATHEMATICAL SETS IN THE COMPLEX PLANE
 class Fractal {
   constructor(name, constants) {
     this.name = name;
-    this.constants = constants;
+    this.constants = constants || {};
 
     switch (name) {
       case "Mandelbrot":
