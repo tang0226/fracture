@@ -122,7 +122,7 @@ const ui = {
         let newExp = Number(this.element.value);
         if (isNaN(newExp) || newExp < 2) {
           this.linked.alert.show();
-          this.state.isQueen = false;
+          this.state.isClean = false;
         }
         else {
           this.update();
