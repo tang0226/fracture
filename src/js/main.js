@@ -242,6 +242,37 @@ const ui = {
       },
     },
   }),
+
+  escapeRadius: new TextInput({
+    id: "escape-radius",
+    containerId: "escape-radius-container",
+    dispStyle: "inline",
+    value: "256",
+    state: {
+      er: 256,
+      isClean: true,
+    },
+    eventCallbacks: {
+      change() {
+        if (isNaN(Number(this.element.value)) || Number(this.element.value) < 2) {
+          this.linked.alert.show();
+          this.state.isClean = false;
+        }
+        else {
+          this.update();
+          this.state.iters = Number(this.element.value);
+          this.linked.alert.hide();
+          this.state.isClean = true;
+        }
+      },
+    },    
+  }),
+
+  escapeRadiusAlert: new TextElement({
+    id: "escape-radius-alert",
+    innerText: "Escape radius must be at least 2",
+    hide: true,
+  }),
 };
 
 // Define links here
@@ -264,6 +295,7 @@ ui.increaseIterations.addLinkedObject("iterIncr", ui.iterationIncrement);
 ui.decreaseIterations.addLinkedObject("iters", ui.iterations);
 ui.decreaseIterations.addLinkedObject("iterIncr", ui.iterationIncrement);
 
+ui.escapeRadius.addLinkedObject("alert", ui.escapeRadiusAlert);
 
 /**
 // Images
