@@ -88,6 +88,7 @@ const ui = {
       },
     },
   }),
+
   juliaConstant: new TextInput({
     id: "julia-constant",
     dispStyle: "inline",
@@ -108,11 +109,13 @@ const ui = {
       },
     },
   }),
+
   juliaConstantAlert: new TextElement({
     id: "julia-constant-alert",
     innerText: "Julia constant must be of the form a+bi",
     hide: true,
   }),
+
   exponent: new TextInput({
     id: "exponent",
     dispStyle: "inline",
@@ -133,16 +136,22 @@ const ui = {
       },
     },
   }),
+
   exponentAlert: new TextElement({
     id: "exponent-alert",
     innerText: "Exponent must be an integer greater than 1",
     hide: true,
   }),
+
   iterations: new TextInput({
     id: "iterations",
     dispStyle: "inline",
     containerId: "iterations-container",
-    value: 1000,
+    value: "1000",
+    state: {
+      iters: 1000,
+      isClean: true,
+    },
     eventCallbacks: {
       change() {
         if (isNaN(Number(this.element.value)) || Number(this.element.value) < 1) {
@@ -151,16 +160,87 @@ const ui = {
         }
         else {
           this.update();
+          this.state.iters = Number(this.element.value);
+          this.utils.clean();
+        }
+      },
+    },
+    utils: {
+      clean() {
+        this.linked.alert.hide();
+        this.state.isClean = true;
+      },
+    },
+  }),
+
+  iterationsAlert: new TextElement({
+    id: "iterations-alert",
+    innerText: "Iterations must be a positive integer",
+    hide: true,
+  }),
+
+  iterationIncrement: new TextInput({
+    id: "iteration-increment",
+    dispStyle: "inline",
+    value: "100",
+    state: {
+      iterIncr: 100,
+      isClean: true,
+    },
+    eventCallbacks: {
+      change() {
+        if (isNaN(Number(this.element.value)) || Number(this.element.value) < 1) {
+          this.linked.alert.show();
+          this.state.isClean = false;
+        }
+        else {
+          this.update();
+          this.state.iterIncr = Number(this.element.value);
           this.linked.alert.hide();
           this.state.isClean = true;
         }
       },
     },
   }),
-  iterationsAlert: new TextElement({
-    id: "iterations-alert",
-    innerText: "Iterations must be a positive integer",
+
+  iterationIncrementAlert: new TextElement({
+    id: "iteration-increment-alert",
+    innerText: "Iteration increment must be a positive integer",
     hide: true,
+  }),
+
+  increaseIterations: new Button({
+    id: "increase-iterations",
+    eventCallbacks: {
+      click() {
+        if (this.linked.iterIncr.state.isClean) {
+          let newIters = this.linked.iters.state.iters +
+            this.linked.iterIncr.state.iterIncr;
+          
+          this.linked.iters.set(newIters);
+          this.linked.iters.state.iters = newIters;
+          this.linked.iters.utils.clean();
+        }
+      },
+    },
+  }),
+  
+  decreaseIterations: new Button({
+    id: "decrease-iterations",
+    eventCallbacks: {
+      click() {
+        if (this.linked.iterIncr.state.isClean) {
+          let newIters = this.linked.iters.state.iters -
+            this.linked.iterIncr.state.iterIncr;
+          
+          if (newIters > 0) {
+            this.linked.iters.set(newIters);
+            this.linked.iters.state.iters = newIters;
+            this.linked.iters.utils.clean();
+          }
+        }
+      },
+    },
   }),
 };
 
@@ -169,10 +249,20 @@ ui.fractalType.addLinkedObject("juliaConstant", ui.juliaConstant);
 ui.fractalType.addLinkedObject("juliaConstantAlert", ui.juliaConstantAlert);
 ui.fractalType.addLinkedObject("exponent", ui.exponent);
 ui.fractalType.addLinkedObject("exponentAlert", ui.exponentAlert);
+
 ui.juliaConstant.addLinkedObject("alert", ui.juliaConstantAlert);
+
 ui.exponent.addLinkedObject("alert", ui.exponentAlert);
+
 ui.iterations.addLinkedObject("alert", ui.iterationsAlert);
 
+ui.iterationIncrement.addLinkedObject("alert", ui.iterationIncrementAlert);
+
+ui.increaseIterations.addLinkedObject("iters", ui.iterations);
+ui.increaseIterations.addLinkedObject("iterIncr", ui.iterationIncrement);
+
+ui.decreaseIterations.addLinkedObject("iters", ui.iterations);
+ui.decreaseIterations.addLinkedObject("iterIncr", ui.iterationIncrement);
 
 
 /**

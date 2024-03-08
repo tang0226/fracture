@@ -32,6 +32,16 @@ class Element {
         );
       }
     }
+
+    if (params.utils) {
+      this.utils = {};
+      let keys = Object.keys(params.utils);
+      for (let i in keys) {
+        let key = keys[i];
+        let util = params.utils[key];
+        this.utils[key] = util.bind(this);
+      }
+    }
   }
   
   addLinkedObject(key, obj) {

@@ -17,7 +17,7 @@ class TextInput extends Element {
   }
 
   set(val){
-    this.value = val;
+    this.value = val.toString();
     this.element.value = val;
   }
 
