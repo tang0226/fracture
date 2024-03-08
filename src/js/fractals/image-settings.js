@@ -1,5 +1,5 @@
 /******************************
-RENDER SETTINGS CLASS: RENDERING OF A FRACTAL WITH ITERATIONS, FRAME, AND CANVAS SIZE
+IMAGE SETTINGS CLASS: ALL PARAMETERS FOR AN IMAGE OF A FRACTAL
 ******************************/
 
 /**
@@ -15,7 +15,7 @@ RENDER SETTINGS CLASS: RENDERING OF A FRACTAL WITH ITERATIONS, FRAME, AND CANVAS
     smooth coloring
 **/
 
-class RenderSettings {
+class ImageSettings {
   constructor(params, reconstruct = false) {
     // Never called, only a placeholder for 
     // reconstruction and deep copying
@@ -72,11 +72,11 @@ class RenderSettings {
 
   // Return a deep copy of self: critical for fractal picking
   copy() {
-    return new RenderSettings(this.params);
+    return new ImageSettings(this.params);
   }
 }
-
+// MAYBE remove copy() and replace reconstruct with copy?
 // Reconstruct serialized object to restore class methods
-RenderSettings.reconstruct = function(renderSettings) {
-  return new RenderSettings(renderSettings.params, true);
+ImageSettings.reconstruct = function(imageSettings) {
+  return new ImageSettings(imageSettings.params, true);
 };
