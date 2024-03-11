@@ -1,5 +1,9 @@
 importScripts(
-  "./render-settings.js",
+  "./fractals/complex.js",
+  "./fractals/fractal.js",
+  "./fractals/frame.js",
+  "./fractals/gradient.js",
+  "./fractals/image-settings.js",
 );
 
 function scale(n, minFrom, maxFrom, minTo, maxTo) {
@@ -8,12 +12,44 @@ function scale(n, minFrom, maxFrom, minTo, maxTo) {
 
 onmessage = function(event) {
   let data = event.data;
-  if (data.type == "draw") {
+  if (data.msg == "draw") {
     let startTime = new Date();
     let renderTime;
 
-    let settings = RenderSettings.reconstruct(data.settings);
-    
+    let settings = ImageSettings.reconstruct(data.settings);
+    let imgData = new ImageData(settings.width, settings.height);
+    let i = 0;
+    for (let y = 0; y < settings.height; y++) {
+      let im = settings.frame.imMin + y * settings.complexIter;
+      for (let x = 0; x < settings.width; x++) {
+        let val = settings.fractal.iterFunc(
+          [
+            settings.frame.reMin + x * settings.complexIter,
+            settings.frame.imMin + y * settings.complexIter
+          ],
+          settings
+        );
+        if (val == settings.fractalSettings.iters) {
+          imgData.data[i] = 0;
+          imgData.data[i + 1] = 0;
+          imgData.data[i + 2] = 0;
+          imgData.data[i + 3] = 255;
+        }
+        else {
+          let bw = 255 * val / settings.fractalSettings.iters;
+          imgData.data[i] = bw;
+          imgData.data[i + 1] = bw;
+          imgData.data[i + 2] = bw;
+          imgData.data[i + 3] = 255;          
+        }
+
+        i += 4;
+      }
+    }
+    postMessage({
+      type: "done",
+      imgData: imgData,
+    });
     /**
     let ipc = img.itersPerCycle;
     let imgData = new ImageData(img.width, img.height);
@@ -65,10 +101,6 @@ onmessage = function(event) {
     }
 
     **/
-    postMessage({
-      type: "done",
-      imgData: imgData,
-      renderTime: renderTime
-    });
+
   }
 };

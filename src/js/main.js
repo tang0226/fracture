@@ -5,22 +5,7 @@ const controlCanvas = new Canvas({
   id: "control-canvas",
   interactive: true,
   eventCallbacks: {
-    mouseMove: function(e) {
-      // console.log(this.mouseDown)
-      this.ctx.clearRect(0, 0, this.width, this.height);
-      this.ctx.fillStyle = this.state.mouseDown ? "green" : "red";
-      this.ctx.fillRect(this.state.mouseX, this.state.mouseY, 20, 20);
-    },
-    mouseDown: function(e) {
-      this.ctx.clearRect(0, 0, this.width, this.height);
-      this.ctx.fillStyle = "green";
-      this.ctx.fillRect(this.state.mouseX, this.state.mouseY, 20, 20);
-    },
-    mouseUp: function(e) {
-      this.ctx.clearRect(0, 0, this.width, this.height);
-      this.ctx.fillStyle = "red";
-      this.ctx.fillRect(this.state.mouseX, this.state.mouseY, 20, 20);
-    }
+
   }
 });
 
@@ -29,7 +14,7 @@ function setCanvasDim(w, h) {
   controlCanvas.setDim(w, h);
 }
 
-setCanvasDim(window.innerWidth, window.innerHeight);
+setCanvasDim(window.innerWidth - 500, window.innerHeight);
 
 // Fractals
 const fractals = {
@@ -51,6 +36,39 @@ const defaultView = new Frame(Complex(0, 0), 4, 4);
 const defaultGradient = new Gradient(
   "2;\n0, 0 0 0;\n1, 255 255 255;"
 );
+
+var image = new ImageSettings({
+  width: canvas.width,
+  height: canvas.height,
+  fractal: fractals.mandelbrot.copy(),
+  fractalSettings: {
+    iters: 100,
+    escapeRadius: 256,
+  },
+  srcFrame: new Frame([-0.5, 0], 4, 4),
+  gradient: defaultGradient,
+  gradientSettings: { itersPerCycle: null},
+  colorSettings: { smoothColoring: true},
+});
+
+var renderInProgress = true;
+
+// Render worker
+const renderWorker = new Worker("./js/render-worker.js");
+
+renderWorker.onmessage = function(event) {
+  let data = event.data;
+  if(data.type == "done") {
+    controlCanvas.ctx.putImageData(data.imgData, 0, 0);
+    renderInProgress = false;
+  }
+};
+
+renderWorker.postMessage({
+  msg: "draw",
+  settings: JSON.parse(JSON.stringify(image)),
+});
+
 
 
 // Define elements first, before links
@@ -270,8 +288,18 @@ const ui = {
 
   escapeRadiusAlert: new TextElement({
     id: "escape-radius-alert",
-    innerText: "Escape radius must be at least 2",
+    innerText: "Escape radius must be a number at least 2",
     hide: true,
+  }),
+
+  redraw: new Button({
+    id: "redraw",
+    dispStyle: "inline",
+    eventCallbacks: {
+      click() {
+
+      },
+    },
   }),
 };
 

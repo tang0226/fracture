@@ -15,11 +15,11 @@ class Fractal {
           juliaEquivalent: "Julia",
         };
 
-        this.iterFunc = function(c, renderSettings) {
+        this.iterFunc = function(c, imageSettings) {
           let z = [0, 0];
 
-          let iters = renderSettings.fractalSettings.iters;
-          let er = renderSettings.fractalSettings.escapeRadius;
+          let iters = imageSettings.fractalSettings.iters;
+          let er = imageSettings.fractalSettings.escapeRadius;
 
           let n = 0;
           while (Complex.abs(z) <= er && n < iters) {
@@ -30,7 +30,7 @@ class Fractal {
             n++;
           }
           
-          if (renderSettings.colorSettings.smoothColoring && n != iters) {
+          if (imageSettings.colorSettings.smoothColoring && n != iters) {
             n += 1 - Math.log(Math.log(Complex.abs(z))) / Math.log(2);
           }
           
@@ -46,11 +46,11 @@ class Fractal {
           mandelEquivalent: "Mandelbrot",
         };
     
-        this.iterFunc = function(z0, renderSettings) {
+        this.iterFunc = function(z0, imageSettings) {
           let z = [z0[0], z0[1]];
 
-          let iters = renderSettings.fractalSettings.iters;
-          let er = renderSettings.fractalSettings.escapeRadius;
+          let iters = imageSettings.fractalSettings.iters;
+          let er = imageSettings.fractalSettings.escapeRadius;
 
           let n = 0;
           while (Complex.abs(z) <= er && n < iters) {
@@ -61,7 +61,7 @@ class Fractal {
             n++;
           }
           
-          if (renderSettings.colorSettings.smoothColoring && n != iters) {
+          if (imageSettings.colorSettings.smoothColoring && n != iters) {
             n += 1 - Math.log(Math.log(Complex.abs(z))) / Math.log(2);
           }
           
@@ -77,11 +77,11 @@ class Fractal {
           juliaEquivalent: "MultibrotJulia",
         };
 
-        this.iterFunc = function(c, renderSettings) {
+        this.iterFunc = function(c, imageSettings) {
           let z = [0, 0];
 
-          let iters = renderSettings.fractalSettings.iters;
-          let er = renderSettings.fractalSettings.escapeRadius;
+          let iters = imageSettings.fractalSettings.iters;
+          let er = imageSettings.fractalSettings.escapeRadius;
 
           let n = 0;
           while (Complex.abs(z) <= er && n < iters) {
@@ -92,7 +92,7 @@ class Fractal {
             n++;
           }
       
-          if (renderSettings.colorSettings.smoothColoring && n != iters) {
+          if (imageSettings.colorSettings.smoothColoring && n != iters) {
             n += 1 - Math.log(Math.log(Complex.abs(z))) / Math.log(this.constants.e);
           }
       
@@ -109,11 +109,11 @@ class Fractal {
           mandelEquivalent: "Multibrot",
         };
 
-        this.iterFunc = function(z0, renderSettings){
+        this.iterFunc = function(z0, imageSettings){
           let z = [z0[0], z0[1]];
 
-          let iters = renderSettings.fractalSettings.iters;
-          let er = renderSettings.fractalSettings.escapeRadius;
+          let iters = imageSettings.fractalSettings.iters;
+          let er = imageSettings.fractalSettings.escapeRadius;
 
           let n = 0;
           while (Complex.abs(z) <= er && n < iters) {
@@ -134,13 +134,13 @@ class Fractal {
   }
 
   copy() {
-    return new Fractal(this.type, this.constants);
+    return new Fractal(this.name, this.constants);
   }
 }
 
 // Reconstruct serialized object to restore class methods
 Fractal.reconstruct = function(fractal) {
-  return new Fractal(fractal.type, fractal.constants);
+  return new Fractal(fractal.name, fractal.constants);
 };
 
 
