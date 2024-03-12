@@ -42,7 +42,7 @@ var image = new ImageSettings({
   height: canvas.height,
   fractal: fractals.mandelbrot.copy(),
   fractalSettings: {
-    iters: 100,
+    iters: 1000,
     escapeRadius: 256,
   },
   srcFrame: new Frame([-0.5, 0], 4, 4),
@@ -51,16 +51,13 @@ var image = new ImageSettings({
   colorSettings: { smoothColoring: true},
 });
 
-var renderInProgress = true;
-
 // Render worker
 const renderWorker = new Worker("./js/render-worker.js");
 
 renderWorker.onmessage = function(event) {
   let data = event.data;
-  if(data.type == "done") {
-    controlCanvas.ctx.putImageData(data.imgData, 0, 0);
-    renderInProgress = false;
+  if(data.type == "update") {
+    controlCanvas.ctx.putImageData(data.imgData, data.x, data.y);
   }
 };
 

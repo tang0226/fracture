@@ -13,11 +13,14 @@ function scale(n, minFrom, maxFrom, minTo, maxTo) {
 onmessage = function(event) {
   let data = event.data;
   if (data.msg == "draw") {
-    let startTime = new Date();
-    let renderTime;
+    let lastUpdateTime = new Date();
 
     let settings = ImageSettings.reconstruct(data.settings);
-    let imgData = new ImageData(settings.width, settings.height);
+
+    let currChunk = [];
+    let currChunkHeight = 0;
+    let currChunkY = 0;
+
     let i = 0;
     for (let y = 0; y < settings.height; y++) {
       let im = settings.frame.imMin + y * settings.complexIter;
@@ -30,26 +33,44 @@ onmessage = function(event) {
           settings
         );
         if (val == settings.fractalSettings.iters) {
-          imgData.data[i] = 0;
-          imgData.data[i + 1] = 0;
-          imgData.data[i + 2] = 0;
-          imgData.data[i + 3] = 255;
+          currChunk[i] = 0;
+          currChunk[i + 1] = 0;
+          currChunk[i + 2] = 0;
+          currChunk[i + 3] = 255;
         }
         else {
           let bw = 255 * val / settings.fractalSettings.iters;
-          imgData.data[i] = bw;
-          imgData.data[i + 1] = bw;
-          imgData.data[i + 2] = bw;
-          imgData.data[i + 3] = 255;          
+          currChunk[i] = bw;
+          currChunk[i + 1] = bw;
+          currChunk[i + 2] = bw;
+          currChunk[i + 3] = 255;          
         }
 
         i += 4;
       }
+
+      currChunkHeight++;
+
+      let t = new Date() - lastUpdateTime;
+      if (t >= 200 || y == settings.height - 1) {
+        let arr = new Uint8ClampedArray(currChunk);
+        postMessage({
+          type: "update",
+          imgData: new ImageData(
+            new Uint8ClampedArray(currChunk),
+            settings.width, currChunkHeight
+          ),
+          x: 0,
+          y: currChunkY,
+          w: settings.width,
+        });
+        currChunk = [];
+        i = 0;
+        currChunkHeight = 0;
+        currChunkY = y + 1;
+        lastUpdateTime = new Date();
+      }
     }
-    postMessage({
-      type: "done",
-      imgData: imgData,
-    });
     /**
     let ipc = img.itersPerCycle;
     let imgData = new ImageData(img.width, img.height);
