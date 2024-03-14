@@ -14,7 +14,7 @@ onmessage = function(event) {
   let data = event.data;
   if (data.msg == "draw") {
     let lastUpdateTime = new Date();
-
+    console.log(data.settings);
     let settings = ImageSettings.reconstruct(data.settings);
 
     let currChunk = [];
@@ -62,7 +62,6 @@ onmessage = function(event) {
           ),
           x: 0,
           y: currChunkY,
-          w: settings.width,
         });
         currChunk = [];
         i = 0;

@@ -51,25 +51,30 @@ var image = new ImageSettings({
   colorSettings: { smoothColoring: true},
 });
 
-// Render worker
-const renderWorker = new Worker("./js/render-worker.js");
-
-renderWorker.onmessage = function(event) {
-  let data = event.data;
-  if(data.type == "update") {
-    controlCanvas.ctx.putImageData(data.imgData, data.x, data.y);
-  }
-};
-
-renderWorker.postMessage({
-  msg: "draw",
-  settings: JSON.parse(JSON.stringify(image)),
-});
-
-
 
 // Define elements first, before links
 const ui = {
+  mainCanvas: new Canvas({
+    id: "main-canvas",
+    utils: {
+      render: function(imageSettings, renderSettings) {
+        let renderWorker = new Worker("./js/render-worker.js");
+
+        renderWorker.onmessage = function(event) {
+          let data = event.data;
+          if(data.type == "update") {
+            this.ctx.putImageData(data.imgData, data.x, data.y);
+          }
+        }.bind(this);
+        
+        renderWorker.postMessage({
+          msg: "draw",
+          settings: JSON.parse(JSON.stringify(imageSettings)),
+        });
+      },
+    },
+  }),
+  
   fractalType: new Dropdown({
     id: "fractal-type",
     dispStyle: "inline",
@@ -79,7 +84,7 @@ const ui = {
       change() {
         this.update();
         let newFractal = fractals[this.value.toLowerCase()];
-        this.state.fractal = newFractal.copy(); // check this
+        this.state.fractalType = newFractal.name; // check this
         if (newFractal.meta.reqJuliaConst) {
           this.linked.juliaConstant.showContainer();
         }
@@ -275,7 +280,7 @@ const ui = {
         }
         else {
           this.update();
-          this.state.iters = Number(this.element.value);
+          this.state.er = Number(this.element.value);
           this.linked.alert.hide();
           this.state.isClean = true;
         }
@@ -294,13 +299,38 @@ const ui = {
     dispStyle: "inline",
     eventCallbacks: {
       click() {
-
+        this.linked.canvas.utils.render({
+            width: this.linked.canvas.width,
+            height: this.linked.canvas.height,
+            fractal: new Fractal(
+              this.linked.fractalType.state.fractalType,
+              {
+                c: this.linked.juliaConstant.state.c || undefined,
+                e: this.linked.exponent.state.e || undefined,
+              },
+            ),
+            fractalSettings: {
+              iters: this.linked.iterations.state.iters,
+              escapeRadius: this.linked.escapeRadius.state.er,
+            },
+            srcFrame: new Frame([-0.5, 0], 4, 4),
+            gradient: defaultGradient,
+            gradientSettings: { itersPerCycle: null},
+            colorSettings: { smoothColoring: true},
+          });
       },
     },
   }),
 };
 
 // Define links here
+ui.redraw.addLinkedObject("canvas", ui.mainCanvas);
+ui.redraw.addLinkedObject("fractalType", ui.fractalType);
+ui.redraw.addLinkedObject("juliaConstant", ui.juliaConstant);
+ui.redraw.addLinkedObject("exponent", ui.exponent);
+ui.redraw.addLinkedObject("iterations", ui.iterations);
+ui.redraw.addLinkedObject("escapeRadius", ui.escapeRadius);
+
 ui.fractalType.addLinkedObject("juliaConstant", ui.juliaConstant);
 ui.fractalType.addLinkedObject("juliaConstantAlert", ui.juliaConstantAlert);
 ui.fractalType.addLinkedObject("exponent", ui.exponent);
@@ -321,6 +351,7 @@ ui.decreaseIterations.addLinkedObject("iters", ui.iterations);
 ui.decreaseIterations.addLinkedObject("iterIncr", ui.iterationIncrement);
 
 ui.escapeRadius.addLinkedObject("alert", ui.escapeRadiusAlert);
+
 
 /**
 // Images
