@@ -80,6 +80,9 @@ const ui = {
     dispStyle: "inline",
     containerId: "fractal-select-container",
     value: "Mandelbrot",
+    state: {
+      fractalType: "Mandelbrot",
+    },
     eventCallbacks: {
       change() {
         this.update();
@@ -167,9 +170,9 @@ const ui = {
     id: "iterations",
     dispStyle: "inline",
     containerId: "iterations-container",
-    value: "1000",
+    value: "100",
     state: {
-      iters: 1000,
+      iters: 100,
       isClean: true,
     },
     eventCallbacks: {
@@ -299,6 +302,11 @@ const ui = {
     dispStyle: "inline",
     eventCallbacks: {
       click() {
+        this.utils.render();
+      },
+    },
+    utils: {
+      render() {
         this.linked.canvas.utils.render({
             width: this.linked.canvas.width,
             height: this.linked.canvas.height,
@@ -352,6 +360,9 @@ ui.decreaseIterations.addLinkedObject("iterIncr", ui.iterationIncrement);
 
 ui.escapeRadius.addLinkedObject("alert", ui.escapeRadiusAlert);
 
+
+// Initial render
+ui.redraw.utils.render();
 
 /**
 // Images
