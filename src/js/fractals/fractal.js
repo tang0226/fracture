@@ -136,13 +136,12 @@ class Fractal {
   copy() {
     return new Fractal(this.name, this.constants);
   }
+  
+  // Reconstruct serialized object to restore class methods
+  static reconstruct(fractal) {
+    return new Fractal(fractal.name, fractal.constants);
+  }
 }
-
-// Reconstruct serialized object to restore class methods
-Fractal.reconstruct = function(fractal) {
-  return new Fractal(fractal.name, fractal.constants);
-};
-
 
 
 /**

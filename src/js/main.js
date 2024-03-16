@@ -317,7 +317,7 @@ const ui = {
             gradient: defaultGradient,
             gradientSettings: { itersPerCycle: null},
             colorSettings: { smoothColoring: true},
-          });
+        });
       },
     },
   }),

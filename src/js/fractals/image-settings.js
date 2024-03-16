@@ -74,9 +74,9 @@ class ImageSettings {
   copy() {
     return new ImageSettings(this.params);
   }
+
+  // Reconstruct serialized object to restore class methods
+  static reconstruct(imageSettings) {
+    return new ImageSettings(imageSettings, true);
+  };
 }
-// MAYBE remove copy() and replace reconstruct with copy?
-// Reconstruct serialized object to restore class methods
-ImageSettings.reconstruct = function(imageSettings) {
-  return new ImageSettings(imageSettings, true);
-};
