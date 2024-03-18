@@ -62,8 +62,14 @@ const ui = {
 
         renderWorker.onmessage = function(event) {
           let data = event.data;
-          if(data.type == "update") {
-            this.ctx.putImageData(data.imgData, data.x, data.y);
+          switch (data.type) {
+            case "update":
+              this.ctx.putImageData(data.imgData, data.x, data.y);
+              break;
+            case "progress":
+              let percent = Math.floor(data.y / data.h * 100);
+              this.linked.progress.set(percent + "%");
+              this.linked.progressBar.set(percent);
           }
         }.bind(this);
         
@@ -73,6 +79,16 @@ const ui = {
         });
       },
     },
+  }),
+
+  progress: new TextElement({
+    id: "progress",
+    dispStyle: "inline",
+    innerText: "0%",
+  }),
+
+  progressBar: new ProgressBar({
+    id: "progress-bar",
   }),
   
   fractalType: new Dropdown({
@@ -338,6 +354,9 @@ ui.redraw.addLinkedObject("juliaConstant", ui.juliaConstant);
 ui.redraw.addLinkedObject("exponent", ui.exponent);
 ui.redraw.addLinkedObject("iterations", ui.iterations);
 ui.redraw.addLinkedObject("escapeRadius", ui.escapeRadius);
+
+ui.mainCanvas.addLinkedObject("progress", ui.progress);
+ui.mainCanvas.addLinkedObject("progressBar", ui.progressBar);
 
 ui.fractalType.addLinkedObject("juliaConstant", ui.juliaConstant);
 ui.fractalType.addLinkedObject("juliaConstantAlert", ui.juliaConstantAlert);

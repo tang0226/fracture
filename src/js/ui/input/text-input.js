@@ -1,7 +1,3 @@
-/******************************
-INPUT CLASSES: Objects representing HTML inputs
-******************************/ 
-
 class TextInput extends Element {
   constructor(params) {
     super(params);
@@ -23,19 +19,5 @@ class TextInput extends Element {
 
   update() {
     this.value = this.element.value;
-  }
-}
-
-class Button extends Element {
-  constructor(params) {
-    super(params);
-    this.type = "button";
-  }
-}
-
-class Dropdown extends TextInput {
-  constructor(params) {
-    super(params);
-    this.type = "select";
   }
 }

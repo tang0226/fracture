@@ -69,6 +69,12 @@ onmessage = function(event) {
         currChunkY = y + 1;
         lastUpdateTime = new Date();
       }
+
+      postMessage({
+        type: "progress",
+        y: y + 1,
+        h: settings.height,
+      });
     }
     /**
     let ipc = img.itersPerCycle;
