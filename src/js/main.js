@@ -112,7 +112,8 @@ const ui = {
           this.linked.juliaConstant.set("");
           this.linked.juliaConstant.jc = null;
           this.linked.juliaConstantAlert.hide();
-          this.linked.juliaConstant.state.isClean = true;
+          this.linked.juliaConstant.state.isClean = false;
+          this.linked.juliaConstant.state.isUsed = false;
         }
         if (newFractal.meta.reqExponent) {
           this.linked.exponent.showContainer();
@@ -122,7 +123,8 @@ const ui = {
           this.linked.exponent.set("");
           this.linked.exponent.e = null;
           this.linked.exponentAlert.hide();
-          this.linked.exponent.state.isClean = true;
+          this.linked.exponent.state.isClean = false;
+          this.linked.exponent.state.isUsed = false;
         }
       },
     },
@@ -132,6 +134,11 @@ const ui = {
     id: "julia-constant",
     dispStyle: "inline",
     containerId: "julia-constant-container",
+    state: {
+      jc: null,
+      isClean: false,
+      isUsed: false,
+    },
     eventCallbacks: {
       change() {
         let newJc = Complex.parseString(this.element.value);
@@ -159,6 +166,11 @@ const ui = {
     id: "exponent",
     dispStyle: "inline",
     containerId: "exponent-container",
+    state: {
+      e: null,
+      isClean: false,
+      isUsed: false,
+    },
     eventCallbacks: {
       change() {
         let newExp = Number(this.element.value);
@@ -190,6 +202,7 @@ const ui = {
     state: {
       iters: 100,
       isClean: true,
+      isUsed: true,
     },
     eventCallbacks: {
       change() {
@@ -225,6 +238,8 @@ const ui = {
     state: {
       iterIncr: 100,
       isClean: true,
+      // No isUsed attribute because
+      // this input is not directly required
     },
     eventCallbacks: {
       change() {
@@ -290,6 +305,7 @@ const ui = {
     state: {
       er: 256,
       isClean: true,
+      isUsed: true,
     },
     eventCallbacks: {
       change() {
