@@ -106,6 +106,7 @@ const ui = {
         this.state.fractalType = newFractal.name; // check this
         if (newFractal.meta.reqJuliaConst) {
           this.linked.juliaConstant.showContainer();
+          this.linked.juliaConstant.state.isUsed = true;
         }
         else {
           this.linked.juliaConstant.hideContainer();
@@ -117,6 +118,7 @@ const ui = {
         }
         if (newFractal.meta.reqExponent) {
           this.linked.exponent.showContainer();
+          this.linked.exponent.state.isUsed = true;
         }
         else {
           this.linked.exponent.hideContainer();
