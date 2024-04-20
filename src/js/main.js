@@ -341,25 +341,51 @@ const ui = {
     },
     utils: {
       render() {
-        this.linked.canvas.utils.render({
-            width: this.linked.canvas.width,
-            height: this.linked.canvas.height,
+        let canvas = this.linked.canvas,
+          frac = this.linked.fractalType,
+          c = this.linked.juliaConstant,
+          e = this.linked.exponent,
+          iters = this.linked.iterations,
+          er = this.linked.escapeRadius;
+          
+        let canRender = true;
+
+        // check conditional inputs
+        if (c.state.isUsed && !c.state.isClean) {
+          c.linked.alert.show();
+          canRender = false;
+        }
+        if (e.state.isUsed && !e.state.isClean) {
+          e.linked.alert.show();
+          canRender = false;
+        }
+
+        // check other inputs
+        if (!iters.state.isClean || !er.state.isClean) {
+          canRender = false;
+        }
+
+        if (canRender) {
+          canvas.utils.render({
+            width: canvas.width,
+            height: canvas.height,
             fractal: new Fractal(
-              this.linked.fractalType.state.fractalType,
+              frac.state.fractalType,
               {
-                c: this.linked.juliaConstant.state.c || undefined,
-                e: this.linked.exponent.state.e || undefined,
+                c: c.state.c || undefined,
+                e: e.state.e || undefined,
               },
             ),
             fractalSettings: {
-              iters: this.linked.iterations.state.iters,
-              escapeRadius: this.linked.escapeRadius.state.er,
+              iters: iters.state.iters,
+              escapeRadius: er.state.er,
             },
             srcFrame: new Frame([-0.5, 0], 4, 4),
             gradient: defaultGradient,
             gradientSettings: { itersPerCycle: null},
             colorSettings: { smoothColoring: true},
-        });
+          });
+        }
       },
     },
   }),
