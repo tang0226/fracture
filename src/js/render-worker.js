@@ -1,14 +1,11 @@
 importScripts(
+  "./utils.js",
   "./fractals/complex.js",
   "./fractals/fractal.js",
   "./fractals/frame.js",
   "./fractals/gradient.js",
   "./fractals/image-settings.js",
 );
-
-function scale(n, minFrom, maxFrom, minTo, maxTo) {
-  return ((n / (maxFrom - minFrom)) * (maxTo - minTo)) + minTo;
-};
 
 onmessage = function(event) {
   let data = event.data;

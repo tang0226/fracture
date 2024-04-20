@@ -16,3 +16,7 @@ function msToTime(ms) {
 
   return str;
 }
+
+function scale(n, a, b, c, d) {
+  return ((n / (b - a)) * (d - c)) + c;
+};
