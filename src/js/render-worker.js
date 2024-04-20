@@ -13,8 +13,9 @@ function scale(n, minFrom, maxFrom, minTo, maxTo) {
 onmessage = function(event) {
   let data = event.data;
   if (data.msg == "draw") {
+    let startTime = new Date();
     let lastUpdateTime = new Date();
-    console.log(data.settings);
+
     let settings = ImageSettings.reconstruct(data.settings);
 
     let currChunk = [];
@@ -74,6 +75,7 @@ onmessage = function(event) {
         type: "progress",
         y: y + 1,
         h: settings.height,
+        renderTime: new Date() - startTime,
       });
     }
     /**

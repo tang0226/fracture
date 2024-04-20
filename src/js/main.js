@@ -70,6 +70,7 @@ const ui = {
               let percent = Math.floor(data.y / data.h * 100);
               this.linked.progress.set(percent + "%");
               this.linked.progressBar.set(percent);
+              this.linked.renderTime.set(msToTime(data.renderTime));
           }
         }.bind(this);
         
@@ -89,6 +90,11 @@ const ui = {
 
   progressBar: new ProgressBar({
     id: "progress-bar",
+  }),
+
+  renderTime: new TextElement({
+    id: "render-time",
+    dispStyle: "inline",
   }),
   
   fractalType: new Dropdown({
@@ -401,6 +407,7 @@ ui.redraw.addLinkedObject("escapeRadius", ui.escapeRadius);
 
 ui.mainCanvas.addLinkedObject("progress", ui.progress);
 ui.mainCanvas.addLinkedObject("progressBar", ui.progressBar);
+ui.mainCanvas.addLinkedObject("renderTime", ui.renderTime);
 
 ui.fractalType.addLinkedObject("juliaConstant", ui.juliaConstant);
 ui.fractalType.addLinkedObject("juliaConstantAlert", ui.juliaConstantAlert);
