@@ -112,30 +112,32 @@ const ui = {
         this.ctx.clearRect(0, 0, this.width, this.height);
 
         let frame = this.linked.mainCanvas.state.currSettings.frame;
-
-        let re = scale(
-          Math.min(this.state.startDragX, this.state.mouseX),
-          0, this.width, frame.reMin, frame.reMin + frame.reWidth
-        );
-        let im = scale(
-          Math.min(this.state.startDragY, this.state.mouseY),
-          0, this.height, frame.imMin, frame.imMin + frame.imHeight
-        );
-
-        let w = Math.abs(this.state.mouseX - this.state.startDragX) /
-          this.width * frame.reWidth;
-        let h = Math.abs(this.state.mouseY - this.state.startDragY) /
-          this.height * frame.imHeight;
-
-        let newSrcFrame = new Frame(
-          [re + w / 2, im + h / 2],
-          w, h
-        );
-        
-        let img = this.linked.mainCanvas.state.currSettings.copy();
-        img.setSrcFrame(newSrcFrame);
-
-        this.linked.mainCanvas.utils.render(img);
+        if (!(this.state.mouseX == this.state.startDragX &&
+          this.state.mouseY == this.state.startDragY)) {
+          let re = scale(
+            Math.min(this.state.startDragX, this.state.mouseX),
+            0, this.width, frame.reMin, frame.reMin + frame.reWidth
+          );
+          let im = scale(
+            Math.min(this.state.startDragY, this.state.mouseY),
+            0, this.height, frame.imMin, frame.imMin + frame.imHeight
+          );
+  
+          let w = Math.abs(this.state.mouseX - this.state.startDragX) /
+            this.width * frame.reWidth;
+          let h = Math.abs(this.state.mouseY - this.state.startDragY) /
+            this.height * frame.imHeight;
+  
+          let newSrcFrame = new Frame(
+            [re + w / 2, im + h / 2],
+            w, h
+          );
+          
+          let img = this.linked.mainCanvas.state.currSettings.copy();
+          img.setSrcFrame(newSrcFrame);
+  
+          this.linked.mainCanvas.utils.render(img);
+        }
       },
       mouseOut() {
         this.ctx.clearRect(0, 0, this.width, this.height);
