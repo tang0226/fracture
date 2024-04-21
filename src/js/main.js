@@ -82,6 +82,32 @@ const ui = {
     },
   }),
 
+  controlCanvas: new Canvas({
+    id: "control-canvas",
+    interactive: true,
+    eventCallbacks: {
+      mouseUp() {
+        this.ctx.clearRect(0, 0, this.width, this.height);
+      },
+      mouseMove() {
+        if (this.state.mouseDown) {
+          let params = [
+            Math.min(this.state.startDragX, this.state.mouseX),
+            Math.min(this.state.startDragY, this.state.mouseY),
+            Math.abs(this.state.mouseX - this.state.startDragX),
+            Math.abs(this.state.mouseY - this.state.startDragY),
+          ];
+          
+          this.ctx.clearRect(0, 0, this.width, this.height);
+          this.ctx.fillStyle = "#FFFFFF44";
+          this.ctx.fillRect(...params);
+          this.ctx.strokeStyle = "#000000";
+          this.ctx.strokeRect(...params);
+        }
+      }
+    },
+  }),
+
   progress: new TextElement({
     id: "progress",
     dispStyle: "inline",

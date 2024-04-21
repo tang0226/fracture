@@ -43,13 +43,18 @@ class Canvas extends Element {
       }.bind(this));
 
       this.element.addEventListener("mouseup", function(e) {
+        if (this.eventCallbacks.mouseUp) this.eventCallbacks.mouseUp(e);
+
+        // don't reset anything until after the callback
         this.state.mouseDown = false;
         this.state.startDragX = null;
         this.state.startDragY = null;
-        if (this.eventCallbacks.mouseUp) this.eventCallbacks.mouseUp(e);
       }.bind(this));
   
       this.element.addEventListener("mouseout", function(e) {
+        if (this.eventCallbacks.mouseOut) this.eventCallbacks.mouseOut(e);
+
+        // don't reset anything until after the callback
         this.state.mouseDown = false;
         this.state.mouseX = null;
         this.state.mouseY = null;
@@ -57,7 +62,6 @@ class Canvas extends Element {
         this.state.lastMouseY = null;
         this.state.startDragX = null;
         this.state.startDragY = null;
-        if (this.eventCallbacks.mouseOut) this.eventCallbacks.mouseOut(e);
       }.bind(this))
     }
   }
