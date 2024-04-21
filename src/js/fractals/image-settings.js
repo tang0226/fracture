@@ -55,7 +55,7 @@ class ImageSettings {
 
   // Fit drawing frame to canvas and
   // update dependent parameters
-  fitToCanvas(w, h) {
+  setRes(w, h) {
     this.width = w;
     this.height = h;
     this.frame = this.srcFrame.fitToCanvas(w, h);
@@ -66,8 +66,9 @@ class ImageSettings {
   }
 
   // Set the source frame
-  setFrame(srcFrame) {
+  setSrcFrame(srcFrame) {
     this.srcFrame = srcFrame;
+    this.setRes(this.width, this.height);
   }
 
   // Return a deep copy of self: critical for fractal picking

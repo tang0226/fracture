@@ -56,6 +56,9 @@ var image = new ImageSettings({
 const ui = {
   mainCanvas: new Canvas({
     id: "main-canvas",
+    state: {
+      currSettings: ImageSettings.reconstruct(image),
+    },
     utils: {
       render: function(imageSettings, renderSettings) {
         let renderWorker = new Worker("./js/render-worker.js");
@@ -74,6 +77,9 @@ const ui = {
           }
         }.bind(this);
         
+        this.state.currSettings = ImageSettings.reconstruct(imageSettings);
+        this.state.renderInProgress = true;
+
         renderWorker.postMessage({
           msg: "draw",
           settings: JSON.parse(JSON.stringify(imageSettings)),
@@ -86,9 +92,6 @@ const ui = {
     id: "control-canvas",
     interactive: true,
     eventCallbacks: {
-      mouseUp() {
-        this.ctx.clearRect(0, 0, this.width, this.height);
-      },
       mouseMove() {
         if (this.state.mouseDown) {
           let params = [
@@ -104,7 +107,39 @@ const ui = {
           this.ctx.strokeStyle = "#000000";
           this.ctx.strokeRect(...params);
         }
-      }
+      },
+      mouseUp() {
+        this.ctx.clearRect(0, 0, this.width, this.height);
+
+        let frame = this.linked.mainCanvas.state.currSettings.frame;
+
+        let re = scale(
+          Math.min(this.state.startDragX, this.state.mouseX),
+          0, this.width, frame.reMin, frame.reMin + frame.reWidth
+        );
+        let im = scale(
+          Math.min(this.state.startDragY, this.state.mouseY),
+          0, this.height, frame.imMin, frame.imMin + frame.imHeight
+        );
+
+        let w = Math.abs(this.state.mouseX - this.state.startDragX) /
+          this.width * frame.reWidth;
+        let h = Math.abs(this.state.mouseY - this.state.startDragY) /
+          this.height * frame.imHeight;
+
+        let newSrcFrame = new Frame(
+          [re + w / 2, im + h / 2],
+          w, h
+        );
+        
+        let img = this.linked.mainCanvas.state.currSettings.copy();
+        img.setSrcFrame(newSrcFrame);
+
+        this.linked.mainCanvas.utils.render(img);
+      },
+      mouseOut() {
+        this.ctx.clearRect(0, 0, this.width, this.height);
+      },
     },
   }),
 
@@ -398,7 +433,8 @@ const ui = {
         }
 
         if (canRender) {
-          canvas.utils.render({
+          let last = this.linked.canvas.state.currSettings;
+          let settings = {
             width: canvas.width,
             height: canvas.height,
             fractal: new Fractal(
@@ -412,11 +448,14 @@ const ui = {
               iters: iters.state.iters,
               escapeRadius: er.state.er,
             },
-            srcFrame: new Frame([-0.5, 0], 4, 4),
+            srcFrame: last.srcFrame,
             gradient: defaultGradient,
             gradientSettings: { itersPerCycle: null},
             colorSettings: { smoothColoring: true},
-          });
+          };
+          
+
+          canvas.utils.render(settings);
         }
       },
     },
@@ -434,6 +473,8 @@ ui.redraw.addLinkedObject("escapeRadius", ui.escapeRadius);
 ui.mainCanvas.addLinkedObject("progress", ui.progress);
 ui.mainCanvas.addLinkedObject("progressBar", ui.progressBar);
 ui.mainCanvas.addLinkedObject("renderTime", ui.renderTime);
+
+ui.controlCanvas.addLinkedObject("mainCanvas", ui.mainCanvas);
 
 ui.fractalType.addLinkedObject("juliaConstant", ui.juliaConstant);
 ui.fractalType.addLinkedObject("juliaConstantAlert", ui.juliaConstantAlert);
@@ -459,360 +500,3 @@ ui.escapeRadius.addLinkedObject("alert", ui.escapeRadiusAlert);
 
 // Initial render
 ui.redraw.utils.render();
-
-/**
-// Images
-const defaultImages = {
-  Mandelbrot: new Image(
-    new Fractal("Mandelbrot"),
-    1000, 256, true,
-    new Frame(Complex(-0.5, 0), 4, 4),
-    defaultGradient, 200,
-    canvasWidth, canvasHeight
-  ),
-  Julia: new Image(
-    new Fractal("Julia", {c: Complex(0, 1)}),
-    1000, 256, true,
-    defaultView,
-    defaultGradient, 200,
-    canvasWidth, canvasHeight
-  ),
-  Multibrot: new Image(
-    new Fractal("Multibrot", {e: 3}),
-    1000, 256, true,
-    defaultView,
-    defaultGradient, 200,
-    canvasWidth, canvasHeight
-  ),
-  Multijulia: new Image(
-    new Fractal("Multijulia", {e: 3, c: Complex(-0.12, -0.8)}),
-    1000, 256, true,
-    defaultView,
-    defaultGradient, 200,
-    canvasWidth, canvasHeight
-  ),
-  Tricorn: new Image(
-    new Fractal("Tricorn"),
-    1000, 256, true,
-    new Frame(
-      Complex(-0.25, 0),
-      4, 4
-    ),
-    defaultGradient, 200,
-    canvasWidth, canvasHeight
-  ),
-  TricornJulia: new Image(
-    new Fractal("TricornJulia", {c: Complex(-1, 0)}),
-    1000, 256, true,
-    defaultView,
-    defaultGradient, 200,
-    canvasWidth, canvasHeight
-  ),
-  Multicorn: new Image(
-    new Fractal("Multicorn", {e: 3}),
-    1000, 256, true,
-    defaultView,
-    defaultGradient, 200,
-    canvasWidth, canvasHeight
-  ),
-  MulticornJulia: new Image(
-    new Fractal("MulticornJulia", {e: 3, c: Complex(-1, -1)}),
-    1000, 256, true,
-    defaultView,
-    defaultGradient, 200,
-    canvasWidth, canvasHeight
-  ),
-  BurningShip: new Image(
-    new Fractal("BurningShip"),
-    1000, 256, true,
-    new Frame(Complex(0, -0.5), 4, 4),
-    defaultGradient, 200,
-    canvasWidth, canvasHeight
-  ),
-  BurningShipJulia: new Image(
-    new Fractal("BurningShipJulia", {c: Complex(-1.5, 0)}),
-    1000, 256, true,
-    defaultView,
-    defaultGradient, 200,
-    canvasWidth, canvasHeight
-  ),
-  Multiship: new Image(
-    new Fractal("Multiship", {e: 3}),
-    1000, 256, true,
-    defaultView,
-    defaultGradient, 200,
-    canvasWidth, canvasHeight
-  ),
-  MultishipJulia: new Image(
-    new Fractal("MultishipJulia", {e: 3, c: Complex(-1.326667, 0)}),
-    1000, 256, true,
-    defaultView,
-    defaultGradient, 200,
-    canvasWidth, canvasHeight
-  )
-};
-
-
-
-// Initial image settings:
-var currImg = defaultImages.Mandelbrot.copy();
-var storedImg = null;
-var currMode = "default";
-
-
-var renderInProgress = true;
-
-// Render worker
-const renderWorker = new Worker("./js/render.js");
-
-renderWorker.onmessage = function(event) {
-  let data = event.data;
-  if(data.type == "progress") {
-    toolbar.displayRenderTime(data.renderTime);
-    toolbar.displayProgress(data.progress);
-  }
-  if(data.type == "done") {
-    canvasCtx.putImageData(data.imgData, 0, 0);
-    toolbar.displayRenderTime(data.renderTime);
-    renderInProgress = false;
-  }
-};
-
-function draw() {
-  document.getElementById("settings-json").value = JSON.stringify(currImg);
-  renderWorker.postMessage({
-    type: "draw",
-    img: currImg
-  });
-  renderInProgress = true;
-};
-
-
-
-// Mouse variables
-var mouseX = null;
-var mouseY = null;
-var startDragX = null;
-var startDragY = null;
-var mouseDown = false;
-
-
-// Mouse functions
-function resetDrag() {
-  mouseDown = false;
-  startDragX = null;
-  startDragY = null;
-  controlsCanvasCtx.clearRect(0, 0, canvasWidth, canvasHeight);
-};
-
-
-// Mouse Events
-
-controlsCanvas.onmousedown = function(event) {
-  if(renderInProgress) {
-    return;
-  }
-
-  if(event.buttons == 1) {
-    if(!mouseDown) {
-      startDragX = mouseX;
-      startDragY = mouseY;
-    }
-    mouseDown = true;
-  }
-};
-
-
-// Based on mouse coordinates, click/drag,
-// and keyboard events, draw the new image
-controlsCanvas.onmouseup = function() {
-  // Glitch-proofing
-  if(!mouseDown) {
-    return;
-  }
-
-  if(renderInProgress) {
-    return;
-  }
-
-  let newFrame = false;
-
-  // Click
-  if(mouseX == startDragX && mouseY == startDragY) {
-    // Julia mode toggling
-    if(keys["Alt"]) {
-      if(currMode == "default") {
-        // Switch to Julia mode
-
-        // Confirm that Julia mode is applicable
-        if(!currImg.fractal.requiresJuliaConstant) {
-          currMode = "julia";
-
-          // Store current image for switching back
-          storedImg = currImg.copy();
-
-          // Initialize new image based on Julia
-          // equivalent of previous fractal
-          let newFractalType = currImg.fractal.juliaEquivalent;
-          currImg = defaultImages[newFractalType].copy();
-
-          // New fractal requires a julia constant,
-          // but not necessarily an exponent
-          currImg.fractal.params.c = storedImg.frame.toComplexCoords(
-            mouseX, mouseY,
-            canvasWidth, canvasHeight
-          );
-          if(Fractal.requiresExponent(newFractalType)) {
-            currImg.fractal.params.e = storedImg.fractal.params.e;
-          }
-        }
-      }
-
-      
-      else {
-        // Return to default mode
-        currMode = "default";
-        currImg = storedImg.copy();
-        storedImg = null;
-      }
-      toolbar.syncFractal();
-      toolbar.syncImageParams();
-      toolbar.setImgPalette();
-    }
-
-    // Center the frame
-    else if(keys["Control"]) {
-      let currFrame = currImg.frame;
-      newFrame = new Frame(
-        currFrame.toComplexCoords(mouseX, mouseY, canvasWidth, canvasHeight),
-        currFrame.reWidth,
-        currFrame.imHeight
-      );
-    }
-
-    // Zoom
-    else {
-      let zoomFactor = toolbar.clickZoomFactor;
-
-      // Calculations to keep clicked point
-      // in the same position on canvas
-      let xOffset = mouseX - (canvasWidth / 2);
-      let yOffset = mouseY - (canvasHeight / 2);
-      
-      let newReWidth = currImg.frame.reWidth;
-      let newImHeight = currImg.frame.imHeight;
-
-      // Zoom out
-      if(keys["Shift"]) {
-        newReWidth *= zoomFactor;
-        newImHeight *= zoomFactor;
-      }
-
-      // Zoom in
-      else {
-        newReWidth /= zoomFactor;
-        newImHeight /= zoomFactor;
-      }
-
-      // Update frame
-      let focus = currImg.frame.toComplexCoords(
-        mouseX, mouseY,
-        canvasWidth, canvasHeight
-      );
-      newFrame = new Frame(
-        Complex(
-          focus.re - (xOffset * newReWidth / canvasWidth),
-          focus.im - (yOffset * newImHeight / canvasHeight)
-        ),
-        newReWidth, newImHeight
-      );
-    }
-  }
-
-  // Drag
-  else if(mouseX != startDragX && mouseY != startDragY) {
-    newFrame = new Frame(
-      Complex(
-        currImg.frame.reMin + ((mouseX + startDragX) / 2 * currImg.complexIter),
-        currImg.frame.imMin + ((mouseY + startDragY) / 2 * currImg.complexIter)
-      ),
-      Math.abs(mouseX - startDragX) * currImg.complexIter,
-      Math.abs(mouseY - startDragY) * currImg.complexIter
-    );
-  }
-
-  // Update frame
-  if(newFrame) {
-    currImg.setFrame(newFrame);
-  }
-  
-  currImg.fitToCanvas(canvasWidth, canvasHeight);
-  toolbar.updateZoom();
-  toolbar.redraw();
-
-  // Reset drag
-  resetDrag();
-};
-
-
-controlsCanvas.onmousemove = function(event) {
-  mouseX = event.offsetX;
-  mouseY = event.offsetY;
-  toolbar.displayMouseComplexCoords();
-  if(mouseDown) {
-    controlsCanvasCtx.clearRect(0, 0, canvasWidth, canvasHeight);
-    controlsCanvasCtx.strokeStyle = "#FF0000";
-    controlsCanvasCtx.strokeRect(
-      Math.min(startDragX, mouseX),
-      Math.min(startDragY, mouseY),
-      Math.abs(mouseX - startDragX),
-      Math.abs(mouseY - startDragY)
-    );
-  }
-};
-
-
-controlsCanvas.onmouseout = function() {
-  resetDrag();
-
-  // Display N/A for mouse coordinates
-  toolbar.resetMouseComplexCoords();
-};
-
-
-
-// Keys variables
-const keys = {};
-
-// Keys functions
-function resetKeys() {
-  for(let key in keys) {
-    keys[key] = false;
-  }
-};
-
-window.onkeydown = function(event) {
-  keys[event.key] = true;
-  if(event.key == "Escape") {
-    resetDrag();
-  }
-  if(event.key == "Enter" && document.activeElement.nodeName != "TEXTAREA") {
-    document.activeElement.blur();
-    toolbar.redraw();
-  }
-};
-
-window.onkeyup = function(event) {
-  keys[event.key] = false;
-};
-
-window.onblur = function() {
-  resetKeys();
-}
-
-
-
-// Run:
-toolbar.init();
-draw();
-**/

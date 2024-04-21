@@ -14,10 +14,10 @@ class Frame {
   // Translate xy coordinates on the canvas
   // to coordinates on the complex plane.
   toComplexCoords(x, y, w, h) {
-    return Complex(
+    return [
       this.reMin + (this.reWidth * x / w),
       this.imMin + (this.imHeight * y / h)
-    );
+    ];
   }
 
   // Get zoom based on size of frame
