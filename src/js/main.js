@@ -61,9 +61,13 @@ const ui = {
     },
     utils: {
       render: function(imageSettings, renderSettings) {
-        let renderWorker = new Worker("./js/render-worker.js");
+        this.state.lastSettings = ImageSettings.reconstruct(this.state.currSettings);
+        this.state.currSettings = ImageSettings.reconstruct(imageSettings);
+        this.state.rendering = true;
 
-        renderWorker.onmessage = function(event) {
+        this.state.renderWorker = new Worker("./js/render-worker.js");
+
+        this.state.renderWorker.onmessage = function(event) {
           let data = event.data;
           switch (data.type) {
             case "update":
@@ -73,17 +77,28 @@ const ui = {
               let percent = Math.floor(data.y / data.h * 100);
               this.linked.progress.set(percent + "%");
               this.linked.progressBar.set(percent);
+              this.state.progress = percent;
+
               this.linked.renderTime.set(msToTime(data.renderTime));
+              this.state.renderTime = data.renderTime;
+              break;
+            case "done":
+              this.state.rendering = false;
           }
         }.bind(this);
-        
-        this.state.currSettings = ImageSettings.reconstruct(imageSettings);
-        this.state.renderInProgress = true;
 
-        renderWorker.postMessage({
+        this.state.renderWorker.postMessage({
           msg: "draw",
           settings: JSON.parse(JSON.stringify(imageSettings)),
         });
+      },
+
+      cancelRender: function() {
+        if (this.state.rendering) {
+          this.state.renderWorker.terminate();
+          this.state.rendering = false;
+          this.linked.progress.set(this.state.progress + "%" + " (cancelled)");
+        }
       },
     },
   }),
@@ -158,6 +173,79 @@ const ui = {
   renderTime: new TextElement({
     id: "render-time",
     dispStyle: "inline",
+  }),
+
+  render: new Button({
+    id: "render",
+    dispStyle: "inline",
+    eventCallbacks: {
+      click() {
+        this.utils.render();
+      },
+    },
+    utils: {
+      render() {
+        let canvas = this.linked.canvas,
+          frac = this.linked.fractalType,
+          c = this.linked.juliaConstant,
+          e = this.linked.exponent,
+          iters = this.linked.iterations,
+          er = this.linked.escapeRadius;
+          
+        let canRender = true;
+
+        // check conditional inputs
+        if (c.state.isUsed && !c.state.isClean) {
+          c.linked.alert.show();
+          canRender = false;
+        }
+        if (e.state.isUsed && !e.state.isClean) {
+          e.linked.alert.show();
+          canRender = false;
+        }
+
+        // check other inputs
+        if (!iters.state.isClean || !er.state.isClean) {
+          canRender = false;
+        }
+
+        if (canRender) {
+          let last = this.linked.canvas.state.currSettings;
+          let settings = {
+            width: canvas.width,
+            height: canvas.height,
+            fractal: new Fractal(
+              frac.state.fractalType,
+              {
+                c: c.state.c || undefined,
+                e: e.state.e || undefined,
+              },
+            ),
+            fractalSettings: {
+              iters: iters.state.iters,
+              escapeRadius: er.state.er,
+            },
+            srcFrame: last.srcFrame,
+            gradient: defaultGradient,
+            gradientSettings: { itersPerCycle: null},
+            colorSettings: { smoothColoring: true},
+          };
+          
+
+          canvas.utils.render(settings);
+        }
+      },
+    },
+  }),
+
+  cancel: new Button({
+    id: "cancel",
+    dispStyle: "inline",
+    eventCallbacks: {
+      click() {
+        this.linked.canvas.utils.cancelRender();
+      },
+    },
   }),
   
   fractalType: new Dropdown({
@@ -399,78 +487,17 @@ const ui = {
     innerText: "Escape radius must be a number at least 2",
     hide: true,
   }),
-
-  redraw: new Button({
-    id: "redraw",
-    dispStyle: "inline",
-    eventCallbacks: {
-      click() {
-        this.utils.render();
-      },
-    },
-    utils: {
-      render() {
-        let canvas = this.linked.canvas,
-          frac = this.linked.fractalType,
-          c = this.linked.juliaConstant,
-          e = this.linked.exponent,
-          iters = this.linked.iterations,
-          er = this.linked.escapeRadius;
-          
-        let canRender = true;
-
-        // check conditional inputs
-        if (c.state.isUsed && !c.state.isClean) {
-          c.linked.alert.show();
-          canRender = false;
-        }
-        if (e.state.isUsed && !e.state.isClean) {
-          e.linked.alert.show();
-          canRender = false;
-        }
-
-        // check other inputs
-        if (!iters.state.isClean || !er.state.isClean) {
-          canRender = false;
-        }
-
-        if (canRender) {
-          let last = this.linked.canvas.state.currSettings;
-          let settings = {
-            width: canvas.width,
-            height: canvas.height,
-            fractal: new Fractal(
-              frac.state.fractalType,
-              {
-                c: c.state.c || undefined,
-                e: e.state.e || undefined,
-              },
-            ),
-            fractalSettings: {
-              iters: iters.state.iters,
-              escapeRadius: er.state.er,
-            },
-            srcFrame: last.srcFrame,
-            gradient: defaultGradient,
-            gradientSettings: { itersPerCycle: null},
-            colorSettings: { smoothColoring: true},
-          };
-          
-
-          canvas.utils.render(settings);
-        }
-      },
-    },
-  }),
 };
 
 // Define links here
-ui.redraw.addLinkedObject("canvas", ui.mainCanvas);
-ui.redraw.addLinkedObject("fractalType", ui.fractalType);
-ui.redraw.addLinkedObject("juliaConstant", ui.juliaConstant);
-ui.redraw.addLinkedObject("exponent", ui.exponent);
-ui.redraw.addLinkedObject("iterations", ui.iterations);
-ui.redraw.addLinkedObject("escapeRadius", ui.escapeRadius);
+ui.render.addLinkedObject("canvas", ui.mainCanvas);
+ui.render.addLinkedObject("fractalType", ui.fractalType);
+ui.render.addLinkedObject("juliaConstant", ui.juliaConstant);
+ui.render.addLinkedObject("exponent", ui.exponent);
+ui.render.addLinkedObject("iterations", ui.iterations);
+ui.render.addLinkedObject("escapeRadius", ui.escapeRadius);
+
+ui.cancel.addLinkedObject("canvas", ui.mainCanvas);
 
 ui.mainCanvas.addLinkedObject("progress", ui.progress);
 ui.mainCanvas.addLinkedObject("progressBar", ui.progressBar);
@@ -501,4 +528,4 @@ ui.escapeRadius.addLinkedObject("alert", ui.escapeRadiusAlert);
 
 
 // Initial render
-ui.redraw.utils.render();
+ui.render.utils.render();
