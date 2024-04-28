@@ -73,6 +73,7 @@ const ui = {
             case "update":
               this.ctx.putImageData(data.imgData, data.x, data.y);
               break;
+
             case "progress":
               let percent = Math.floor(data.y / data.h * 100);
               this.linked.progress.set(percent + "%");
@@ -82,6 +83,7 @@ const ui = {
               this.linked.renderTime.set(msToTime(data.renderTime));
               this.state.renderTime = data.renderTime;
               break;
+
             case "done":
               this.state.rendering = false;
           }
@@ -93,11 +95,13 @@ const ui = {
         });
       },
 
-      cancelRender: function() {
+      cancelRender: function(skipMsg) {
         if (this.state.rendering) {
           this.state.renderWorker.terminate();
           this.state.rendering = false;
-          this.linked.progress.set(this.state.progress + "%" + " (cancelled)");
+          if (!skipMsg) {
+            this.linked.progress.set(this.state.progress + "%" + " (cancelled)");
+          }
         }
       },
     },
@@ -151,6 +155,7 @@ const ui = {
           let img = this.linked.mainCanvas.state.currSettings.copy();
           img.setSrcFrame(newSrcFrame);
   
+          this.linked.mainCanvas.utils.cancelRender(true);
           this.linked.mainCanvas.utils.render(img);
         }
       },
