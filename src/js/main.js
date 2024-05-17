@@ -34,7 +34,7 @@ const defaultView = new Frame(Complex(0, 0), 4, 4);
 // Gradent
 
 const defaultGradient = new Gradient(
-  "2;\n0, 0 0 0;\n1, 255 255 255;"
+  "2; 0, 0 0 0; 1, 255 255 255;"
 );
 
 var image = new ImageSettings({
@@ -492,6 +492,27 @@ const ui = {
     innerText: "Escape radius must be a number at least 2",
     hide: true,
   }),
+
+  settingsJson: new TextInput({
+    id: "settings-json",
+    eventCallbacks: {
+      change() {
+        this.update();
+      },
+    },
+  }),
+
+  importSettings: new Button({
+    id: "import-settings",
+    eventCallbacks: {
+      click() {
+        let str = this.linked.settingsJson.element.value;
+        let obj = JSON.parse(str);
+        console.log(str, obj);
+        this.linked.canvas.utils.render(obj);
+      },
+    },
+  }),
 };
 
 // Define links here
@@ -531,6 +552,8 @@ ui.decreaseIterations.addLinkedObject("iterIncr", ui.iterationIncrement);
 
 ui.escapeRadius.addLinkedObject("alert", ui.escapeRadiusAlert);
 
+ui.importSettings.addLinkedObject("settingsJson", ui.settingsJson);
+ui.importSettings.addLinkedObject("canvas", ui.mainCanvas);
 
 // Initial render
 ui.render.utils.render();
