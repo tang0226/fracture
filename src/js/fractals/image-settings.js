@@ -17,10 +17,6 @@ IMAGE SETTINGS CLASS: ALL PARAMETERS FOR AN IMAGE OF A FRACTAL
 
 class ImageSettings {
   constructor(params, reconstruct = false) {
-    // Never called, only a placeholder for 
-    // reconstruction and deep copying
-    this.params = params;
-
     this.width = params.width;
     this.height = params.height;
 
@@ -73,7 +69,7 @@ class ImageSettings {
 
   // Return a deep copy of self: critical for fractal picking
   copy() {
-    return new ImageSettings(this.params);
+    return new ImageSettings(this);
   }
 
   // Reconstruct serialized object to restore class methods
