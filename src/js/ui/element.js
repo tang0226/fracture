@@ -42,10 +42,11 @@ class Element {
         this.utils[key] = util.bind(this);
       }
     }
-  }
-  
-  addLinkedObject(key, obj) {
-    this.linked[key] = obj;
+    
+    // Define here, not outside, to have an alias
+    this.addLinkedObject = this.link = function(key, obj) {
+      this.linked[key] = obj;
+    };
   }
 
   show(dispStyle) {
