@@ -263,8 +263,7 @@ const ui = {
     },
     eventCallbacks: {
       change() {
-        this.update();
-        let newFractal = fractals[this.value.toLowerCase()];
+        let newFractal = fractals[this.element.value.toLowerCase()];
         this.state.fractalType = newFractal.name; // check this
         if (newFractal.meta.reqJuliaConst) {
           this.linked.juliaConstant.showContainer();
@@ -307,7 +306,6 @@ const ui = {
       change() {
         let newJc = Complex.parseString(this.element.value);
         if (newJc) {
-          this.update();
           this.state.c = newJc;
           this.linked.alert.hide();
           this.state.isClean = true;
@@ -343,7 +341,6 @@ const ui = {
           this.state.isClean = false;
         }
         else {
-          this.update();
           this.linked.alert.hide();
           this.state.e = newExp;
           this.state.isClean = true;
@@ -375,7 +372,6 @@ const ui = {
           this.state.isClean = false;
         }
         else {
-          this.update();
           this.state.iters = Number(this.element.value);
           this.utils.clean();
         }
@@ -412,7 +408,6 @@ const ui = {
           this.state.isClean = false;
         }
         else {
-          this.update();
           this.state.iterIncr = Number(this.element.value);
           this.linked.alert.hide();
           this.state.isClean = true;
@@ -478,7 +473,6 @@ const ui = {
           this.state.isClean = false;
         }
         else {
-          this.update();
           this.state.er = Number(this.element.value);
           this.linked.alert.hide();
           this.state.isClean = true;
@@ -495,11 +489,6 @@ const ui = {
 
   settingsJson: new TextInput({
     id: "settings-json",
-    eventCallbacks: {
-      change() {
-        this.update();
-      },
-    },
   }),
 
   importSettings: new Button({
