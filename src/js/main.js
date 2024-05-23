@@ -305,9 +305,14 @@ const ui = {
       },
       eventCallbacks: {
         change() {
-          let newJc = Complex.parseString(this.element.value);
-          if (newJc) {
-            this.state.c = newJc;
+          this.utils.sanitize();
+        },
+      },
+      utils: {
+        sanitize() {
+          let c = Complex.parseString(this.element.value);
+          if (c) {
+            this.state.c = c;
             this.linked.alert.hide();
             this.state.isClean = true;
           }
@@ -336,14 +341,19 @@ const ui = {
       },
       eventCallbacks: {
         change() {
-          let newExp = Number(this.element.value);
-          if (isNaN(newExp) || newExp < 2) {
+          this.utils.sanitize();
+        },
+      },
+      utils: {
+        sanitize() {
+          let e = Number(this.element.value);
+          if (isNaN(e) || e < 2 || !Number.isInteger(e)) {
             this.linked.alert.show();
             this.state.isClean = false;
           }
           else {
             this.linked.alert.hide();
-            this.state.e = newExp;
+            this.state.e = e;
             this.state.isClean = true;
           }
         },
@@ -368,20 +378,24 @@ const ui = {
       },
       eventCallbacks: {
         change() {
-          if (isNaN(Number(this.element.value)) || Number(this.element.value) < 1) {
-            this.linked.alert.show();
-            this.state.isClean = false;
-          }
-          else {
-            this.state.iters = Number(this.element.value);
-            this.utils.clean();
-          }
+          this.utils.sanitize();
         },
       },
       utils: {
         clean() {
           this.linked.alert.hide();
           this.state.isClean = true;
+        },
+        sanitize() {
+          let i = Number(this.element.value)
+          if (isNaN(i) || i < 1) {
+            this.linked.alert.show();
+            this.state.isClean = false;
+          }
+          else {
+            this.state.iters = i;
+            this.utils.clean();
+          }
         },
       },
     }),
@@ -469,17 +483,23 @@ const ui = {
       },
       eventCallbacks: {
         change() {
-          if (isNaN(Number(this.element.value)) || Number(this.element.value) < 2) {
+          this.utils.sanitize();
+        },
+      },
+      utils: {
+        sanitize() {
+          let er = Number(this.element.value)
+          if (isNaN(er) || er < 2) {
             this.linked.alert.show();
             this.state.isClean = false;
           }
           else {
-            this.state.er = Number(this.element.value);
+            this.state.er = er;
             this.linked.alert.hide();
             this.state.isClean = true;
           }
         },
-      },    
+      },
     }),
 
     escapeRadiusAlert: new TextElement({
