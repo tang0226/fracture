@@ -16,37 +16,35 @@ function setCanvasDim(w, h) {
 
 setCanvasDim(window.innerWidth - 500, window.innerHeight);
 
-// Fractals
-const FRACTALS = {
-  mandelbrot: new Fractal("Mandelbrot"),
-  julia: new Fractal("Julia", {
-    c: Complex(0, 1),
-  }),
-  multibrot: new Fractal("Multibrot", {
-    e: 3,
-  }),
+
+
+const DEFAULTS = {
+  fractals: {
+    mandelbrot: new Fractal("Mandelbrot"),
+    julia: new Fractal("Julia", {
+      c: Complex(0, 1),
+    }),
+    multibrot: new Fractal("Multibrot", {
+      e: 3,
+    }),
+  },
+
+  frame: new Frame(Complex(0, 0), 4, 4),
+  gradient: new Gradient(
+    "2; 0, 0 0 0; 1, 255 255 255;"
+  ),
 };
-
-// Frames
-const DEFAULT_VIEW = new Frame(Complex(0, 0), 4, 4);
-
-
-// Gradent
-
-const DEFAULT_GRADIENT = new Gradient(
-  "2; 0, 0 0 0; 1, 255 255 255;"
-);
 
 var image = new ImageSettings({
   width: canvas.width,
   height: canvas.height,
-  fractal: FRACTALS.mandelbrot.copy(),
+  fractal: DEFAULTS.fractals.mandelbrot.copy(),
   fractalSettings: {
     iters: 1000,
     escapeRadius: 256,
   },
   srcFrame: new Frame([-0.5, 0], 4, 4),
-  gradient: DEFAULT_GRADIENT,
+  gradient: DEFAULTS.gradient,
   gradientSettings: { itersPerCycle: null},
   colorSettings: { smoothColoring: true},
 });
@@ -232,7 +230,7 @@ const UI = {
                 escapeRadius: er.state.er,
               },
               srcFrame: last.srcFrame,
-              gradient: DEFAULT_GRADIENT,
+              gradient: DEFAULTS.gradient,
               gradientSettings: { itersPerCycle: null},
               colorSettings: { smoothColoring: true},
             };
@@ -264,7 +262,7 @@ const UI = {
       },
       eventCallbacks: {
         change() {
-          let newFractal = FRACTALS[this.element.value.toLowerCase()];
+          let newFractal = DEFAULTS.fractals[this.element.value.toLowerCase()];
           this.state.fractalType = newFractal.name; // check this
           if (newFractal.meta.reqJuliaConst) {
             this.linked.juliaConstant.showContainer();
