@@ -38,20 +38,19 @@ const DEFAULTS = {
   ),
 };
 
-var image = new ImageSettings({
+DEFAULTS.imageSettings = new ImageSettings({
   width: canvas.width,
   height: canvas.height,
   fractal: DEFAULTS.fractals.mandelbrot.copy(),
   fractalSettings: {
-    iters: 1000,
-    escapeRadius: 256,
+    iters: DEFAULTS.iters,
+    escapeRadius: DEFAULTS.escapeRadius,
   },
-  srcFrame: new Frame([-0.5, 0], 4, 4),
+  srcFrame: DEFAULTS.frame,
   gradient: DEFAULTS.gradient,
   gradientSettings: { itersPerCycle: null},
   colorSettings: { smoothColoring: true},
 });
-
 
 // Define elements first, before links
 const UI = {
@@ -59,7 +58,7 @@ const UI = {
     mainCanvas: new Canvas({
       id: "main-canvas",
       state: {
-        currSettings: ImageSettings.reconstruct(image),
+        currSettings: ImageSettings.reconstruct(DEFAULTS.imageSettings),
       },
       utils: {
         render: function(imageSettings, renderSettings) {
