@@ -258,9 +258,9 @@ const UI = {
       id: "fractal-type",
       dispStyle: "inline",
       containerId: "fractal-select-container",
-      init() {
-        this.element.value = "Mandelbrot";
-        this.state.fractalType = "Mandelbrot";
+      value: "Mandelbrot",
+      state: {
+        fractalType: "Mandelbrot",
       },
       eventCallbacks: {
         change() {
