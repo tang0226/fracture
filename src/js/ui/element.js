@@ -47,6 +47,11 @@ class Element {
     this.addLinkedObject = this.link = function(key, obj) {
       this.linked[key] = obj;
     };
+
+    if (params.init) {
+      this.init = params.init.bind(this);
+      this.init();
+    }
   }
 
   show(dispStyle) {

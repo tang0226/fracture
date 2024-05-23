@@ -258,9 +258,9 @@ const UI = {
       id: "fractal-type",
       dispStyle: "inline",
       containerId: "fractal-select-container",
-      value: "Mandelbrot",
-      state: {
-        fractalType: "Mandelbrot",
+      init() {
+        this.element.value = "Mandelbrot";
+        this.state.fractalType = "Mandelbrot";
       },
       eventCallbacks: {
         change() {
@@ -303,6 +303,10 @@ const UI = {
         isClean: false,
         isUsed: false,
       },
+      init() {
+        // Hide; container has no Element object, so we must hardcode
+        this.container.style.display = "none";
+      },
       eventCallbacks: {
         change() {
           this.utils.sanitize();
@@ -339,6 +343,9 @@ const UI = {
         isClean: false,
         isUsed: false,
       },
+      init() {
+        this.container.style.display = "none";
+      },
       eventCallbacks: {
         change() {
           this.utils.sanitize();
@@ -370,7 +377,7 @@ const UI = {
       id: "iterations",
       dispStyle: "inline",
       containerId: "iterations-container",
-      value: "100",
+      value: 100,
       state: {
         iters: 100,
         isClean: true,
@@ -409,7 +416,7 @@ const UI = {
     iterationIncrement: new TextInput({
       id: "iteration-increment",
       dispStyle: "inline",
-      value: "100",
+      value: 100,
       state: {
         iterIncr: 100,
         isClean: true,
@@ -475,7 +482,7 @@ const UI = {
       id: "escape-radius",
       containerId: "escape-radius-container",
       dispStyle: "inline",
-      value: "256",
+      value: 256,
       state: {
         er: 256,
         isClean: true,
