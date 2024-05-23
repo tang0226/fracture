@@ -48,8 +48,8 @@ class Element {
     this.linked[key] = obj;
   }
 
-  show() {
-    this.element.style.display = this.dispStyle;
+  show(dispStyle) {
+    this.element.style.display = dispStyle || this.dispStyle;
   }
 
   hide() {
