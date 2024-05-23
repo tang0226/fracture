@@ -29,6 +29,9 @@ const DEFAULTS = {
     }),
   },
 
+  iters: 1000,
+  escapeRadius: 256,
+
   frame: new Frame(Complex(0, 0), 4, 4),
   gradient: new Gradient(
     "2; 0, 0 0 0; 1, 255 255 255;"
