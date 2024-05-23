@@ -17,7 +17,7 @@ function setCanvasDim(w, h) {
 setCanvasDim(window.innerWidth - 500, window.innerHeight);
 
 // Fractals
-const fractals = {
+const FRACTALS = {
   mandelbrot: new Fractal("Mandelbrot"),
   julia: new Fractal("Julia", {
     c: Complex(0, 1),
@@ -28,32 +28,32 @@ const fractals = {
 };
 
 // Frames
-const defaultView = new Frame(Complex(0, 0), 4, 4);
+const DEFAULT_VIEW = new Frame(Complex(0, 0), 4, 4);
 
 
 // Gradent
 
-const defaultGradient = new Gradient(
+const DEFAULT_GRADIENT = new Gradient(
   "2; 0, 0 0 0; 1, 255 255 255;"
 );
 
 var image = new ImageSettings({
   width: canvas.width,
   height: canvas.height,
-  fractal: fractals.mandelbrot.copy(),
+  fractal: FRACTALS.mandelbrot.copy(),
   fractalSettings: {
     iters: 1000,
     escapeRadius: 256,
   },
   srcFrame: new Frame([-0.5, 0], 4, 4),
-  gradient: defaultGradient,
+  gradient: DEFAULT_GRADIENT,
   gradientSettings: { itersPerCycle: null},
   colorSettings: { smoothColoring: true},
 });
 
 
 // Define elements first, before links
-const ui = {
+const UI = {
   elements: {
     mainCanvas: new Canvas({
       id: "main-canvas",
@@ -232,7 +232,7 @@ const ui = {
                 escapeRadius: er.state.er,
               },
               srcFrame: last.srcFrame,
-              gradient: defaultGradient,
+              gradient: DEFAULT_GRADIENT,
               gradientSettings: { itersPerCycle: null},
               colorSettings: { smoothColoring: true},
             };
@@ -264,7 +264,7 @@ const ui = {
       },
       eventCallbacks: {
         change() {
-          let newFractal = fractals[this.element.value.toLowerCase()];
+          let newFractal = FRACTALS[this.element.value.toLowerCase()];
           this.state.fractalType = newFractal.name; // check this
           if (newFractal.meta.reqJuliaConst) {
             this.linked.juliaConstant.showContainer();
@@ -527,7 +527,7 @@ const ui = {
 };
 
 // Alias for elements object
-var elements = ui.elements;
+var elements = UI.elements;
 
 // Define links here
 elements.render.link("canvas", elements.mainCanvas);
