@@ -19,9 +19,7 @@ canvas {
   margin: 0px;
   padding: 0px;
 
-  z-index: 2;
-
-  background-color: white;
+  overflow-y: scroll;
 }
 
 section, div, input, select {
