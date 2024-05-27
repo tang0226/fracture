@@ -61,9 +61,13 @@ const UI = {
         currSettings: ImageSettings.reconstruct(DEFAULTS.imageSettings),
       },
       utils: {
-        render: function(imageSettings, renderSettings) {
+        pushSettings(newSettings) {
           this.state.lastSettings = ImageSettings.reconstruct(this.state.currSettings);
           this.state.currSettings = ImageSettings.reconstruct(imageSettings);
+        },
+        
+        render(imageSettings, renderSettings) {
+          this.utils.pushSettings(imageSettings);
           this.state.rendering = true;
 
           this.state.renderWorker = new Worker("./js/render-worker.js");
