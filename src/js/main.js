@@ -221,7 +221,7 @@ const UI = {
               width: canvas.width,
               height: canvas.height,
               fractal: new Fractal(
-                frac.state.fractalType,
+                frac.state.fractal.name,
                 {
                   c: c.state.c || undefined,
                   e: e.state.e || undefined,
@@ -260,38 +260,43 @@ const UI = {
       containerId: "fractal-select-container",
       value: "Mandelbrot",
       state: {
-        fractalType: "Mandelbrot",
+        fractal: DEFAULTS.fractals.mandelbrot.copy(),
       },
       eventCallbacks: {
         change() {
-          let newFractal = DEFAULTS.fractals[this.element.value.toLowerCase()];
-          this.state.fractalType = newFractal.name; // check this
-          if (newFractal.meta.reqJuliaConst) {
-            this.linked.juliaConstant.showContainer();
-            this.linked.juliaConstant.state.isUsed = true;
-          }
-          else {
-            this.linked.juliaConstant.hideContainer();
-            this.linked.juliaConstant.set("");
-            this.linked.juliaConstant.jc = null;
-            this.linked.juliaConstantAlert.hide();
-            this.linked.juliaConstant.state.isClean = false;
-            this.linked.juliaConstant.state.isUsed = false;
-          }
-          if (newFractal.meta.reqExponent) {
-            this.linked.exponent.showContainer();
-            this.linked.exponent.state.isUsed = true;
-          }
-          else {
-            this.linked.exponent.hideContainer();
-            this.linked.exponent.set("");
-            this.linked.exponent.e = null;
-            this.linked.exponentAlert.hide();
-            this.linked.exponent.state.isClean = false;
-            this.linked.exponent.state.isUsed = false;
-          }
+          this.state.fractal = DEFAULTS.fractals[this.element.value.toLowerCase()].copy();
+          this.utils.updateParameterDisplays();
         },
       },
+      utils: {
+        updateParameterDisplays() {
+          let l = this.linked
+          if (this.state.fractal.meta.reqJuliaConst) {
+            l.juliaConstant.showContainer();
+            l.juliaConstant.state.isUsed = true;
+          }
+          else {
+            l.juliaConstant.hideContainer();
+            l.juliaConstant.set("");
+            l.juliaConstant.jc = null;
+            l.juliaConstantAlert.hide();
+            l.juliaConstant.state.isClean = false;
+            l.juliaConstant.state.isUsed = false;
+          }
+          if (this.state.fractal.meta.reqExponent) {
+            l.exponent.showContainer();
+            l.exponent.state.isUsed = true;
+          }
+          else {
+            l.exponent.hideContainer();
+            l.exponent.set("");
+            l.exponent.e = null;
+            l.exponentAlert.hide();
+            l.exponent.state.isClean = false;
+            l.exponent.state.isUsed = false;
+          }
+        },
+      }
     }),
 
     juliaConstant: new TextInput({
