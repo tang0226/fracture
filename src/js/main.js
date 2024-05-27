@@ -197,6 +197,8 @@ const UI = {
             e = this.linked.exponent,
             iters = this.linked.iterations,
             er = this.linked.escapeRadius;
+          
+          if (canvas.state.rendering) return;
             
           let canRender = true;
 
@@ -237,7 +239,6 @@ const UI = {
               colorSettings: { smoothColoring: true},
             };
             
-
             canvas.utils.render(settings);
           }
         },
