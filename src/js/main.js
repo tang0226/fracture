@@ -265,7 +265,11 @@ const UI = {
       },
       eventCallbacks: {
         change() {
-          this.state.fractal = DEFAULTS.fractals[this.element.value.toLowerCase()].copy();
+          let newFractal = DEFAULTS.fractals[this.element.value.toLowerCase()].copy();
+          this.state.fractal = {
+            name: newFractal.name,
+            meta: newFractal.meta,
+          };
           this.utils.updateParameterDisplays();
         },
       },
