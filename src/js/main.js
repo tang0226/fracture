@@ -29,10 +29,13 @@ const DEFAULTS = {
     }),
   },
 
-  iters: 1000,
+  iters: 100,
   escapeRadius: 256,
 
-  frame: new Frame(Complex(0, 0), 4, 4),
+  srcFrame: new Frame(Complex(0, 0), 4, 4),
+  specialSrcFrame: {
+    mandelbrot: new Frame(Complex(-0.5, 0), 4, 4),
+  },
   gradient: new Gradient(
     "2; 0, 0 0 0; 1, 255 255 255;"
   ),
@@ -46,7 +49,7 @@ DEFAULTS.imageSettings = new ImageSettings({
     iters: DEFAULTS.iters,
     escapeRadius: DEFAULTS.escapeRadius,
   },
-  srcFrame: DEFAULTS.frame,
+  srcFrame: DEFAULTS.specialSrcFrame.mandelbrot,
   gradient: DEFAULTS.gradient,
   gradientSettings: { itersPerCycle: null},
   colorSettings: { smoothColoring: true},
@@ -63,9 +66,9 @@ const UI = {
       utils: {
         pushSettings(newSettings) {
           this.state.lastSettings = ImageSettings.reconstruct(this.state.currSettings);
-          this.state.currSettings = ImageSettings.reconstruct(imageSettings);
+          this.state.currSettings = ImageSettings.reconstruct(newSettings);
         },
-        
+
         render(imageSettings, renderSettings) {
           this.utils.pushSettings(imageSettings);
           this.state.rendering = true;
@@ -100,7 +103,7 @@ const UI = {
           });
         },
 
-        cancelRender: function(skipMsg) {
+        cancelRender(skipMsg) {
           if (this.state.rendering) {
             this.state.renderWorker.terminate();
             this.state.rendering = false;
@@ -275,6 +278,24 @@ const UI = {
             meta: newFractal.meta,
           };
           this.utils.updateParameterDisplays();
+
+          let l = this.linked;
+          
+          l.iters.set(DEFAULTS.iters);
+          l.iters.state.iters = DEFAULTS.iters;
+          l.iters.utils.clean();
+
+          l.er.set(DEFAULTS.escapeRadius);
+          l.er.state.er = DEFAULTS.escapeRadius;
+          l.er.utils.clean();
+
+          // Frame
+          let newSettings = l.canvas.state.currSettings.copy();
+          newSettings.setSrcFrame(
+            DEFAULTS.specialSrcFrame[this.state.fractal.name.toLowerCase()] ||
+            DEFAULTS.srcFrame
+          );
+          l.canvas.utils.pushSettings(newSettings);
         },
       },
       utils: {
@@ -512,7 +533,7 @@ const UI = {
           this.linked.alert.hide();
           this.state.isClean = true;
         },
-        
+
         sanitize() {
           let er = Number(this.element.value)
           if (isNaN(er) || er < 2) {
@@ -574,6 +595,9 @@ elements.fractalType.link("juliaConstant", elements.juliaConstant);
 elements.fractalType.link("juliaConstantAlert", elements.juliaConstantAlert);
 elements.fractalType.link("exponent", elements.exponent);
 elements.fractalType.link("exponentAlert", elements.exponentAlert);
+elements.fractalType.link("iters", elements.iterations);
+elements.fractalType.link("er", elements.escapeRadius);
+elements.fractalType.link("canvas", elements.mainCanvas);
 
 elements.juliaConstant.link("alert", elements.juliaConstantAlert);
 
