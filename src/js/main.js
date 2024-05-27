@@ -508,6 +508,11 @@ const UI = {
         },
       },
       utils: {
+        clean() {
+          this.linked.alert.hide();
+          this.state.isClean = true;
+        },
+        
         sanitize() {
           let er = Number(this.element.value)
           if (isNaN(er) || er < 2) {
@@ -516,8 +521,7 @@ const UI = {
           }
           else {
             this.state.er = er;
-            this.linked.alert.hide();
-            this.state.isClean = true;
+            this.utils.clean();
           }
         },
       },
