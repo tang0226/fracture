@@ -7,6 +7,10 @@ const DEFAULTS = {
     multibrot: new Fractal("Multibrot", {
       e: 3,
     }),
+    multijulia: new Fractal("Multijulia", {
+      e: 3,
+      c: Complex(0, 1),
+    }),
   },
 
   iters: 100,
@@ -129,7 +133,7 @@ const UI = {
               Math.min(this.state.startDragX, this.state.mouseX),
               0, this.width, frame.reMin, frame.reMin + frame.reWidth
             );
-            
+
             let im = scale(
               Math.min(this.state.startDragY, this.state.mouseY),
               0, this.height, frame.imMin, frame.imMin + frame.imHeight

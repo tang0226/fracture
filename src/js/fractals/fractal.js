@@ -82,6 +82,8 @@ class Fractal {
 
           let iters = imageSettings.fractalSettings.iters;
           let er = imageSettings.fractalSettings.escapeRadius;
+          let smoothColoring = imageSettings.fractalSettings.smoothColoring;
+
 
           let n = 0;
           while (Complex.abs(z) <= er && n < iters) {
@@ -92,7 +94,7 @@ class Fractal {
             n++;
           }
       
-          if (imageSettings.colorSettings.smoothColoring && n != iters) {
+          if (smoothColoring && n != iters) {
             n += 1 - Math.log(Math.log(Complex.abs(z))) / Math.log(this.constants.e);
           }
       
@@ -114,6 +116,7 @@ class Fractal {
 
           let iters = imageSettings.fractalSettings.iters;
           let er = imageSettings.fractalSettings.escapeRadius;
+          let smoothColoring = imageSettings.fractalSettings.smoothColoring;
 
           let n = 0;
           while (Complex.abs(z) <= er && n < iters) {
