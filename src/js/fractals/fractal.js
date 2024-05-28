@@ -127,7 +127,7 @@ class Fractal {
 
     let n = 0;
     while (Complex.abs(z) <= er && n < iters) {
-      z = iterFunc(z, iterSettings.fractal.constants.c, e);
+      z = iterFunc(z, iterSettings.c, e);
       n++;
     }
 
