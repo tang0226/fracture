@@ -197,6 +197,11 @@ const UI = {
         },
       },
       utils: {
+        // Set frame for new redraw (when changing fractals)
+        queueFrame(frame) {
+          this.state.queuedFrame = frame;
+        },
+
         render() {
           let canvas = this.linked.canvas,
             frac = this.linked.fractalType,
@@ -225,7 +230,18 @@ const UI = {
           }
 
           if (canRender) {
-            let last = this.linked.canvas.state.currSettings;
+            let frame;
+
+            // If fractal changed and new frame is queued
+            if (this.state.queuedFrame) {
+              frame = this.state.queuedFrame;
+              this.state.queuedFrame = null;
+            }
+            // Otherwise, stick to current frame
+            else {
+              frame = this.linked.canvas.state.currSettings.srcFrame;
+            }
+
             let settings = {
               width: canvas.width,
               height: canvas.height,
@@ -240,7 +256,7 @@ const UI = {
                 iters: iters.state.iters,
                 escapeRadius: er.state.er,
               },
-              srcFrame: last.srcFrame,
+              srcFrame: frame,
               gradient: DEFAULTS.gradient,
               gradientSettings: { itersPerCycle: null},
               colorSettings: { smoothColoring: true},
@@ -289,13 +305,11 @@ const UI = {
           l.er.state.er = DEFAULTS.escapeRadius;
           l.er.utils.clean();
 
-          // Frame
-          let newSettings = l.canvas.state.currSettings.copy();
-          newSettings.setSrcFrame(
+          // Prepare new frame
+          l.render.utils.queueFrame(
             DEFAULTS.specialSrcFrame[this.state.fractal.name.toLowerCase()] ||
-            DEFAULTS.srcFrame
+            DEFAULTS.srcFrame,
           );
-          l.canvas.utils.pushSettings(newSettings);
         },
       },
       utils: {
@@ -597,7 +611,7 @@ elements.fractalType.link("exponent", elements.exponent);
 elements.fractalType.link("exponentAlert", elements.exponentAlert);
 elements.fractalType.link("iters", elements.iterations);
 elements.fractalType.link("er", elements.escapeRadius);
-elements.fractalType.link("canvas", elements.mainCanvas);
+elements.fractalType.link("render", elements.render);
 
 elements.juliaConstant.link("alert", elements.juliaConstantAlert);
 
