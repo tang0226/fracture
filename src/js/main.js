@@ -11,6 +11,7 @@ const DEFAULTS = {
       e: 3,
       c: Complex(0, 1),
     }),
+    burningShip: new Fractal("BurningShip"),
   },
 
   iters: 100,
@@ -19,6 +20,7 @@ const DEFAULTS = {
   srcFrame: new Frame(Complex(0, 0), 4, 4),
   specialSrcFrame: {
     mandelbrot: new Frame(Complex(-0.5, 0), 4, 4),
+    burningShip: new Frame(Complex(-0.5, -0.25), 4, 4),
   },
   gradient: new Gradient(
     "2; 0, 0 0 0; 1, 255 255 255;"

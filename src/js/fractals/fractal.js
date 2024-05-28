@@ -68,11 +68,26 @@ class Fractal {
           mandelEquivalent: "Multibrot",
         };
 
-        this.iterFunc = function(z, c, e){
+        this.iterFunc = function(z, c, e) {
           return Complex.add(
             Complex.exp(z, e), c
           );
         };
+        break
+
+      case "BurningShip":
+        this.meta = {
+          type: "escape-time",
+          iterationType: "mandelbrot",
+          juliaEquivalent: "BurningShipJulia",
+        };
+
+        this.iterFunc = function(z, c, _e) {
+          return [
+            z[0] * z[0] - z[1] * z[1] + c[0],
+            Math.abs(2 * z[0] * z[1]) + c[1]
+          ];
+        }
     }
   }
 
