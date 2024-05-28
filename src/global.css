@@ -1,7 +1,7 @@
-canvas {
+#main-canvas, #control-canvas {
   position: absolute;
-  left: 500px;
   top: 0px;
+  right: 0px;
 }
 
 .control-canvas {
@@ -13,13 +13,18 @@ canvas {
   left: 0px;
   top: 0px;
 
-  width: 500px;
   height: 100%;
+
+  background-color: white;
+  border-right: 1px solid black;
+
+  z-index: 2;
 
   margin: 0px;
   padding: 0px;
 
-  overflow-y: scroll;
+  overflow: auto;
+  resize: horizontal;
 }
 
 section, div, input, select {

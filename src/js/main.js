@@ -1,4 +1,6 @@
 const DEFAULTS = {
+  toolbarWidth: 500,
+
   fractals: {
     mandelbrot: new Fractal("Mandelbrot"),
     julia: new Fractal("Julia", {
@@ -40,7 +42,7 @@ const DEFAULTS = {
 };
 
 DEFAULTS.imageSettings = new ImageSettings({
-  width: window.innerWidth - 500,
+  width: window.innerWidth - DEFAULTS.toolbarWidth,
   height: window.innerHeight,
   fractal: DEFAULTS.fractals.mandelbrot.copy(),
   iterSettings: {
@@ -58,10 +60,19 @@ DEFAULTS.imageSettings = new ImageSettings({
 // Define elements first, before links
 const UI = {
   elements: {
+    toolbar: new Element({
+      id: "toolbar",
+      init() {
+        this.element.style.width = DEFAULTS.toolbarWidth + "px";
+      },
+    }),
     mainCanvas: new Canvas({
       id: "main-canvas",
       state: {
         currSettings: ImageSettings.reconstruct(DEFAULTS.imageSettings),
+      },
+      init() {
+        this.setDim(window.innerWidth - DEFAULTS.toolbarWidth, window.innerHeight);
       },
       utils: {
         pushSettings(newSettings) {
@@ -118,6 +129,9 @@ const UI = {
     controlCanvas: new Canvas({
       id: "control-canvas",
       interactive: true,
+      init() {
+        this.setDim(window.innerWidth - DEFAULTS.toolbarWidth, window.innerHeight);
+      },
       eventCallbacks: {
         mouseMove() {
           if (this.state.mouseDown) {
@@ -594,6 +608,24 @@ const UI = {
       }
     }),
 
+    resize: new Button({
+      id: "resize",
+      eventCallbacks: {
+        click() {
+          if (!this.linked.mainCanvas.state.rendering) {
+            let dim = [
+              window.innerWidth - CSSpxToNumber(this.linked.toolbar.element.style.width),
+              window.innerHeight
+            ];
+            this.linked.mainCanvas.setDim(...dim);
+            this.linked.controlCanvas.setDim(...dim);
+  
+            this.linked.render.utils.render();
+          }
+        },
+      },
+    }),
+
     settingsJson: new TextInput({
       id: "settings-json",
     }),
@@ -660,14 +692,13 @@ elements.escapeRadius.link("alert", elements.escapeRadiusAlert);
 elements.reset.link("render", elements.render);
 elements.reset.link("fractalType", elements.fractalType);
 
+elements.resize.link("toolbar", elements.toolbar);
+elements.resize.link("mainCanvas", elements.mainCanvas);
+elements.resize.link("controlCanvas", elements.controlCanvas);
+elements.resize.link("render", elements.render);
+
 elements.importSettings.link("settingsJson", elements.settingsJson);
 elements.importSettings.link("canvas", elements.mainCanvas);
-
-var canvasWidth = window.innerWidth - 500;
-var canvasHeight = window.innerHeight;
-
-elements.mainCanvas.setDim(canvasWidth, canvasHeight);
-elements.controlCanvas.setDim(canvasWidth, canvasHeight);
 
 // Initial render
 elements.render.utils.render();
