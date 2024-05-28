@@ -14,6 +14,8 @@ onmessage = function(event) {
     let lastUpdateTime = new Date();
 
     let settings = ImageSettings.reconstruct(data.settings);
+    let iterate = settings.fractal.meta.iterationType == "mandelbrot" ?
+      Fractal.iterateMandelbrot : Fractal.iterateJulia;
 
     let currChunk = [];
     let currChunkHeight = 0;
@@ -23,13 +25,15 @@ onmessage = function(event) {
     for (let y = 0; y < settings.height; y++) {
       let im = settings.frame.imMin + y * settings.complexIter;
       for (let x = 0; x < settings.width; x++) {
-        let val = settings.fractal.iterFunc(
-          [
-            settings.frame.reMin + x * settings.complexIter,
-            settings.frame.imMin + y * settings.complexIter
-          ],
-          settings
-        );
+        let val = iterate(
+            [
+              settings.frame.reMin + x * settings.complexIter,
+              settings.frame.imMin + y * settings.complexIter
+            ],
+            settings.fractal.iterFunc,
+            settings,
+            settings.fractal.constants.e || 2
+          );
         if (val == settings.fractalSettings.iters) {
           currChunk[i] = 0;
           currChunk[i + 1] = 0;

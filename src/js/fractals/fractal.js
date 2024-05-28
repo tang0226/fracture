@@ -15,28 +15,15 @@ class Fractal {
           juliaEquivalent: "Julia",
         };
 
-        this.iterFunc = function(c, imageSettings) {
-          let z = [0, 0];
+        this.iterFunc = function(z, c, _e) {
+          return [
+            z[0] * z[0] - z[1] * z[1] + c[0],
+            2 * z[0] * z[1] + c[1]
+          ]
+        };
 
-          let iters = imageSettings.fractalSettings.iters;
-          let er = imageSettings.fractalSettings.escapeRadius;
-
-          let n = 0;
-          while (Complex.abs(z) <= er && n < iters) {
-            let temp = z[0] * z[0] - z[1] * z[1] + c[0];
-            z[1] = 2 * z[0] * z[1] + c[1];
-            z[0] = temp;
-    
-            n++;
-          }
-          
-          if (imageSettings.colorSettings.smoothColoring && n != iters) {
-            n += 1 - Math.log(Math.log(Complex.abs(z))) / Math.log(2);
-          }
-          
-          return n;
-        }
         break;
+
 
       case "Julia":
         this.meta = {
@@ -46,29 +33,16 @@ class Fractal {
           mandelEquivalent: "Mandelbrot",
         };
     
-        this.iterFunc = function(z0, imageSettings) {
-          let z = [z0[0], z0[1]];
-
-          let iters = imageSettings.fractalSettings.iters;
-          let er = imageSettings.fractalSettings.escapeRadius;
-
-          let n = 0;
-          while (Complex.abs(z) <= er && n < iters) {
-            let temp = z[0] * z[0] - z[1] * z[1] + this.constants.c[0];
-            z[1] = 2 * z[0] * z[1] + this.constants.c[1];
-            z[0] = temp;
-    
-            n++;
-          }
-          
-          if (imageSettings.colorSettings.smoothColoring && n != iters) {
-            n += 1 - Math.log(Math.log(Complex.abs(z))) / Math.log(2);
-          }
-          
-          return n;
+        this.iterFunc = function(z, c, _e) {
+          return [
+            z[0] * z[0] - z[1] * z[1] + c[0],
+            2 * z[0] * z[1] + c[1]
+          ];
         };
+
         break;
-      
+
+
       case "Multibrot":
         this.meta = {
           type: "escape-time",
@@ -77,30 +51,13 @@ class Fractal {
           juliaEquivalent: "MultibrotJulia",
         };
 
-        this.iterFunc = function(c, imageSettings) {
-          let z = [0, 0];
-
-          let iters = imageSettings.fractalSettings.iters;
-          let er = imageSettings.fractalSettings.escapeRadius;
-          let smoothColoring = imageSettings.colorSettings.smoothColoring;
-
-
-          let n = 0;
-          while (Complex.abs(z) <= er && n < iters) {
-            z = Complex.add(
-              Complex.exp(z, this.constants.e), c
-            );
-      
-            n++;
-          }
-      
-          if (smoothColoring && n != iters) {
-            n += 1 - Math.log(Math.log(Complex.abs(z))) / Math.log(this.constants.e);
-          }
-      
-          return n;
+        this.iterFunc = function(z, c, e) {
+          return Complex.add(
+            Complex.exp(z, e), c
+          );
         };
         break;
+
 
       case "Multijulia":
         this.meta = {
@@ -111,27 +68,10 @@ class Fractal {
           mandelEquivalent: "Multibrot",
         };
 
-        this.iterFunc = function(z0, imageSettings){
-          let z = [z0[0], z0[1]];
-
-          let iters = imageSettings.fractalSettings.iters;
-          let er = imageSettings.fractalSettings.escapeRadius;
-          let smoothColoring = imageSettings.colorSettings.smoothColoring;
-
-          let n = 0;
-          while (Complex.abs(z) <= er && n < iters) {
-            z = Complex.add(
-              Complex.exp(z, this.constants.e), this.constants.c
-            );
-      
-            n++;
-          }
-      
-          if (smoothColoring && n != iterations) {
-            n += 1 - Math.log(Math.log(Complex.abs(z))) / Math.log(this.constants.e);
-          }
-      
-          return n;
+        this.iterFunc = function(z, c, e){
+          return Complex.add(
+            Complex.exp(z, e), c
+          );
         };
     }
   }
@@ -143,6 +83,46 @@ class Fractal {
   // Reconstruct serialized object to restore class methods
   static reconstruct(fractal) {
     return new Fractal(fractal.name, fractal.constants);
+  }
+
+  // Mandelbrot-style iteration (z0 = 0, c = point)
+  static iterateMandelbrot(c, iterFunc, imageSettings, e = 2) {
+    let z = [0, 0];
+    let iters = imageSettings.fractalSettings.iters;
+    let er = imageSettings.fractalSettings.escapeRadius;
+    let smoothColoring = imageSettings.colorSettings.smoothColoring;
+
+    let n = 0;
+    while (Complex.abs(z) <= er && n < iters) {
+      z = iterFunc(z, c, e);
+      n++;
+    }
+
+    if (smoothColoring && n != iters) {
+      n += 1 - Math.log(Math.log(Complex.abs(z))) / Math.log(e);
+    }
+
+    return n;
+  }
+
+  // Julia-style iteration (z0 = point, c = const.)
+  static iterateJulia(z0, iterFunc, imageSettings, e = 2) {
+    let z = [z0[0], z0[1]];
+    let iters = imageSettings.fractalSettings.iters;
+    let er = imageSettings.fractalSettings.escapeRadius;
+    let smoothColoring = imageSettings.colorSettings.smoothColoring;
+
+    let n = 0;
+    while (Complex.abs(z) <= er && n < iters) {
+      z = iterFunc(z, imageSettings.fractal.constants.c, e);
+      n++;
+    }
+
+    if (smoothColoring && n != iters) {
+      n += 1 - Math.log(Math.log(Complex.abs(z))) / Math.log(e);
+    }
+
+    return n;
   }
 }
 
