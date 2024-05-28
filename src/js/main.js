@@ -1,23 +1,3 @@
-const canvas = new Canvas({
-  id: "main-canvas",
-});
-const controlCanvas = new Canvas({
-  id: "control-canvas",
-  interactive: true,
-  eventCallbacks: {
-
-  }
-});
-
-function setCanvasDim(w, h) {
-  canvas.setDim(w, h);
-  controlCanvas.setDim(w, h);
-}
-
-setCanvasDim(window.innerWidth - 500, window.innerHeight);
-
-
-
 const DEFAULTS = {
   fractals: {
     mandelbrot: new Fractal("Mandelbrot"),
@@ -42,8 +22,8 @@ const DEFAULTS = {
 };
 
 DEFAULTS.imageSettings = new ImageSettings({
-  width: canvas.width,
-  height: canvas.height,
+  width: window.innerWidth - 500,
+  height: window.innerHeight,
   fractal: DEFAULTS.fractals.mandelbrot.copy(),
   fractalSettings: {
     iters: DEFAULTS.iters,
@@ -54,6 +34,8 @@ DEFAULTS.imageSettings = new ImageSettings({
   gradientSettings: { itersPerCycle: null},
   colorSettings: { smoothColoring: true},
 });
+
+
 
 // Define elements first, before links
 const UI = {
@@ -135,16 +117,19 @@ const UI = {
             this.ctx.strokeRect(...params);
           }
         },
+
         mouseUp() {
           this.ctx.clearRect(0, 0, this.width, this.height);
 
           let frame = this.linked.mainCanvas.state.currSettings.frame;
           if (!(this.state.mouseX == this.state.startDragX &&
             this.state.mouseY == this.state.startDragY)) {
+
             let re = scale(
               Math.min(this.state.startDragX, this.state.mouseX),
               0, this.width, frame.reMin, frame.reMin + frame.reWidth
             );
+            
             let im = scale(
               Math.min(this.state.startDragY, this.state.mouseY),
               0, this.height, frame.imMin, frame.imMin + frame.imHeight
@@ -310,8 +295,10 @@ const UI = {
           else {
             l.juliaConstant.hideContainer();
             l.juliaConstant.set("");
-            l.juliaConstant.state.jc = null;
+
             l.juliaConstantAlert.hide();
+
+            l.juliaConstant.state.jc = null;
             l.juliaConstant.state.isClean = false;
             l.juliaConstant.state.isUsed = false;
           }
@@ -322,12 +309,15 @@ const UI = {
           else {
             l.exponent.hideContainer();
             l.exponent.set("");
-            l.exponent.state.e = null;
+
             l.exponentAlert.hide();
+
+            l.exponent.state.e = null;
             l.exponent.state.isClean = false;
             l.exponent.state.isUsed = false;
           }
         },
+
         resetInputs() {
           let l = this.linked;
           
@@ -478,12 +468,13 @@ const UI = {
       },
       eventCallbacks: {
         change() {
-          if (isNaN(Number(this.element.value)) || Number(this.element.value) < 1) {
+          let val = val;
+          if (isNaN(val) || val < 1) {
             this.linked.alert.show();
             this.state.isClean = false;
           }
           else {
-            this.state.iterIncr = Number(this.element.value);
+            this.state.iterIncr = val;
             this.linked.alert.hide();
             this.state.isClean = true;
           }
@@ -502,8 +493,8 @@ const UI = {
       eventCallbacks: {
         click() {
           if (this.linked.iterIncr.state.isClean) {
-            let newIters = this.linked.iters.state.iters +
-              this.linked.iterIncr.state.iterIncr;
+            let newIters = this.linked.iters.state.iters
+              + this.linked.iterIncr.state.iterIncr;
             
             this.linked.iters.set(newIters);
             this.linked.iters.state.iters = newIters;
@@ -518,8 +509,8 @@ const UI = {
       eventCallbacks: {
         click() {
           if (this.linked.iterIncr.state.isClean) {
-            let newIters = this.linked.iters.state.iters -
-              this.linked.iterIncr.state.iterIncr;
+            let newIters = this.linked.iters.state.iters
+              - this.linked.iterIncr.state.iterIncr;
             
             if (newIters > 0) {
               this.linked.iters.set(newIters);
@@ -553,7 +544,7 @@ const UI = {
         },
 
         sanitize() {
-          let er = Number(this.element.value)
+          let er = Number(this.element.value);
           if (isNaN(er) || er < 2) {
             this.linked.alert.show();
             this.state.isClean = false;
@@ -637,6 +628,12 @@ elements.escapeRadius.link("alert", elements.escapeRadiusAlert);
 
 elements.importSettings.link("settingsJson", elements.settingsJson);
 elements.importSettings.link("canvas", elements.mainCanvas);
+
+var canvasWidth = window.innerWidth - 500;
+var canvasHeight = window.innerHeight;
+
+elements.mainCanvas.setDim(canvasWidth, canvasHeight);
+elements.controlCanvas.setDim(canvasWidth, canvasHeight);
 
 // Initial render
 elements.render.utils.render();
