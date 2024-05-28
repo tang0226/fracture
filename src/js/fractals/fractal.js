@@ -87,23 +87,54 @@ class Fractal {
             z[0] * z[0] - z[1] * z[1] + c[0],
             Math.abs(2 * z[0] * z[1]) + c[1]
           ];
-        }
+        };
         break;
       
-        case "BurningShipJulia":
-          this.meta = {
-            type: "escape-time",
-            iterationType: "julia",
-            reqJuliaConst: true,
-            mandelEquivalent: "BurningShip",
-          };
-  
-          this.iterFunc = function(z, c, _e) {
-            return [
-              z[0] * z[0] - z[1] * z[1] + c[0],
-              Math.abs(2 * z[0] * z[1]) + c[1]
-            ];
-          }
+      case "BurningShipJulia":
+        this.meta = {
+          type: "escape-time",
+          iterationType: "julia",
+          reqJuliaConst: true,
+          mandelEquivalent: "BurningShip",
+        };
+
+        this.iterFunc = function(z, c, _e) {
+          return [
+            z[0] * z[0] - z[1] * z[1] + c[0],
+            Math.abs(2 * z[0] * z[1]) + c[1]
+          ];
+        };
+        break;
+      
+      case "Multiship":
+        this.meta = {
+          type: "escape-time",
+          iterationType: "mandelbrot",
+          reqExponent: true,
+          juliaEquivalent: "MultishipJulia",
+        };
+
+        this.iterFunc = function(z, c, e) {
+          return Complex.add(
+            Complex.exp([Math.abs(z[0]), Math.abs(z[1])], e), c
+          );
+        };
+        break;
+
+      case "MultishipJulia":
+        this.meta = {
+          type: "escape-time",
+          iterationType: "julia",
+          reqJuliaConst: true,
+          reqExponent: true,
+          mandelEquivalent: "Multiship",
+        };
+
+        this.iterFunc = function(z, c, e) {
+          return Complex.add(
+            Complex.exp([Math.abs(z[0]), Math.abs(z[1])], e), c
+          );
+        };
     }
   }
 
@@ -116,7 +147,7 @@ class Fractal {
     return new Fractal(fractal.id, fractal.constants);
   }
 
-  // Mandelbrot-style iteration (z0 = 0, c = point)
+  // Mandelbrot-style iteration wrapper (z0 = 0, c = point)
   static iterateMandelbrot(c, iterFunc, iterSettings, e = 2) {
     let z = [0, 0];
     let iters = iterSettings.iters;
@@ -135,7 +166,7 @@ class Fractal {
     return n;
   }
 
-  // Julia-style iteration (z0 = point, c = const.)
+  // Julia-style iteration wrapper (z0 = point, c = const.)
   static iterateJulia(z0, iterFunc, iterSettings, e = 2) {
     let z = [z0[0], z0[1]];
     let iters = iterSettings.iters;

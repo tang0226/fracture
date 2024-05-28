@@ -15,6 +15,13 @@ const DEFAULTS = {
     burningShipJulia: new Fractal("BurningShipJulia", {
       c: Complex(0, 1),
     }),
+    multiship: new Fractal("Multiship", {
+      e: 3,
+    }),
+    multishipJulia: new Fractal("MultishipJulia", {
+      e: 3,
+      c: Complex(0, 1),
+    }),
   },
 
   iters: 100,
