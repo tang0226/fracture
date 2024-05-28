@@ -55,7 +55,6 @@ onmessage = function(event) {
 
       let t = new Date() - lastUpdateTime;
       if (t >= 200 || y == settings.height - 1) {
-        let arr = new Uint8ClampedArray(currChunk);
         postMessage({
           type: "update",
           imgData: new ImageData(
