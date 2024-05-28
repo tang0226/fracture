@@ -22,6 +22,7 @@ const DEFAULTS = {
       e: 3,
       c: Complex(0, 1),
     }),
+    tricorn: new Fractal("Tricorn"),
   },
 
   iters: 100,
@@ -31,6 +32,7 @@ const DEFAULTS = {
   specialSrcFrame: {
     mandelbrot: new Frame(Complex(-0.5, 0), 4, 4),
     burningShip: new Frame(Complex(-0.5, -0.25), 4, 4),
+    tricorn: new Frame(Complex(-0.25, 0), 4, 4)
   },
   gradient: new Gradient(
     "2; 0, 0 0 0; 1, 255 255 255;"

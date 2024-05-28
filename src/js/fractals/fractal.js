@@ -135,6 +135,21 @@ class Fractal {
             Complex.exp([Math.abs(z[0]), Math.abs(z[1])], e), c
           );
         };
+        break;
+
+      case "Tricorn":
+        this.meta = {
+          type: "escape-time",
+          iterationType: "mandelbrot",
+          mandelEquivalent: "TricornJulia",
+        };
+
+        this.iterFunc = function(z, c, e) {
+          return [
+            z[0] * z[0] - z[1] * z[1] + c[0],
+            -2 * z[0] * z[1] + c[1]
+          ];
+        };
     }
   }
 
