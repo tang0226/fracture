@@ -198,8 +198,11 @@ const UI = {
       },
       utils: {
         // Set frame for new redraw (when changing fractals)
-        queueFrame(frame) {
-          this.state.queuedFrame = frame;
+        queueDefaultFrame() {
+          this.state.queuedFrame =
+            DEFAULTS.specialSrcFrame[
+              pascalToCamel(this.linked.fractalType.element.value)
+            ] || DEFAULTS.srcFrame;
         },
 
         render() {
@@ -211,7 +214,7 @@ const UI = {
             er = this.linked.escapeRadius;
           
           if (canvas.state.rendering) return;
-            
+
           let canRender = true;
 
           // check conditional inputs
@@ -288,28 +291,13 @@ const UI = {
       },
       eventCallbacks: {
         change() {
-          let newFractal = DEFAULTS.fractals[this.element.value.toLowerCase()].copy();
+          let newFractal = DEFAULTS.fractals[pascalToCamel(this.element.value)].copy();
           this.state.fractal = {
             name: newFractal.name,
             meta: newFractal.meta,
           };
           this.utils.updateParameterDisplays();
-
-          let l = this.linked;
-          
-          l.iters.set(DEFAULTS.iters);
-          l.iters.state.iters = DEFAULTS.iters;
-          l.iters.utils.clean();
-
-          l.er.set(DEFAULTS.escapeRadius);
-          l.er.state.er = DEFAULTS.escapeRadius;
-          l.er.utils.clean();
-
-          // Prepare new frame
-          l.render.utils.queueFrame(
-            DEFAULTS.specialSrcFrame[this.state.fractal.name.toLowerCase()] ||
-            DEFAULTS.srcFrame,
-          );
+          this.utils.resetInputs();
         },
       },
       utils: {
@@ -340,6 +328,20 @@ const UI = {
             l.exponent.state.isUsed = false;
           }
         },
+        resetInputs() {
+          let l = this.linked;
+          
+          l.iters.set(DEFAULTS.iters);
+          l.iters.state.iters = DEFAULTS.iters;
+          l.iters.utils.clean();
+
+          l.er.set(DEFAULTS.escapeRadius);
+          l.er.state.er = DEFAULTS.escapeRadius;
+          l.er.utils.clean();
+
+          // Prepare new frame based on fractal type selected
+          l.render.utils.queueDefaultFrame();
+        },
       }
     }),
 
@@ -359,6 +361,7 @@ const UI = {
       eventCallbacks: {
         change() {
           this.utils.sanitize();
+          this.linked.fractalType.utils.resetInputs();
         },
       },
       utils: {
@@ -398,6 +401,7 @@ const UI = {
       eventCallbacks: {
         change() {
           this.utils.sanitize();
+          this.linked.fractalType.utils.resetInputs();
         },
       },
       utils: {
@@ -614,8 +618,10 @@ elements.fractalType.link("er", elements.escapeRadius);
 elements.fractalType.link("render", elements.render);
 
 elements.juliaConstant.link("alert", elements.juliaConstantAlert);
+elements.juliaConstant.link("fractalType", elements.fractalType);
 
 elements.exponent.link("alert", elements.exponentAlert);
+elements.exponent.link("fractalType", elements.fractalType);
 
 elements.iterations.link("alert", elements.iterationsAlert);
 

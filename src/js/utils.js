@@ -1,3 +1,7 @@
+function pascalToCamel(str) {
+  return str.charAt(0).toLowerCase() + str.slice(1);
+}
+
 function msToTime(ms) {
   let str = " ms";
   str = (ms % 1000) + str;
