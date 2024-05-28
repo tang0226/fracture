@@ -12,6 +12,9 @@ const DEFAULTS = {
       c: Complex(0, 1),
     }),
     burningShip: new Fractal("BurningShip"),
+    burningShipJulia: new Fractal("BurningShipJulia", {
+      c: Complex(0, 1),
+    }),
   },
 
   iters: 100,

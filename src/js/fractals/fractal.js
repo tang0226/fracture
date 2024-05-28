@@ -73,7 +73,7 @@ class Fractal {
             Complex.exp(z, e), c
           );
         };
-        break
+        break;
 
       case "BurningShip":
         this.meta = {
@@ -88,6 +88,22 @@ class Fractal {
             Math.abs(2 * z[0] * z[1]) + c[1]
           ];
         }
+        break;
+      
+        case "BurningShipJulia":
+          this.meta = {
+            type: "escape-time",
+            iterationType: "julia",
+            reqJuliaConst: true,
+            mandelEquivalent: "BurningShip",
+          };
+  
+          this.iterFunc = function(z, c, _e) {
+            return [
+              z[0] * z[0] - z[1] * z[1] + c[0],
+              Math.abs(2 * z[0] * z[1]) + c[1]
+            ];
+          }
     }
   }
 
