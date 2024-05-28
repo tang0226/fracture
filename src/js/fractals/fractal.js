@@ -86,11 +86,10 @@ class Fractal {
   }
 
   // Mandelbrot-style iteration (z0 = 0, c = point)
-  static iterateMandelbrot(c, iterFunc, imageSettings, e = 2) {
+  static iterateMandelbrot(c, iterFunc, iterSettings, e = 2) {
     let z = [0, 0];
-    let iters = imageSettings.fractalSettings.iters;
-    let er = imageSettings.fractalSettings.escapeRadius;
-    let smoothColoring = imageSettings.colorSettings.smoothColoring;
+    let iters = iterSettings.iters;
+    let er = iterSettings.escapeRadius;
 
     let n = 0;
     while (Complex.abs(z) <= er && n < iters) {
@@ -98,7 +97,7 @@ class Fractal {
       n++;
     }
 
-    if (smoothColoring && n != iters) {
+    if (iterSettings.smoothColoring && n != iters) {
       n += 1 - Math.log(Math.log(Complex.abs(z))) / Math.log(e);
     }
 
@@ -106,19 +105,18 @@ class Fractal {
   }
 
   // Julia-style iteration (z0 = point, c = const.)
-  static iterateJulia(z0, iterFunc, imageSettings, e = 2) {
+  static iterateJulia(z0, iterFunc, iterSettings, e = 2) {
     let z = [z0[0], z0[1]];
-    let iters = imageSettings.fractalSettings.iters;
-    let er = imageSettings.fractalSettings.escapeRadius;
-    let smoothColoring = imageSettings.colorSettings.smoothColoring;
+    let iters = iterSettings.iters;
+    let er = iterSettings.escapeRadius;
 
     let n = 0;
     while (Complex.abs(z) <= er && n < iters) {
-      z = iterFunc(z, imageSettings.fractal.constants.c, e);
+      z = iterFunc(z, iterSettings.fractal.constants.c, e);
       n++;
     }
 
-    if (smoothColoring && n != iters) {
+    if (iterSettings.smoothColoring && n != iters) {
       n += 1 - Math.log(Math.log(Complex.abs(z))) / Math.log(e);
     }
 

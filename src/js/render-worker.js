@@ -31,17 +31,17 @@ onmessage = function(event) {
               settings.frame.imMin + y * settings.complexIter
             ],
             settings.fractal.iterFunc,
-            settings,
+            settings.iterSettings,
             settings.fractal.constants.e || 2
           );
-        if (val == settings.fractalSettings.iters) {
+        if (val == settings.iterSettings.iters) {
           currChunk[i] = 0;
           currChunk[i + 1] = 0;
           currChunk[i + 2] = 0;
           currChunk[i + 3] = 255;
         }
         else {
-          let bw = 255 * val / settings.fractalSettings.iters;
+          let bw = 255 * val / settings.iterSettings.iters;
           currChunk[i] = bw;
           currChunk[i + 1] = bw;
           currChunk[i + 2] = bw;

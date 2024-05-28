@@ -29,14 +29,14 @@ DEFAULTS.imageSettings = new ImageSettings({
   width: window.innerWidth - 500,
   height: window.innerHeight,
   fractal: DEFAULTS.fractals.mandelbrot.copy(),
-  fractalSettings: {
+  iterSettings: {
     iters: DEFAULTS.iters,
     escapeRadius: DEFAULTS.escapeRadius,
+    smoothColoring: true,
   },
   srcFrame: DEFAULTS.specialSrcFrame.mandelbrot,
   gradient: DEFAULTS.gradient,
   gradientSettings: { itersPerCycle: null},
-  colorSettings: { smoothColoring: true},
 });
 
 
@@ -244,14 +244,14 @@ const UI = {
                   e: e.state.e || undefined,
                 },
               ),
-              fractalSettings: {
+              iterSettings: {
                 iters: iters.state.iters,
                 escapeRadius: er.state.er,
+                smoothColoring: true,
               },
               srcFrame: frame,
               gradient: DEFAULTS.gradient,
               gradientSettings: { itersPerCycle: null},
-              colorSettings: { smoothColoring: true},
             };
             
             canvas.utils.render(settings);

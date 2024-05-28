@@ -31,15 +31,13 @@ class ImageSettings {
       this.gradient = params.gradient.copy();
     }
 
-    this.fractalSettings = {...params.fractalSettings};
+    this.iterSettings = {...params.iterSettings};
 
     this.frame = this.srcFrame.fitToCanvas(params.width, params.height);
 
     this.gradientSettings = {
       itersPerCycle: params.gradientSettings.itersPerCycle,
     };
-
-    this.colorSettings = {...params.colorSettings};
 
     
     // Distance between / width of pixels on the complex plane
