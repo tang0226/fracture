@@ -581,6 +581,19 @@ const UI = {
       hide: true,
     }),
 
+    reset: new Button({
+      id: "reset",
+      dispStyle: "inline",
+      eventCallbacks: {
+        click() {
+          // Reset frame, reset iters, er, etc. then render
+          this.linked.render.utils.queueDefaultFrame();
+          this.linked.fractalType.utils.resetInputs();
+          this.linked.render.utils.render();
+        },
+      }
+    }),
+
     settingsJson: new TextInput({
       id: "settings-json",
     }),
@@ -643,6 +656,9 @@ elements.decreaseIterations.link("iters", elements.iterations);
 elements.decreaseIterations.link("iterIncr", elements.iterationIncrement);
 
 elements.escapeRadius.link("alert", elements.escapeRadiusAlert);
+
+elements.reset.link("render", elements.render);
+elements.reset.link("fractalType", elements.fractalType);
 
 elements.importSettings.link("settingsJson", elements.settingsJson);
 elements.importSettings.link("canvas", elements.mainCanvas);
