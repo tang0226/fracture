@@ -44,8 +44,10 @@ class Element {
     }
     
     // Define here, not outside, to have an alias
-    this.addLinkedObject = this.link = function(key, obj) {
-      this.linked[key] = obj;
+    this.addLinkedObject = this.link = function(obj) {
+      for (let key of Object.keys(obj)) {
+        this.linked[key] = obj[key];
+      }
     };
 
     if (params.init) {

@@ -647,57 +647,79 @@ const UI = {
 var elements = UI.elements;
 
 // Define links here
-elements.render.link("canvas", elements.mainCanvas);
-elements.render.link("fractalType", elements.fractalType);
-elements.render.link("juliaConstant", elements.juliaConstant);
-elements.render.link("exponent", elements.exponent);
-elements.render.link("iterations", elements.iterations);
-elements.render.link("escapeRadius", elements.escapeRadius);
+elements.render.link({
+  canvas: elements.mainCanvas,
+  fractalType: elements.fractalType,
+  juliaConstant: elements.juliaConstant,
+  exponent: elements.exponent,
+  iterations: elements.iterations,
+  escapeRadius: elements.escapeRadius,
+});
 
-elements.cancel.link("canvas", elements.mainCanvas);
+elements.cancel.link({
+  canvas: elements.mainCanvas
+});
 
-elements.mainCanvas.link("progress", elements.progress);
-elements.mainCanvas.link("progressBar", elements.progressBar);
-elements.mainCanvas.link("renderTime", elements.renderTime);
+elements.mainCanvas.link({
+  progress: elements.progress,
+  progressBar: elements.progressBar,
+  renderTime: elements.renderTime,
+});
 
-elements.controlCanvas.link("mainCanvas", elements.mainCanvas);
+elements.controlCanvas.link({mainCanvas: elements.mainCanvas});
 
-elements.fractalType.link("juliaConstant", elements.juliaConstant);
-elements.fractalType.link("juliaConstantAlert", elements.juliaConstantAlert);
-elements.fractalType.link("exponent", elements.exponent);
-elements.fractalType.link("exponentAlert", elements.exponentAlert);
-elements.fractalType.link("iters", elements.iterations);
-elements.fractalType.link("er", elements.escapeRadius);
-elements.fractalType.link("render", elements.render);
+elements.fractalType.link({
+  juliaConstant: elements.juliaConstant,
+  juliaConstantAlert: elements.juliaConstantAlert,
+  exponent: elements.exponent,
+  exponentAlert: elements.exponentAlert,
+  iters: elements.iterations,
+  er: elements.escapeRadius,
+  render: elements.render,
+});
 
-elements.juliaConstant.link("alert", elements.juliaConstantAlert);
-elements.juliaConstant.link("fractalType", elements.fractalType);
+elements.juliaConstant.link({
+  alert: elements.juliaConstantAlert,
+  fractalType: elements.fractalType,
+});
 
-elements.exponent.link("alert", elements.exponentAlert);
-elements.exponent.link("fractalType", elements.fractalType);
+elements.exponent.link({
+  alert: elements.exponentAlert,
+  fractalType: elements.fractalType,
+});
 
-elements.iterations.link("alert", elements.iterationsAlert);
+elements.iterations.link({alert: elements.iterationsAlert});
 
-elements.iterationIncrement.link("alert", elements.iterationIncrementAlert);
+elements.iterationIncrement.link({alert: elements.iterationIncrementAlert});
 
-elements.increaseIterations.link("iters", elements.iterations);
-elements.increaseIterations.link("iterIncr", elements.iterationIncrement);
+elements.increaseIterations.link({
+  iters: elements.iterations,
+  iterIncr: elements.iterationIncrement,
+});
 
-elements.decreaseIterations.link("iters", elements.iterations);
-elements.decreaseIterations.link("iterIncr", elements.iterationIncrement);
+elements.decreaseIterations.link({
+  iters: elements.iterations,
+  iterIncr: elements.iterationIncrement,
+});
 
-elements.escapeRadius.link("alert", elements.escapeRadiusAlert);
+elements.escapeRadius.link({alert: elements.escapeRadiusAlert});
 
-elements.reset.link("render", elements.render);
-elements.reset.link("fractalType", elements.fractalType);
+elements.reset.link({
+  render: elements.render,
+  fractalType: elements.fractalType,
+});
 
-elements.resize.link("toolbar", elements.toolbar);
-elements.resize.link("mainCanvas", elements.mainCanvas);
-elements.resize.link("controlCanvas", elements.controlCanvas);
-elements.resize.link("render", elements.render);
+elements.resize.link({
+  toolbar: elements.toolbar,
+  mainCanvas: elements.mainCanvas,
+  controlCanvas: elements.controlCanvas,
+  render: elements.render,
+});
 
-elements.importSettings.link("settingsJson", elements.settingsJson);
-elements.importSettings.link("canvas", elements.mainCanvas);
+elements.importSettings.link({
+  settingsJson: elements.settingsJson,
+  canvas: elements.mainCanvas,
+});
 
 // Initial render
 elements.render.utils.render();
