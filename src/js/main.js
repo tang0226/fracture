@@ -243,7 +243,7 @@ const UI = {
               width: canvas.width,
               height: canvas.height,
               fractal: new Fractal(
-                frac.state.fractal.name,
+                frac.state.fractal.id,
                 {
                   c: c.state.c || undefined,
                   e: e.state.e || undefined,
@@ -287,7 +287,7 @@ const UI = {
         change() {
           let newFractal = DEFAULTS.fractals[pascalToCamel(this.element.value)].copy();
           this.state.fractal = {
-            name: newFractal.name,
+            id: newFractal.id,
             meta: newFractal.meta,
           };
           this.utils.updateParameterDisplays();

@@ -3,11 +3,11 @@ FRACTALS: THEORETICAL MATHEMATICAL SETS IN THE COMPLEX PLANE
 ******************************/
 
 class Fractal {
-  constructor(name, constants) {
-    this.name = name;
+  constructor(id, constants) {
+    this.id = id;
     this.constants = constants || {};
 
-    switch (name) {
+    switch (id) {
       case "Mandelbrot":
         this.meta = {
           type: "escape-time",
@@ -108,12 +108,12 @@ class Fractal {
   }
 
   copy() {
-    return new Fractal(this.name, this.constants);
+    return new Fractal(this.id, this.constants);
   }
   
   // Reconstruct serialized object to restore class methods
   static reconstruct(fractal) {
-    return new Fractal(fractal.name, fractal.constants);
+    return new Fractal(fractal.id, fractal.constants);
   }
 
   // Mandelbrot-style iteration (z0 = 0, c = point)
