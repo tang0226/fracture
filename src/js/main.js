@@ -310,7 +310,7 @@ const UI = {
           else {
             l.juliaConstant.hideContainer();
             l.juliaConstant.set("");
-            l.juliaConstant.jc = null;
+            l.juliaConstant.state.jc = null;
             l.juliaConstantAlert.hide();
             l.juliaConstant.state.isClean = false;
             l.juliaConstant.state.isUsed = false;
@@ -322,7 +322,7 @@ const UI = {
           else {
             l.exponent.hideContainer();
             l.exponent.set("");
-            l.exponent.e = null;
+            l.exponent.state.e = null;
             l.exponentAlert.hide();
             l.exponent.state.isClean = false;
             l.exponent.state.isUsed = false;
