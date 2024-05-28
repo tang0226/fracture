@@ -73,6 +73,5 @@ class Canvas extends Element {
     this.element.height = height;
     this.width = width;
     this.height = height;
-    console.log(this.width, this.height);
   }
 }

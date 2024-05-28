@@ -636,7 +636,6 @@ const UI = {
         click() {
           let str = this.linked.settingsJson.element.value;
           let obj = JSON.parse(str);
-          console.log(str, obj);
           this.linked.canvas.utils.render(obj);
         },
       },
