@@ -29,6 +29,7 @@ const DEFAULTS = {
 
   iters: 100,
   escapeRadius: 256,
+  smoothColoring: true,
 
   srcFrame: new Frame(Complex(0, 0), 4, 4),
   specialSrcFrame: {
@@ -229,6 +230,7 @@ const UI = {
             e = this.linked.exponent,
             iters = this.linked.iterations,
             er = this.linked.escapeRadius;
+            sc = this.linked.smoothColoring;
           
           if (canvas.state.rendering) return;
 
@@ -275,7 +277,7 @@ const UI = {
               iterSettings: {
                 iters: iters.state.iters,
                 escapeRadius: er.state.er,
-                smoothColoring: true,
+                smoothColoring: sc.element.checked,
               },
               srcFrame: frame,
               gradient: DEFAULTS.gradient,
@@ -595,6 +597,24 @@ const UI = {
       hide: true,
     }),
 
+    smoothColoring: new Checkbox({
+      id: "smooth-coloring",
+      dispStyle: "inline",
+      init() {
+        this.element.checked = DEFAULTS.smoothColoring;
+      },
+    }),
+
+    smoothColoringContainer: new Element({
+      id: "smooth-coloring-container",
+      eventCallbacks: {
+        click() {
+          let ele = this.linked.smoothColoring.element;
+          ele.checked = !ele.checked;
+        },
+      },
+    }),
+
     reset: new Button({
       id: "reset",
       dispStyle: "inline",
@@ -654,6 +674,7 @@ elements.render.link({
   exponent: elements.exponent,
   iterations: elements.iterations,
   escapeRadius: elements.escapeRadius,
+  smoothColoring: elements.smoothColoring,
 });
 
 elements.cancel.link({
@@ -703,6 +724,8 @@ elements.decreaseIterations.link({
 });
 
 elements.escapeRadius.link({alert: elements.escapeRadiusAlert});
+
+elements.smoothColoringContainer.link({smoothColoring: elements.smoothColoring});
 
 elements.reset.link({
   render: elements.render,
