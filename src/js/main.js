@@ -389,6 +389,13 @@ const UI = {
         },
       },
       utils: {
+        // Mark self as valid
+        clean() {
+          this.linked.alert.hide();
+          this.state.isClean = true;
+        },
+        
+        // Verify and accept input
         sanitize() {
           let c = Complex.parseString(this.element.value);
           if (c) {
@@ -400,6 +407,12 @@ const UI = {
             this.linked.alert.show();
             this.state.isClean = false;
           }
+        },
+
+        // Set to a verified clean input
+        setClean(val) {
+          this.element.value = val;
+          this.utils.sanitize();
         },
       },
     }),
@@ -429,6 +442,13 @@ const UI = {
         },
       },
       utils: {
+        // Mark self as valid
+        clean() {
+          this.linked.alert.hide();
+          this.state.isClean = true;
+        },
+        
+        // Verify and accept input
         sanitize() {
           let e = Number(this.element.value);
           if (isNaN(e) || e < 2 || !Number.isInteger(e)) {
@@ -440,6 +460,12 @@ const UI = {
             this.state.e = e;
             this.state.isClean = true;
           }
+        },
+
+        // Set to a verified clean input
+        setClean(val) {
+          this.element.value = val;
+          this.sanitize();
         },
       },
     }),
@@ -466,10 +492,13 @@ const UI = {
         },
       },
       utils: {
+        // Mark self as valid
         clean() {
           this.linked.alert.hide();
           this.state.isClean = true;
         },
+
+        // Verify and accept input
         sanitize() {
           let i = Number(this.element.value)
           if (isNaN(i) || i < 1) {
@@ -480,6 +509,12 @@ const UI = {
             this.state.iters = i;
             this.utils.clean();
           }
+        },
+
+        // Set to a verified clean input
+        setClean(val) {
+          this.element.value = val;
+          this.utils.sanitize();
         },
       },
     }),
@@ -572,11 +607,13 @@ const UI = {
         },
       },
       utils: {
+        // Mark self as valid
         clean() {
           this.linked.alert.hide();
           this.state.isClean = true;
         },
 
+        // Verify and accept input
         sanitize() {
           let er = Number(this.element.value);
           if (isNaN(er) || er < 2) {
@@ -587,6 +624,12 @@ const UI = {
             this.state.er = er;
             this.utils.clean();
           }
+        },
+
+        // Set to a verified clean input
+        setClean(val) {
+          this.element.value = val;
+          this.utils.sanitize();
         },
       },
     }),
