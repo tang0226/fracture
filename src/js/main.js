@@ -636,7 +636,7 @@ const escapeRadiusAlert = new TextElement({
   id: "escape-radius-alert",
   innerText: "Escape radius must be a number at least 2",
   hide: true,
-}),
+});
 
 const smoothColoring = new Checkbox({
   id: "smooth-coloring",
