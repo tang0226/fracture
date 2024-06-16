@@ -189,7 +189,7 @@ const controlCanvas = Canvas({
   },
 });
 
-const progress = new TextElement({
+const progressDisp = new TextElement({
   id: "progress",
   dispStyle: "inline",
   innerText: "0%",
@@ -204,7 +204,7 @@ const renderTime = new TextElement({
   dispStyle: "inline",
 });
 
-const render = new Button({
+const renderButton = new Button({
   id: "render",
   dispStyle: "inline",
   eventCallbacks: {
@@ -288,7 +288,7 @@ const render = new Button({
   },
 });
 
-const cancel = new Button({
+const cancelButton = new Button({
   id: "cancel",
   dispStyle: "inline",
   eventCallbacks: {
@@ -298,7 +298,7 @@ const cancel = new Button({
   },
 });
 
-const fractalType = new Dropdown({
+const fractalDropdown = new Dropdown({
   id: "fractal-type",
   dispStyle: "inline",
   containerId: "fractal-select-container",
@@ -367,7 +367,7 @@ const fractalType = new Dropdown({
   }
 });
 
-const juliaConstant = new TextInput({
+const juliaConstInput = new TextInput({
   id: "julia-constant",
   dispStyle: "inline",
   containerId: "julia-constant-container",
@@ -415,13 +415,13 @@ const juliaConstant = new TextInput({
   },
 })
 
-const juliaConstantAlert = new TextElement({
+const juliaConstAlert = new TextElement({
   id: "julia-constant-alert",
   innerText: "Julia constant must be of the form a+bi",
   hide: true,
 });
 
- const exponent = new TextInput({
+ const expInput = new TextInput({
   id: "exponent",
   dispStyle: "inline",
   containerId: "exponent-container",
@@ -468,13 +468,13 @@ const juliaConstantAlert = new TextElement({
   },
 });
 
-const exponentAlert = new TextElement({
+const expAlert = new TextElement({
   id: "exponent-alert",
   innerText: "Exponent must be an integer greater than 1",
   hide: true,
 });
 
-const iterations = new TextInput({
+const itersInput = new TextInput({
   id: "iterations",
   dispStyle: "inline",
   containerId: "iterations-container",
@@ -517,13 +517,13 @@ const iterations = new TextInput({
   },
 });
 
-const iterationsAlert = new TextElement({
+const itersAlert = new TextElement({
   id: "iterations-alert",
   innerText: "Iterations must be a positive integer",
   hide: true,
 });
 
-const iterationIncrement = new TextInput({
+const iterIncrInput = new TextInput({
   id: "iteration-increment",
   dispStyle: "inline",
   value: 100,
@@ -549,13 +549,13 @@ const iterationIncrement = new TextInput({
   },
 });
 
-const iterationIncrementAlert = new TextElement({
+const iterIncrAlert = new TextElement({
   id: "iteration-increment-alert",
   innerText: "Iteration increment must be a positive integer",
   hide: true,
 });
 
-const increaseIterations = new Button({
+const incrItersButton = new Button({
   id: "increase-iterations",
   eventCallbacks: {
     click() {
@@ -571,7 +571,7 @@ const increaseIterations = new Button({
   },
 });
 
-const decreaseIterations = new Button({
+const decrItersButton = new Button({
   id: "decrease-iterations",
   eventCallbacks: {
     click() {
@@ -589,7 +589,7 @@ const decreaseIterations = new Button({
   },
 });
 
-const escapeRadius = new TextInput({
+const escapeRadiusInput = new TextInput({
   id: "escape-radius",
   containerId: "escape-radius-container",
   dispStyle: "inline",
@@ -638,7 +638,7 @@ const escapeRadiusAlert = new TextElement({
   hide: true,
 });
 
-const smoothColoring = new Checkbox({
+const smoothColoringCheckbox = new Checkbox({
   id: "smooth-coloring",
   dispStyle: "inline",
   init() {
@@ -656,7 +656,7 @@ const smoothColoringContainer = new Element({
   },
 });
 
-const reset = new Button({
+const resetButton = new Button({
   id: "reset",
   dispStyle: "inline",
   eventCallbacks: {
@@ -669,7 +669,7 @@ const reset = new Button({
   }
 });
 
-const resize = new Button({
+const resizeButton = new Button({
   id: "resize",
   eventCallbacks: {
     click() {
@@ -687,11 +687,11 @@ const resize = new Button({
   },
 });
 
-const settingsJson = new TextInput({
+const settingsJsonInput = new TextInput({
   id: "settings-json",
 });
 
-const importSettings = new Button({
+const importSettingsButton = new Button({
   id: "import-settings",
   eventCallbacks: {
     click() {
