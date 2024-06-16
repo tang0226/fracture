@@ -638,7 +638,7 @@ const escapeRadiusAlert = new TextElement({
   hide: true,
 }),
 
-smoothColoring: new Checkbox({
+smoothColoring = new Checkbox({
   id: "smooth-coloring",
   dispStyle: "inline",
   init() {
