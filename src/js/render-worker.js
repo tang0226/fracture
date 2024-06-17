@@ -1,10 +1,12 @@
 importScripts(
   "./utils.js",
-  "./fractals/complex.js",
-  "./fractals/fractal.js",
-  "./fractals/frame.js",
-  "./fractals/gradient.js",
-  "./fractals/image-settings.js",
+  "./classes/complex.js",
+  "./classes/fractal.js",
+  "./classes/fractal-type.js",
+  "./classes/frame.js",
+  "./classes/gradient.js",
+  "./classes/image-settings.js",
+  "./fractal-types.js",
 );
 
 onmessage = function(event) {
@@ -15,11 +17,11 @@ onmessage = function(event) {
 
     let settings = ImageSettings.reconstruct(data.settings);
 
-    let iterate = settings.fractal.meta.iterationType == "mandelbrot" ?
+    let iterate = settings.fractal.type.meta.iterationType == "mandelbrot" ?
       Fractal.iterateMandelbrot : Fractal.iterateJulia;
     
     let iterSettings = {...settings.iterSettings};
-    iterSettings.c = settings.fractal.constants.c;
+    iterSettings.smoothColoringExp = settings.fractal.params.e || 2;
 
     let currChunk = [];
     let currChunkHeight = 0;
@@ -36,7 +38,7 @@ onmessage = function(event) {
             ],
             settings.fractal.iterFunc,
             iterSettings,
-            settings.fractal.constants.e || 2
+            settings.fractal.params,
           );
         if (val == settings.iterSettings.iters) {
           currChunk[i] = 0;

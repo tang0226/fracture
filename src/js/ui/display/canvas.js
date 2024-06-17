@@ -1,6 +1,6 @@
 class Canvas extends Element {
   constructor(params) {
-    // False because we are adding event listeners later
+    // False because we are adding event listeners later (see element.js)
     super(params, false);
 
     this.width = params.width || this.element.width;

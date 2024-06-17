@@ -21,7 +21,7 @@ class ImageSettings {
     this.height = params.height;
 
     if (reconstruct) {
-      this.fractal = Fractal.reconstruct(params.fractal);
+      this.fractal = Fractal.reconstruct(params.fractal, FRACTAL_TYPES);
       this.srcFrame = Frame.reconstruct(params.srcFrame);
       this.gradient = Gradient.reconstruct(params.gradient);
     }

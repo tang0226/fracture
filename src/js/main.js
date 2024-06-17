@@ -1,34 +1,3 @@
-const FRACTAL_TYPES = {
-  mandelbrot: new FractalType({
-    id: "Mandelbrot",
-    meta: {
-      juilaEquivalent: "julia",
-    },
-    iterFunc(z, c, _params) {
-      return [
-        z[0] * z[0] - z[1] * z[1] + c[0],
-        2 * z[0] * z[1] + c[1]
-      ];
-    },
-  }),
-
-
-
-  julia: new FractalType({
-    id: "Julia",
-    meta: {
-      reqJuliaConst: true,
-      mandelEquivalent: "mandelbrot",
-    },
-    iterFunc(z, params) {
-      return [
-        z[0] * z[0] - z[1] * z[1] + params.c[0],
-        2 * z[0] * z[1] + params.c[1]
-      ];
-    },
-  }),
-};
-
 const DEFAULTS = {
   toolbarWidth: 500,
 
@@ -50,7 +19,7 @@ const DEFAULTS = {
 DEFAULTS.imageSettings = new ImageSettings({
   width: window.innerWidth - DEFAULTS.toolbarWidth,
   height: window.innerHeight,
-  fractal: DEFAULTS.fractals.mandelbrot.copy(),
+  fractal: new Fractal(FRACTAL_TYPES.mandelbrot),
   iterSettings: {
     iters: DEFAULTS.iters,
     escapeRadius: DEFAULTS.escapeRadius,
@@ -258,12 +227,12 @@ const renderButton = new Button({
         else {
           frame = mainCanvas.state.currSettings.srcFrame;
         }
-
+        
         let settings = {
           width: mainCanvas.width,
           height: mainCanvas.height,
           fractal: new Fractal(
-            fractalDropdown.state.fractal.id,
+            FRACTAL_TYPES[fractalDropdown.state.fractalType.id],
             {
               c: juliaConstInput.state.c || undefined,
               e: expInput.state.e || undefined,
@@ -300,22 +269,18 @@ const fractalDropdown = new Dropdown({
   containerId: "fractal-select-container",
   value: "Mandelbrot",
   state: {
-    fractal: DEFAULTS.fractals.mandelbrot.copy(),
+    fractalType: FRACTAL_TYPES.mandelbrot,
   },
   eventCallbacks: {
     change() {
-      let newFractal = DEFAULTS.fractals[pascalToCamel(this.element.value)].copy();
-      this.state.fractal = {
-        id: newFractal.id,
-        meta: newFractal.meta,
-      };
+      this.state.fractalType = FRACTAL_TYPES[pascalToCamel(this.element.value)];
       this.utils.updateParameterDisplays();
       this.utils.resetInputs();
     },
   },
   utils: {
     updateParameterDisplays() {
-      if (this.state.fractal.meta.reqJuliaConst) {
+      if (this.state.fractalType.meta.reqJuliaConst) {
         juliaConstInput.showContainer();
         juliaConstInput.state.isUsed = true;
       }
@@ -328,7 +293,7 @@ const fractalDropdown = new Dropdown({
         juliaConstInput.state.isClean = false;
         juliaConstInput.state.isUsed = false;
       }
-      if (this.state.fractal.meta.reqExponent) {
+      if (this.state.fractalType.meta.reqExponent) {
         expInput.showContainer();
         expInput.state.isUsed = true;
       }
@@ -352,9 +317,6 @@ const fractalDropdown = new Dropdown({
       escapeRadiusInput.set(DEFAULTS.escapeRadius);
       escapeRadiusInput.state.er = DEFAULTS.escapeRadius;
       escapeRadiusInput.utils.clean();
-
-      // Prepare new frame based on fractal type selected
-      renderButton.utils.queueDefaultFrame();
     },
   }
 });
@@ -376,6 +338,9 @@ const juliaConstInput = new TextInput({
     change() {
       this.utils.sanitize();
       fractalDropdown.utils.resetInputs();
+
+      // Prepare new frame based on fractal type
+      renderButton.utils.queueDefaultFrame();
     },
   },
   utils: {
@@ -429,6 +394,9 @@ const juliaConstAlert = new TextElement({
     change() {
       this.utils.sanitize();
       fractalDropdown.utils.resetInputs();
+
+      // Prepare new frame based on fractal type
+      renderButton.utils.queueDefaultFrame();
     },
   },
   utils: {
