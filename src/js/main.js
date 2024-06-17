@@ -193,9 +193,7 @@ const renderButton = new Button({
     // Set frame for new redraw (when changing fractals)
     queueDefaultFrame() {
       this.state.queuedFrame =
-        DEFAULTS.specialSrcFrame[
-          pascalToCamel(fractalDropdown.element.value)
-        ] || DEFAULTS.srcFrame;
+        DEFAULTS.specialSrcFrame[fractalDropdown.element.value] || DEFAULTS.srcFrame;
     },
 
     render() {
@@ -269,13 +267,13 @@ const fractalDropdown = new Dropdown({
   id: "fractal-type",
   dispStyle: "inline",
   containerId: "fractal-select-container",
-  value: "Mandelbrot",
+  value: "mandelbrot",
   state: {
     fractalType: FRACTAL_TYPES.mandelbrot,
   },
   eventCallbacks: {
     change() {
-      this.state.fractalType = FRACTAL_TYPES[pascalToCamel(this.element.value)];
+      this.state.fractalType = FRACTAL_TYPES[this.element.value];
       this.utils.updateParameterDisplays();
       resetInputs();
     },

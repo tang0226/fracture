@@ -1,7 +1,3 @@
-function pascalToCamel(str) {
-  return str.charAt(0).toLowerCase() + str.slice(1);
-}
-
 function CSSpxToNumber(str) {
   return Number(str.slice(0, -2));
 }

@@ -42,4 +42,20 @@ const FRACTAL_TYPES = {
       )
     }
   }),
+
+  multijulia: new FractalType({
+    id: "multijulia",
+    meta: {
+      iterationType: "julia",
+      reqJuliaConst: true,
+      reqExponent: true,
+      mandelEquivalent: "multibrot",
+    },
+    iterFunc: function(z, params) {
+      return Complex.add(
+        Complex.exp(z, params.e),
+        params.c
+      );
+    }
+  }),
 };
