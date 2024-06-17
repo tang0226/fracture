@@ -32,7 +32,63 @@ DEFAULTS.imageSettings = new ImageSettings({
 
 
 
-// Define elements first, before links
+var currSettings = DEFAULTS.imageSettings.copy(),
+  lastSettings, renderInProgress, renderWorker, renderProgress, renderTime;
+
+
+function pushSettings(newSettings) {
+  lastSettings = ImageSettings.reconstruct(currSettings);
+  currSettings = ImageSettings.reconstruct(newSettings);
+}
+
+function render(imageSettings, _pushSettings = true) {
+  if (_pushSettings) {
+    pushSettings(imageSettings);
+    console.log(currSettings.width, currSettings.height, lastSettings.width, lastSettings.height);
+  }
+  renderInProgress = true;
+
+  renderWorker = new Worker("./js/render-worker.js");
+
+  renderWorker.onmessage = function(event) {
+    let data = event.data;
+    switch (data.type) {
+      case "update":
+        mainCanvas.ctx.putImageData(data.imgData, data.x, data.y);
+        break;
+
+      case "progress":
+        let percent = Math.floor(data.y / data.h * 100);
+        progressDisp.set(percent + "%");
+        progressBar.set(percent);
+        renderProgress = percent;
+
+        renderTimeDisp.set(msToTime(data.renderTime));
+        renderTime = data.renderTime;
+        break;
+
+      case "done":
+        renderInProgress = false;
+    }
+  };
+
+  renderWorker.postMessage({
+    msg: "draw",
+    settings: JSON.parse(JSON.stringify(imageSettings)),
+  });
+}
+
+function cancelRender(skipMsg) {
+  if (renderInProgress) {
+    renderWorker.terminate();
+    renderInProgress = false;
+    if (!skipMsg) {
+      progressDisp.set(renderProgress + "%" + " (cancelled)");
+    }
+  }
+}
+
+
 const toolbar = new Element({
   id: "toolbar",
   init() {
@@ -47,58 +103,6 @@ const mainCanvas = new Canvas({
   },
   init() {
     this.setDim(window.innerWidth - DEFAULTS.toolbarWidth, window.innerHeight);
-  },
-  utils: {
-    pushSettings(newSettings) {
-      this.state.lastSettings = ImageSettings.reconstruct(this.state.currSettings);
-      this.state.currSettings = ImageSettings.reconstruct(newSettings);
-    },
-
-    render(imageSettings, pushSettings = true) {
-      if (pushSettings) {
-        this.utils.pushSettings(imageSettings);
-      }
-      this.state.rendering = true;
-
-      this.state.renderWorker = new Worker("./js/render-worker.js");
-
-      this.state.renderWorker.onmessage = function(event) {
-        let data = event.data;
-        switch (data.type) {
-          case "update":
-            this.ctx.putImageData(data.imgData, data.x, data.y);
-            break;
-
-          case "progress":
-            let percent = Math.floor(data.y / data.h * 100);
-            progressDisp.set(percent + "%");
-            progressBar.set(percent);
-            this.state.progress = percent;
-
-            renderTime.set(msToTime(data.renderTime));
-            this.state.renderTime = data.renderTime;
-            break;
-
-          case "done":
-            this.state.rendering = false;
-        }
-      }.bind(this);
-
-      this.state.renderWorker.postMessage({
-        msg: "draw",
-        settings: JSON.parse(JSON.stringify(imageSettings)),
-      });
-    },
-
-    cancelRender(skipMsg) {
-      if (this.state.rendering) {
-        this.state.renderWorker.terminate();
-        this.state.rendering = false;
-        if (!skipMsg) {
-          progressDisp.set(this.state.progress + "%" + " (cancelled)");
-        }
-      }
-    },
   },
 });
 
@@ -129,7 +133,7 @@ const controlCanvas = new Canvas({
     mouseUp() {
       this.ctx.clearRect(0, 0, this.width, this.height);
 
-      let frame = mainCanvas.state.currSettings.frame;
+      let frame = currSettings.frame;
       if (!(this.state.mouseX == this.state.startDragX &&
         this.state.mouseY == this.state.startDragY)) {
 
@@ -153,11 +157,11 @@ const controlCanvas = new Canvas({
           w, h
         );
         
-        let img = mainCanvas.state.currSettings.copy();
+        let img = currSettings.copy();
         img.setSrcFrame(newSrcFrame);
 
-        mainCanvas.utils.cancelRender(true);
-        mainCanvas.utils.render(img);
+        cancelRender(true);
+        render(img);
       }
     },
     mouseOut() {
@@ -176,7 +180,7 @@ const progressBar = new ProgressBar({
   id: "progress-bar",
 });
 
-const renderTime = new TextElement({
+const renderTimeDisp = new TextElement({
   id: "render-time",
   dispStyle: "inline",
 });
@@ -197,7 +201,7 @@ const renderButton = new Button({
     },
 
     render() {
-      if (mainCanvas.state.rendering) return;
+      if (renderInProgress) return;
       var canRender = true;
 
       // check conditional inputs
@@ -225,7 +229,15 @@ const renderButton = new Button({
         }
         // Otherwise, stick to current frame
         else {
-          frame = mainCanvas.state.currSettings.srcFrame;
+          frame = currSettings.srcFrame;
+        }
+
+        let fracParams = {};
+        if (juliaConstInput.state.c) {
+          fracParams.c = juliaConstInput.state.c
+        }
+        if (expInput.state.e) {
+          fracParams.e = expInput.state.e;
         }
 
         let settings = {
@@ -233,10 +245,7 @@ const renderButton = new Button({
           height: mainCanvas.height,
           fractal: new Fractal(
             FRACTAL_TYPES[fractalDropdown.state.fractalType.id],
-            {
-              c: juliaConstInput.state.c || undefined,
-              e: expInput.state.e || undefined,
-            },
+            fracParams,
           ),
           iterSettings: {
             iters: itersInput.state.iters,
@@ -247,7 +256,7 @@ const renderButton = new Button({
           gradient: DEFAULTS.gradient,
           gradientSettings: { itersPerCycle: null},
         };
-        mainCanvas.utils.render(settings);
+        render(settings);
       }
     },
   },
@@ -258,7 +267,7 @@ const cancelButton = new Button({
   dispStyle: "inline",
   eventCallbacks: {
     click() {
-      mainCanvas.utils.cancelRender();
+      cancelRender();
     },
   },
 });
@@ -623,7 +632,7 @@ const resizeButton = new Button({
   id: "resize",
   eventCallbacks: {
     click() {
-      if (!mainCanvas.state.rendering) {
+      if (!renderInProgress) {
         let dim = [
           window.innerWidth - CSSpxToNumber(toolbar.element.style.width),
           window.innerHeight
@@ -631,9 +640,8 @@ const resizeButton = new Button({
         mainCanvas.setDim(...dim);
         controlCanvas.setDim(...dim);
 
-        let newSettings = mainCanvas.state.currSettings.copy();
-        newSettings.setRes(...dim);
-        mainCanvas.utils.render(newSettings, false);
+        currSettings.setRes(...dim);
+        render(currSettings, false);
       }
     },
   },
@@ -649,7 +657,7 @@ const importSettingsButton = new Button({
     click() {
       let str = settingsJsonInput.element.value;
       let obj = JSON.parse(str);
-      mainCanvas.utils.render(obj);
+      render(obj);
     },
   },
 });

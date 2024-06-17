@@ -58,4 +58,33 @@ const FRACTAL_TYPES = {
       );
     }
   }),
+
+  burningShip: new FractalType({
+    id: "burningShip",
+    meta: {
+      iterationType: "mandelbrot",
+      juliaEquivalent: "burningShipJulia",
+    },
+    iterFunc: function(z, c, _params) {
+      return [
+        z[0] * z[0] - z[1] * z[1] + c[0],
+        Math.abs(2 * z[0] * z[1]) + c[1]
+      ];
+    },
+  }),
+
+  burningShipJulia: new FractalType({
+    id: "burningShipJulia",
+    meta: {
+      iterationType: "julia",
+      reqJuliaConst: true,
+      mandelEquivalent: "burningShip",
+    },
+    iterFunc: function(z, params) {
+      return [
+        z[0] * z[0] - z[1] * z[1] + params.c[0],
+        Math.abs(2 * z[0] * z[1]) + params.c[1]
+      ];
+    },
+  }),
 };
