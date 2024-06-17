@@ -54,8 +54,10 @@ const mainCanvas = new Canvas({
       this.state.currSettings = ImageSettings.reconstruct(newSettings);
     },
 
-    render(imageSettings, renderSettings) {
-      this.utils.pushSettings(imageSettings);
+    render(imageSettings, pushSettings = true) {
+      if (pushSettings) {
+        this.utils.pushSettings(imageSettings);
+      }
       this.state.rendering = true;
 
       this.state.renderWorker = new Worker("./js/render-worker.js");
@@ -227,7 +229,7 @@ const renderButton = new Button({
         else {
           frame = mainCanvas.state.currSettings.srcFrame;
         }
-        
+
         let settings = {
           width: mainCanvas.width,
           height: mainCanvas.height,
@@ -641,7 +643,9 @@ const resizeButton = new Button({
         mainCanvas.setDim(...dim);
         controlCanvas.setDim(...dim);
 
-        renderButton.utils.render();
+        let newSettings = mainCanvas.state.currSettings.copy();
+        newSettings.setRes(...dim);
+        mainCanvas.utils.render(newSettings, false);
       }
     },
   },
