@@ -6,7 +6,7 @@ importScripts(
   "./classes/frame.js",
   "./classes/gradient.js",
   "./classes/image-settings.js",
-  "./fractal-types.js",
+  "./constants/fractal-types.js",
 );
 
 onmessage = function(event) {
