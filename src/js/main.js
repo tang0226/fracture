@@ -33,7 +33,7 @@ DEFAULTS.imageSettings = new ImageSettings({
 
 
 var currSettings = DEFAULTS.imageSettings.copy(),
-  lastSettings, renderInProgress, renderWorker, renderProgress, renderTime;
+  lastSettings, queuedFrame, renderInProgress, renderWorker, renderProgress, renderTime;
 
 
 function pushSettings(newSettings) {
@@ -44,7 +44,6 @@ function pushSettings(newSettings) {
 function render(imageSettings, _pushSettings = true) {
   if (_pushSettings) {
     pushSettings(imageSettings);
-    console.log(currSettings.width, currSettings.height, lastSettings.width, lastSettings.height);
   }
   renderInProgress = true;
 
@@ -90,7 +89,7 @@ function cancelRender(skipMsg) {
 
 // Set frame for new redraw (when changing fractals)
 function queueDefaultFrame() {
-  renderButton.state.queuedFrame =
+  queuedFrame =
     DEFAULTS.specialSrcFrame[fractalDropdown.element.value] || DEFAULTS.srcFrame;
 }
 
@@ -223,9 +222,9 @@ const renderButton = new Button({
         let frame;
 
         // If fractal changed and new frame is queued
-        if (this.state.queuedFrame) {
-          frame = this.state.queuedFrame;
-          this.state.queuedFrame = null;
+        if (queuedFrame) {
+          frame = queuedFrame;
+          queuedFrame = null;
         }
         // Otherwise, stick to current frame
         else {
