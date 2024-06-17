@@ -88,6 +88,12 @@ function cancelRender(skipMsg) {
   }
 }
 
+// Set frame for new redraw (when changing fractals)
+function queueDefaultFrame() {
+  renderButton.state.queuedFrame =
+    DEFAULTS.specialSrcFrame[fractalDropdown.element.value] || DEFAULTS.srcFrame;
+}
+
 
 const toolbar = new Element({
   id: "toolbar",
@@ -194,12 +200,6 @@ const renderButton = new Button({
     },
   },
   utils: {
-    // Set frame for new redraw (when changing fractals)
-    queueDefaultFrame() {
-      this.state.queuedFrame =
-        DEFAULTS.specialSrcFrame[fractalDropdown.element.value] || DEFAULTS.srcFrame;
-    },
-
     render() {
       if (renderInProgress) return;
       var canRender = true;
@@ -283,6 +283,7 @@ const fractalDropdown = new Dropdown({
   eventCallbacks: {
     change() {
       this.state.fractalType = FRACTAL_TYPES[this.element.value];
+      queueDefaultFrame();
       this.utils.updateParameterDisplays();
       resetInputs();
     },
@@ -339,7 +340,7 @@ const juliaConstInput = new TextInput({
       resetInputs();
 
       // Prepare new frame based on fractal type
-      renderButton.utils.queueDefaultFrame();
+      queueDefaultFrame();
     },
   },
   utils: {
@@ -395,7 +396,7 @@ const juliaConstAlert = new TextElement({
       resetInputs();
 
       // Prepare new frame based on fractal type
-      renderButton.utils.queueDefaultFrame();
+      queueDefaultFrame();
     },
   },
   utils: {
@@ -621,7 +622,7 @@ const resetButton = new Button({
   eventCallbacks: {
     click() {
       // Reset frame, reset iters, er, etc. then render
-      renderButton.utils.queueDefaultFrame();
+      queueDefaultFrame();
       resetInputs();
       renderButton.utils.render();
     },
