@@ -1,31 +1,36 @@
+const FRACTAL_TYPES = {
+  mandelbrot: new FractalType({
+    id: "Mandelbrot",
+    meta: {
+      juilaEquivalent: "julia",
+    },
+    iterFunc(z, c, _params) {
+      return [
+        z[0] * z[0] - z[1] * z[1] + c[0],
+        2 * z[0] * z[1] + c[1]
+      ];
+    },
+  }),
+
+
+
+  julia: new FractalType({
+    id: "Julia",
+    meta: {
+      reqJuliaConst: true,
+      mandelEquivalent: "mandelbrot",
+    },
+    iterFunc(z, params) {
+      return [
+        z[0] * z[0] - z[1] * z[1] + params.c[0],
+        2 * z[0] * z[1] + params.c[1]
+      ];
+    },
+  }),
+};
+
 const DEFAULTS = {
   toolbarWidth: 500,
-
-  fractals: {
-    mandelbrot: new Fractal("Mandelbrot"),
-    julia: new Fractal("Julia", {
-      c: Complex(0, 1),
-    }),
-    multibrot: new Fractal("Multibrot", {
-      e: 3,
-    }),
-    multijulia: new Fractal("Multijulia", {
-      e: 3,
-      c: Complex(0, 1),
-    }),
-    burningShip: new Fractal("BurningShip"),
-    burningShipJulia: new Fractal("BurningShipJulia", {
-      c: Complex(0, 1),
-    }),
-    multiship: new Fractal("Multiship", {
-      e: 3,
-    }),
-    multishipJulia: new Fractal("MultishipJulia", {
-      e: 3,
-      c: Complex(0, 1),
-    }),
-    tricorn: new Fractal("Tricorn"),
-  },
 
   iters: 100,
   escapeRadius: 256,
