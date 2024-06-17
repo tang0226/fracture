@@ -277,7 +277,7 @@ const fractalDropdown = new Dropdown({
     change() {
       this.state.fractalType = FRACTAL_TYPES[pascalToCamel(this.element.value)];
       this.utils.updateParameterDisplays();
-      this.utils.resetInputs();
+      resetInputs();
     },
   },
   utils: {
@@ -310,16 +310,6 @@ const fractalDropdown = new Dropdown({
         expInput.state.isUsed = false;
       }
     },
-
-    resetInputs() {
-      itersInput.set(DEFAULTS.iters);
-      itersInput.state.iters = DEFAULTS.iters;
-      itersInput.utils.clean();
-
-      escapeRadiusInput.set(DEFAULTS.escapeRadius);
-      escapeRadiusInput.state.er = DEFAULTS.escapeRadius;
-      escapeRadiusInput.utils.clean();
-    },
   }
 });
 
@@ -339,7 +329,7 @@ const juliaConstInput = new TextInput({
   eventCallbacks: {
     change() {
       this.utils.sanitize();
-      fractalDropdown.utils.resetInputs();
+      resetInputs();
 
       // Prepare new frame based on fractal type
       renderButton.utils.queueDefaultFrame();
@@ -395,7 +385,7 @@ const juliaConstAlert = new TextElement({
   eventCallbacks: {
     change() {
       this.utils.sanitize();
-      fractalDropdown.utils.resetInputs();
+      resetInputs();
 
       // Prepare new frame based on fractal type
       renderButton.utils.queueDefaultFrame();
@@ -625,7 +615,7 @@ const resetButton = new Button({
     click() {
       // Reset frame, reset iters, er, etc. then render
       renderButton.utils.queueDefaultFrame();
-      fractalDropdown.utils.resetInputs();
+      resetInputs();
       renderButton.utils.render();
     },
   }
@@ -665,6 +655,16 @@ const importSettingsButton = new Button({
     },
   },
 });
+
+function resetInputs() {
+  itersInput.set(DEFAULTS.iters);
+  itersInput.state.iters = DEFAULTS.iters;
+  itersInput.utils.clean();
+
+  escapeRadiusInput.set(DEFAULTS.escapeRadius);
+  escapeRadiusInput.state.er = DEFAULTS.escapeRadius;
+  escapeRadiusInput.utils.clean();
+}
 
 // Initial render
 renderButton.utils.render();
