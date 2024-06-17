@@ -65,6 +65,7 @@ const toolbar = new Element({
     this.element.style.width = DEFAULTS.toolbarWidth + "px";
   },
 });
+
 const mainCanvas = new Canvas({
   id: "main-canvas",
   state: {
@@ -94,11 +95,11 @@ const mainCanvas = new Canvas({
 
           case "progress":
             let percent = Math.floor(data.y / data.h * 100);
-            this.linked.progress.set(percent + "%");
-            this.linked.progressBar.set(percent);
+            progressDisp.set(percent + "%");
+            progressBar.set(percent);
             this.state.progress = percent;
 
-            this.linked.renderTime.set(msToTime(data.renderTime));
+            renderTime.set(msToTime(data.renderTime));
             this.state.renderTime = data.renderTime;
             break;
 
@@ -118,14 +119,14 @@ const mainCanvas = new Canvas({
         this.state.renderWorker.terminate();
         this.state.rendering = false;
         if (!skipMsg) {
-          this.linked.progress.set(this.state.progress + "%" + " (cancelled)");
+          progressDisp.set(this.state.progress + "%" + " (cancelled)");
         }
       }
     },
   },
 });
 
-const controlCanvas = Canvas({
+const controlCanvas = new Canvas({
   id: "control-canvas",
   interactive: true,
   init() {
@@ -152,7 +153,7 @@ const controlCanvas = Canvas({
     mouseUp() {
       this.ctx.clearRect(0, 0, this.width, this.height);
 
-      let frame = this.linked.mainCanvas.state.currSettings.frame;
+      let frame = mainCanvas.state.currSettings.frame;
       if (!(this.state.mouseX == this.state.startDragX &&
         this.state.mouseY == this.state.startDragY)) {
 
@@ -176,11 +177,11 @@ const controlCanvas = Canvas({
           w, h
         );
         
-        let img = this.linked.mainCanvas.state.currSettings.copy();
+        let img = mainCanvas.state.currSettings.copy();
         img.setSrcFrame(newSrcFrame);
 
-        this.linked.mainCanvas.utils.cancelRender(true);
-        this.linked.mainCanvas.utils.render(img);
+        mainCanvas.utils.cancelRender(true);
+        mainCanvas.utils.render(img);
       }
     },
     mouseOut() {
@@ -195,7 +196,7 @@ const progressDisp = new TextElement({
   innerText: "0%",
 });
 
-const progressBar = ProgressBar({
+const progressBar = new ProgressBar({
   id: "progress-bar",
 });
 
@@ -217,35 +218,26 @@ const renderButton = new Button({
     queueDefaultFrame() {
       this.state.queuedFrame =
         DEFAULTS.specialSrcFrame[
-          pascalToCamel(this.linked.fractalType.element.value)
+          pascalToCamel(fractalDropdown.element.value)
         ] || DEFAULTS.srcFrame;
     },
 
     render() {
-      let canvas = this.linked.canvas,
-        frac = this.linked.fractalType,
-        c = this.linked.juliaConstant,
-        e = this.linked.exponent,
-        iters = this.linked.iterations,
-        er = this.linked.escapeRadius;
-        sc = this.linked.smoothColoring;
-      
-      if (canvas.state.rendering) return;
-
-      let canRender = true;
+      if (mainCanvas.state.rendering) return;
+      var canRender = true;
 
       // check conditional inputs
-      if (c.state.isUsed && !c.state.isClean) {
-        c.linked.alert.show();
+      if (juliaConstInput.state.isUsed && !juliaConstInput.state.isClean) {
+        juliaConstAlert.show();
         canRender = false;
       }
-      if (e.state.isUsed && !e.state.isClean) {
-        e.linked.alert.show();
+      if (expInput.state.isUsed && !expInput.state.isClean) {
+        expAlert.show();
         canRender = false;
       }
 
       // check other inputs
-      if (!iters.state.isClean || !er.state.isClean) {
+      if (!itersInput.state.isClean || !escapeRadiusInput.state.isClean) {
         canRender = false;
       }
 
@@ -259,30 +251,29 @@ const renderButton = new Button({
         }
         // Otherwise, stick to current frame
         else {
-          frame = this.linked.canvas.state.currSettings.srcFrame;
+          frame = mainCanvas.state.currSettings.srcFrame;
         }
 
         let settings = {
-          width: canvas.width,
-          height: canvas.height,
+          width: mainCanvas.width,
+          height: mainCanvas.height,
           fractal: new Fractal(
-            frac.state.fractal.id,
+            fractalDropdown.state.fractal.id,
             {
-              c: c.state.c || undefined,
-              e: e.state.e || undefined,
+              c: juliaConstInput.state.c || undefined,
+              e: expInput.state.e || undefined,
             },
           ),
           iterSettings: {
-            iters: iters.state.iters,
-            escapeRadius: er.state.er,
-            smoothColoring: sc.element.checked,
+            iters: itersInput.state.iters,
+            escapeRadius: escapeRadiusInput.state.er,
+            smoothColoring: smoothColoringCheckbox.element.checked,
           },
           srcFrame: frame,
           gradient: DEFAULTS.gradient,
           gradientSettings: { itersPerCycle: null},
         };
-        
-        canvas.utils.render(settings);
+        mainCanvas.utils.render(settings);
       }
     },
   },
@@ -293,7 +284,7 @@ const cancelButton = new Button({
   dispStyle: "inline",
   eventCallbacks: {
     click() {
-      this.linked.canvas.utils.cancelRender();
+      mainCanvas.utils.cancelRender();
     },
   },
 });
@@ -319,50 +310,46 @@ const fractalDropdown = new Dropdown({
   },
   utils: {
     updateParameterDisplays() {
-      let l = this.linked
       if (this.state.fractal.meta.reqJuliaConst) {
-        l.juliaConstant.showContainer();
-        l.juliaConstant.state.isUsed = true;
+        juliaConstInput.showContainer();
+        juliaConstInput.state.isUsed = true;
       }
       else {
-        l.juliaConstant.hideContainer();
-        l.juliaConstant.set("");
+        juliaConstInput.hideContainer();
+        juliaConstInput.set("");
+        juliaConstAlert.hide();
 
-        l.juliaConstantAlert.hide();
-
-        l.juliaConstant.state.jc = null;
-        l.juliaConstant.state.isClean = false;
-        l.juliaConstant.state.isUsed = false;
+        juliaConstInput.state.jc = null;
+        juliaConstInput.state.isClean = false;
+        juliaConstInput.state.isUsed = false;
       }
       if (this.state.fractal.meta.reqExponent) {
-        l.exponent.showContainer();
-        l.exponent.state.isUsed = true;
+        expInput.showContainer();
+        expInput.state.isUsed = true;
       }
       else {
-        l.exponent.hideContainer();
-        l.exponent.set("");
+        expInput.hideContainer();
+        expInput.set("");
 
-        l.exponentAlert.hide();
+        expAlert.hide();
 
-        l.exponent.state.e = null;
-        l.exponent.state.isClean = false;
-        l.exponent.state.isUsed = false;
+        expInput.state.e = null;
+        expInput.state.isClean = false;
+        expInput.state.isUsed = false;
       }
     },
 
     resetInputs() {
-      let l = this.linked;
-      
-      l.iters.set(DEFAULTS.iters);
-      l.iters.state.iters = DEFAULTS.iters;
-      l.iters.utils.clean();
+      itersInput.set(DEFAULTS.iters);
+      itersInput.state.iters = DEFAULTS.iters;
+      itersInput.utils.clean();
 
-      l.er.set(DEFAULTS.escapeRadius);
-      l.er.state.er = DEFAULTS.escapeRadius;
-      l.er.utils.clean();
+      escapeRadiusInput.set(DEFAULTS.escapeRadius);
+      escapeRadiusInput.state.er = DEFAULTS.escapeRadius;
+      escapeRadiusInput.utils.clean();
 
       // Prepare new frame based on fractal type selected
-      l.render.utils.queueDefaultFrame();
+      renderButton.utils.queueDefaultFrame();
     },
   }
 });
@@ -383,13 +370,13 @@ const juliaConstInput = new TextInput({
   eventCallbacks: {
     change() {
       this.utils.sanitize();
-      this.linked.fractalType.utils.resetInputs();
+      fractalDropdown.utils.resetInputs();
     },
   },
   utils: {
     // Mark self as valid
     clean() {
-      this.linked.alert.hide();
+      juliaConstAlert.hide();
       this.state.isClean = true;
     },
     
@@ -398,11 +385,11 @@ const juliaConstInput = new TextInput({
       let c = Complex.parseString(this.element.value);
       if (c) {
         this.state.c = c;
-        this.linked.alert.hide();
+        juliaConstAlert.hide();
         this.state.isClean = true;
       }
       else {
-        this.linked.alert.show();
+        juliaConstAlert.show();
         this.state.isClean = false;
       }
     },
@@ -436,13 +423,13 @@ const juliaConstAlert = new TextElement({
   eventCallbacks: {
     change() {
       this.utils.sanitize();
-      this.linked.fractalType.utils.resetInputs();
+      fractalDropdown.utils.resetInputs();
     },
   },
   utils: {
     // Mark self as valid
     clean() {
-      this.linked.alert.hide();
+      expAlert.hide();
       this.state.isClean = true;
     },
     
@@ -450,11 +437,11 @@ const juliaConstAlert = new TextElement({
     sanitize() {
       let e = Number(this.element.value);
       if (isNaN(e) || e < 2 || !Number.isInteger(e)) {
-        this.linked.alert.show();
+        expAlert.show();
         this.state.isClean = false;
       }
       else {
-        this.linked.alert.hide();
+        expAlert.hide();
         this.state.e = e;
         this.state.isClean = true;
       }
@@ -492,7 +479,7 @@ const itersInput = new TextInput({
   utils: {
     // Mark self as valid
     clean() {
-      this.linked.alert.hide();
+      itersAlert.hide();
       this.state.isClean = true;
     },
 
@@ -500,7 +487,7 @@ const itersInput = new TextInput({
     sanitize() {
       let i = Number(this.element.value)
       if (isNaN(i) || i < 1) {
-        this.linked.alert.show();
+        itersAlert.show();
         this.state.isClean = false;
       }
       else {
@@ -535,14 +522,14 @@ const iterIncrInput = new TextInput({
   },
   eventCallbacks: {
     change() {
-      let val = val;
-      if (isNaN(val) || val < 1) {
-        this.linked.alert.show();
+      let val = Number(this.element.value);
+      if (isNaN(val) || val < 1 || !Number.isInteger(val)) {
+        iterIncrAlert.show();
         this.state.isClean = false;
       }
       else {
         this.state.iterIncr = val;
-        this.linked.alert.hide();
+        iterIncrAlert.hide();
         this.state.isClean = true;
       }
     },
@@ -559,13 +546,13 @@ const incrItersButton = new Button({
   id: "increase-iterations",
   eventCallbacks: {
     click() {
-      if (this.linked.iterIncr.state.isClean) {
-        let newIters = this.linked.iters.state.iters
-          + this.linked.iterIncr.state.iterIncr;
+      if (iterIncrInput.state.isClean) {
+        let newIters = itersInput.state.iters
+          + iterIncrInput.state.iterIncr;
         
-        this.linked.iters.set(newIters);
-        this.linked.iters.state.iters = newIters;
-        this.linked.iters.utils.clean();
+        itersInput.set(newIters);
+        itersInput.state.iters = newIters;
+        itersInput.utils.clean();
       }
     },
   },
@@ -575,14 +562,14 @@ const decrItersButton = new Button({
   id: "decrease-iterations",
   eventCallbacks: {
     click() {
-      if (this.linked.iterIncr.state.isClean) {
-        let newIters = this.linked.iters.state.iters
-          - this.linked.iterIncr.state.iterIncr;
+      if (iterIncrInput.state.isClean) {
+        let newIters = itersInput.state.iters
+          - iterIncrInput.state.iterIncr;
         
         if (newIters > 0) {
-          this.linked.iters.set(newIters);
-          this.linked.iters.state.iters = newIters;
-          this.linked.iters.utils.clean();
+          itersInput.set(newIters);
+          itersInput.state.iters = newIters;
+          itersInput.utils.clean();
         }
       }
     },
@@ -607,7 +594,7 @@ const escapeRadiusInput = new TextInput({
   utils: {
     // Mark self as valid
     clean() {
-      this.linked.alert.hide();
+      escapeRadiusAlert.hide();
       this.state.isClean = true;
     },
 
@@ -615,7 +602,7 @@ const escapeRadiusInput = new TextInput({
     sanitize() {
       let er = Number(this.element.value);
       if (isNaN(er) || er < 2) {
-        this.linked.alert.show();
+        escapeRadiusAlert.show();
         this.state.isClean = false;
       }
       else {
@@ -650,7 +637,7 @@ const smoothColoringContainer = new Element({
   id: "smooth-coloring-container",
   eventCallbacks: {
     click() {
-      let ele = this.linked.smoothColoring.element;
+      let ele = smoothColoringCheckbox.element;
       ele.checked = !ele.checked;
     },
   },
@@ -662,9 +649,9 @@ const resetButton = new Button({
   eventCallbacks: {
     click() {
       // Reset frame, reset iters, er, etc. then render
-      this.linked.render.utils.queueDefaultFrame();
-      this.linked.fractalType.utils.resetInputs();
-      this.linked.render.utils.render();
+      renderButton.utils.queueDefaultFrame();
+      fractalDropdown.utils.resetInputs();
+      renderButton.utils.render();
     },
   }
 });
@@ -673,15 +660,15 @@ const resizeButton = new Button({
   id: "resize",
   eventCallbacks: {
     click() {
-      if (!this.linked.mainCanvas.state.rendering) {
+      if (!mainCanvas.state.rendering) {
         let dim = [
-          window.innerWidth - CSSpxToNumber(this.linked.toolbar.element.style.width),
+          window.innerWidth - CSSpxToNumber(toolbar.element.style.width),
           window.innerHeight
         ];
-        this.linked.mainCanvas.setDim(...dim);
-        this.linked.controlCanvas.setDim(...dim);
+        mainCanvas.setDim(...dim);
+        controlCanvas.setDim(...dim);
 
-        this.linked.render.utils.render();
+        renderButton.utils.render();
       }
     },
   },
@@ -695,12 +682,12 @@ const importSettingsButton = new Button({
   id: "import-settings",
   eventCallbacks: {
     click() {
-      let str = this.linked.settingsJson.element.value;
+      let str = settingsJsonInput.element.value;
       let obj = JSON.parse(str);
-      this.linked.canvas.utils.render(obj);
+      mainCanvas.utils.render(obj);
     },
   },
 });
 
 // Initial render
-elements.render.utils.render();
+renderButton.utils.render();
