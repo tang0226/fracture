@@ -106,6 +106,10 @@ class Gradient {
     }
   }
 
+  getPrettifiedString() {
+    return this.string.replace(/; ?/g, ";\n")
+  }
+
   copy() {
     return new Gradient(this.string);
   }

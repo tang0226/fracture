@@ -214,7 +214,7 @@ const renderButton = new Button({
       }
 
       // check other inputs
-      if (!itersInput.state.isClean || !escapeRadiusInput.state.isClean) {
+      if (!itersInput.state.isClean || !escapeRadiusInput.state.isClean || !gradientInput.state.isClean) {
         canRender = false;
       }
 
@@ -252,7 +252,7 @@ const renderButton = new Button({
             smoothColoring: smoothColoringCheckbox.element.checked,
           },
           srcFrame: frame,
-          gradient: DEFAULTS.gradient,
+          gradient: gradientInput.state.gradient,
           gradientSettings: { itersPerCycle: null},
         };
         render(settings);
@@ -457,7 +457,7 @@ const itersInput = new TextInput({
 
     // Verify and accept input
     sanitize() {
-      let i = Number(this.element.value)
+      let i = Number(this.element.value);
       if (isNaN(i) || i < 1) {
         itersAlert.show();
         this.state.isClean = false;
@@ -626,6 +626,45 @@ const resetButton = new Button({
       renderButton.utils.render();
     },
   }
+});
+
+const gradientInput = new TextInput({
+  id: "gradient",
+  value: DEFAULTS.gradient.getPrettifiedString(),
+  state: {
+    isClean: true,
+    gradient: DEFAULTS.gradient,
+  },
+  eventCallbacks: {
+    change() {
+      this.utils.sanitize();
+    },
+  },
+  utils: {
+    // Mark self as valid
+    clean() {
+      gradientAlert.hide();
+      this.state.isClean = true;
+    },
+
+    sanitize() {
+      try {
+        let grad = new Gradient(this.element.value);
+        this.state.gradient = grad;
+        this.utils.clean();
+      }
+      catch (error) {
+        gradientAlert.show();
+        this.state.isClean = false;
+      }
+    },
+  },
+});
+
+const gradientAlert = new TextElement({
+  id: "gradient-alert",
+  innerText: "There is an error in the gradient",
+  hide: true,
 });
 
 const resizeButton = new Button({

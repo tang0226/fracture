@@ -47,10 +47,10 @@ onmessage = function(event) {
           currChunk[i + 3] = 255;
         }
         else {
-          let bw = 255 * val / settings.iterSettings.iters;
-          currChunk[i] = bw;
-          currChunk[i + 1] = bw;
-          currChunk[i + 2] = bw;
+          let col = settings.gradient.getColorAt(val / settings.iterSettings.iters);
+          currChunk[i] = col[0];
+          currChunk[i + 1] = col[1];
+          currChunk[i + 2] = col[2];
           currChunk[i + 3] = 255;          
         }
 
