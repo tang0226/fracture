@@ -40,10 +40,13 @@
   resize: horizontal;
 }
 
-section, div, input, select {
-  margin: 3px 0px 3px 10px;
-  font-family: "Arial";
+div, input, select {
   font-size: 16px;
+  font-family: "Arial";
+}
+
+.ui-block {
+  margin: 5px 0px 5px 15px;
 }
 
 hr {

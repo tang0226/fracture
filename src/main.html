@@ -10,26 +10,26 @@
     <canvas id="control-canvas" class="control-canvas"></canvas>  
 
     <section id="toolbar">
-      <div id="mouse-coords-container">
+      <div id="mouse-coords-container" class="ui-block">
         Mouse coordinates: <div id="mouse-complex-coords" class="inline"></div>
       </div>
 
       
-      <div id="progress-container">
+      <div id="progress-container" class="ui-block">
         Progress: <div id="progress" class="inline"></div>
       </div>
 
-      <div id="progress-bar-container">
+      <div id="progress-bar-container" class="ui-block">
         <progress id="progress-bar" max="100"></progress>
       </div>
 
-      <div id="render-time-container">
+      <div id="render-time-container" class="ui-block">
         Render time: <span id="render-time" class="inline"></span>
       </div>
 
       <hr>
 
-      <div>
+      <div class="ui-block">
         <input id="render" type="button" value="Render"/>
         <input id="cancel" type="button" value="Cancel"/>
 
@@ -43,11 +43,9 @@
         </div>
       </div>
 
-      <br/>
+      <hr>
 
-      <br/>
-
-      <div id="fractal-select-container">
+      <div id="fractal-select-container" class="ui-block">
         Fractal:
         <select id="fractal-type" class="inline">
           <option value="mandelbrot">Mandelbrot set</option>
@@ -65,13 +63,13 @@
         </select>
       </div>
 
-      <div id="exponent-container">
+      <div id="exponent-container" class="ui-block">
         Exponent:
         <input type="text" id="exponent" class="inline"/>
         <div id="exponent-alert" class="alert"></div>
       </div>
 
-      <div id="julia-constant-container">
+      <div id="julia-constant-container" class="ui-block">
         Julia constant:
         <input type="text" id="julia-constant" class="inline"/>
         <div id="julia-constant-alert" class="alert"></div>
@@ -79,64 +77,64 @@
 
       <hr>
 
-      <input id="increase-iterations" type="button" value="+"/>
+      <input id="increase-iterations" type="button" value="+" class="ui-block"/>
 
-      <div id="iterations-container">
+      <div id="iterations-container" class="ui-block">
         Iterations:
         <input type="text" id="iterations" class="inline"/>
         <div id="iterations-alert" class="alert"></div>
       </div>
 
-      <input id="decrease-iterations" type="button" value="-"/>
+      <input id="decrease-iterations" type="button" value="-" class="ui-block"/>
 
-      <div>
+      <div class="ui-block">
         Increment:
         <input id="iteration-increment" type="text" class="inline"/>
         <div id="iteration-increment-alert" class="alert"></div>
       </div>
 
-      <div id="escape-radius-container">
+      <div id="escape-radius-container" class="ui-block">
         Escape radius:
         <input type="text" id="escape-radius" class="inline"/>
         <div id="escape-radius-alert" class="alert"></div>
       </div>
 
-      <div id="zoom-container">
+      <div id="zoom-container" class="ui-block">
         Zoom: <div id="zoom" class="inline"></div>
         <input id="reset" type="button" class="inline" value="Reset"/>
       </div>
 
-      <div>
+      <div class="ui-block">
         Click zoom factor:
         <input id="click-zoom-factor"/>
         <div id="click-zoom-factor-alert" class="alert"></div>
       </div>
 
-      <div id="smooth-coloring-container">
+      <div id="smooth-coloring-container" class="ui-block">
         <input type="checkbox" id="smooth-coloring"/> Smooth coloring
       </div>
 
       <hr>
 
-      <div id="gradient-container">
+      <div id="gradient-container" class="ui-block">
         Gradient:
         <br/>
         <textarea id="gradient" cols="40" rows="5"></textarea>
         <div id="gradient-alert" class="alert"></div>
       </div>
 
-      <div id="gradient-canvas-container" class="canvas-container">
+      <div id="gradient-canvas-container" class="canvas-container ui-block">
         <canvas id="gradient-main-canvas" class="double-canvas border"></canvas>
         <canvas id="gradient-control-canvas" class="control-canvas double-canvas border"></canvas>
       </div>
 
-      <div id="rgb-container">
+      <div id="rgb-container" class="ui-block">
         R<input id="color-r" type="range" min="0" max="255"/><br/>
         G<input id="color-g" type="range" min="0" max="255"/><br/>
         B<input id="color-b" type="range" min="0" max="255"/>
       </div>
 
-      <div id="ipc-container">
+      <div id="ipc-container" class="ui-block">
         Iterations per cycle:
         <input type="text" id="iters-per-cycle"/>
         <div id="ipc-alert" class="alert"></div>
@@ -144,23 +142,23 @@
 
       <hr>
 
-      <div id="canvas-width-container">
+      <div id="canvas-width-container" class="ui-block">
         Width (px):
         <input type="text" id="canvas-width"/>
         <div id="canvas-width-alert" class="alert"></div>
       </div>
 
-      <div id="canvas-height-container">
+      <div id="canvas-height-container" class="ui-block">
         Height (px):
         <input type="text" id="canvas-height"/>
         <div id="canvas-height-alert" class="alert"></div>
       </div>
 
-      <input id="resize" type="button" value="Resize"/>
+      <input id="resize" type="button" value="Resize" class="ui-block"/>
 
       <hr>
 
-      <div>
+      <div class="ui-block">
         <textarea id="settings-json" cols="50" rows="6"></textarea>
         <input id="import-settings" type="button" value="Import"/>
       </div>
