@@ -1,6 +1,9 @@
-const DEFAULTS = {
-  toolbarWidth: 500,
+const SETTINGS = {
+  toolbarWidth: 450,
+  gradientBarHeight: 15,
+};
 
+const DEFAULTS = {
   iters: 100,
   escapeRadius: 256,
   smoothColoring: true,
@@ -12,12 +15,13 @@ const DEFAULTS = {
     tricorn: new Frame(Complex(-0.25, 0), 4, 4)
   },
   gradient: new Gradient(
-    "2; 0, 0 0 0; 1, 255 255 255;"
+    `12;0, 0 0 0;1, 150 0 0;2, 0 0 0;3, 200 200 0;4, 0 0 0;5, 50 100 50;
+     6, 0 0 0;7, 0 175 175;8, 0 0 0;9, 75 75 150;10, 0 0 0;11, 100 50 150;`
   ),
 };
 
 DEFAULTS.imageSettings = new ImageSettings({
-  width: window.innerWidth - DEFAULTS.toolbarWidth,
+  width: window.innerWidth - SETTINGS.toolbarWidth,
   height: window.innerHeight,
   fractal: new Fractal(FRACTAL_TYPES.mandelbrot),
   iterSettings: {
@@ -97,7 +101,7 @@ function queueDefaultFrame() {
 const toolbar = new Element({
   id: "toolbar",
   init() {
-    this.element.style.width = DEFAULTS.toolbarWidth + "px";
+    this.element.style.width = SETTINGS.toolbarWidth + "px";
   },
 });
 
@@ -107,7 +111,7 @@ const mainCanvas = new Canvas({
     currSettings: ImageSettings.reconstruct(DEFAULTS.imageSettings),
   },
   init() {
-    this.setDim(window.innerWidth - DEFAULTS.toolbarWidth, window.innerHeight);
+    this.setDim(window.innerWidth - SETTINGS.toolbarWidth, window.innerHeight);
   },
 });
 
@@ -115,7 +119,7 @@ const controlCanvas = new Canvas({
   id: "control-canvas",
   interactive: true,
   init() {
-    this.setDim(window.innerWidth - DEFAULTS.toolbarWidth, window.innerHeight);
+    this.setDim(window.innerWidth - SETTINGS.toolbarWidth, window.innerHeight);
   },
   eventCallbacks: {
     mouseMove() {
@@ -648,15 +652,26 @@ const gradientInput = new TextInput({
     },
 
     sanitize() {
+      let grad;
       try {
-        let grad = new Gradient(this.element.value);
-        this.state.gradient = grad;
-        this.utils.clean();
+        grad = new Gradient(this.element.value);
       }
       catch (error) {
         gradientAlert.show();
         this.state.isClean = false;
+        return;
       }
+
+      this.state.gradient = grad;
+      this.element.value = grad.getPrettifiedString();
+
+      gradientMainCanvas.state.gradient = grad;
+      gradientControlCanvas.state.selected = null;
+      rgbContainer.hide();
+      gradientMainCanvas.utils.draw();
+      gradientControlCanvas.utils.draw();
+
+      this.utils.clean();
     },
   },
 });
@@ -666,6 +681,165 @@ const gradientAlert = new TextElement({
   innerText: "There is an error in the gradient",
   hide: true,
 });
+
+const gradientMainCanvas = new Canvas({
+  id: "gradient-main-canvas",
+  width: 400,
+  height: 75,
+  init() {
+    this.utils.draw();
+  },
+  state: {
+    gradient: DEFAULTS.gradient,
+  },
+  utils: {
+    draw() {
+      this.ctx.clearRect(0, 0, this.width, this.height);
+
+      let grad = this.state.gradient;
+
+      // Draw gradient
+      for (let x = 0; x < this.width + 1; x++) {
+        let col = grad.getColorAt(x / this.width);
+        this.ctx.fillStyle = `rgb(${col[0]}, ${col[1]}, ${col[2]})`;
+        this.ctx.fillRect(x, 0, 1, this.height - SETTINGS.gradientBarHeight);
+      }
+    },
+  },
+});
+
+const gradientControlCanvas = new Canvas({
+  id: "gradient-control-canvas",
+  interactive: true,
+  width: 400,
+  height: 75,
+  init() {
+    this.utils.draw();
+  },
+  state: {
+    selected: null,
+  },
+  utils: {
+    draw() {
+      this.ctx.clearRect(0, 0, this.width, this.height);
+
+      let grad = gradientMainCanvas.state.gradient;
+      let points = grad.points;
+
+      // Draw bar underneath
+      let numPoints = points.length;
+      let start = 0;
+      this.state.positions = [0];
+      for (let i = 0; i < numPoints; i++) {
+        let col = points[i].color;
+        this.ctx.fillStyle = `rgb(${col[0]}, ${col[1]}, ${col[2]})`;
+
+        let avg = i == numPoints - 1 ? 1 : (points[i].pos + points[i + 1].pos) / 2;
+
+        let params = [
+          Math.round(start * this.width), this.height - SETTINGS.gradientBarHeight,
+          Math.ceil((avg - start) * this.width), SETTINGS.gradientBarHeight
+        ];
+
+        this.ctx.fillRect(...params);
+
+        if (
+          i == this.state.selected ||
+          (this.state.selected == 0 && i == numPoints - 1) ||
+          (this.state.selected == numPoints - 1 && i == 0)
+        ) {
+          this.ctx.strokeStyle = col[0] + col[1] + col[2] < 383 ? "#FFFFFF" : "#000000";
+          this.ctx.lineWidth = 2;
+          this.ctx.strokeRect(params[0] + 1, params[1] + 1, params[2] - 2, params[3] - 2);
+        }
+
+        start = avg
+        this.state.positions.push(avg);
+      }
+    },
+
+    modifySelectedColor(i, n) {
+      let grad = gradientMainCanvas.state.gradient;
+      let selected = this.state.selected;
+      grad.points[selected].color[i] = n;
+      grad.updateString();
+
+      gradientMainCanvas.utils.draw();
+      this.utils.draw();
+
+      gradientInput.state.gradient = grad;
+      gradientInput.element.value = grad.getPrettifiedString();
+    },
+  },
+  eventCallbacks: {
+    mouseUp() {
+      if (this.state.mouseY > this.height - SETTINGS.gradientBarHeight) {
+        for (let i = 0; i < this.state.positions.length - 1; i++) {
+          let normX = this.state.mouseX / this.width
+          if (this.state.positions[i] < normX && normX < this.state.positions[i + 1]) {
+            if (this.state.selected == i) {
+              this.state.selected = null;
+              this.utils.draw();
+              rgbContainer.hide();
+            }
+            else {
+              this.state.selected = i;
+              this.utils.draw();
+              rgbContainer.utils.setSliders(
+                ...gradientMainCanvas.state.gradient.points[i].color
+              );
+              rgbContainer.show();
+            }
+            break;
+          }
+        }
+      }
+    },
+  },
+});
+
+const rgbContainer = new Element({
+  id: "rgb-container",
+  hide: true,
+  utils: {
+    setSliders(r, g, b) {
+      rSlider.element.value = r;
+      gSlider.element.value = g;
+      bSlider.element.value = b;
+    },
+  },
+});
+
+const rSlider = new Slider({
+  id: "color-r",
+  dispStyle: "inline",
+  eventCallbacks: {
+    input() {
+      gradientControlCanvas.utils.modifySelectedColor(0, Number(this.element.value));
+    }
+  },
+});
+
+const gSlider = new Slider({
+  id: "color-g",
+  dispStyle: "inline",
+  eventCallbacks: {
+    input() {
+      gradientControlCanvas.utils.modifySelectedColor(1, Number(this.element.value));
+    }
+  },
+});
+
+const bSlider = new Slider({
+  id: "color-b",
+  dispStyle: "inline",
+  eventCallbacks: {
+    input() {
+      gradientControlCanvas.utils.modifySelectedColor(2, Number(this.element.value));
+    }
+  },
+});
+
 
 const resizeButton = new Button({
   id: "resize",

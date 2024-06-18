@@ -1,5 +1,5 @@
 class Element {
-  constructor(params, attachEvents = true) {
+  constructor(params, attachEvents = true, initNow = true) {
     this.id = params.id || params.element.id;
     this.element = params.element || document.getElementById(params.id);
 
@@ -50,7 +50,7 @@ class Element {
       }
     };
 
-    if (params.init) {
+    if (params.init && initNow) {
       this.init = params.init.bind(this);
       this.init();
     }

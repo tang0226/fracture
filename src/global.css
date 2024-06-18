@@ -8,6 +8,19 @@
   z-index: 1;
 }
 
+.border {
+  border: 1px solid black;
+}
+
+.canvas-container {
+  display: grid;
+}
+
+.double-canvas {
+  grid-row: 1;
+  grid-column: 1;
+}
+
 #toolbar {
   position: absolute;
   left: 0px;

@@ -57,7 +57,7 @@ class Gradient {
       }
   
       this.points.push({
-        pos: pos / range,
+        pos: round(pos / range, 4),
         color: color
       })
     }
@@ -75,9 +75,12 @@ class Gradient {
     if (this.points[this.points.length - 1].pos != range) {
       this.points.push({
         pos: 1,
+        //     Useful because of pointers (the ends are linked)
         color: this.points[0].color
       });
     }
+
+    this.updateString();
   }  
   
 
@@ -107,7 +110,16 @@ class Gradient {
   }
 
   getPrettifiedString() {
-    return this.string.replace(/; ?/g, ";\n")
+    let str = "1;";
+    for (let i = 0; i < this.points.length - 1; i++) {
+      let col = this.points[i].color;
+      str += `\n${this.points[i].pos}, ${col[0]} ${col[1]} ${col[2]};`;
+    }
+    return str;
+  }
+
+  updateString() {
+    this.string = this.getPrettifiedString();
   }
 
   copy() {

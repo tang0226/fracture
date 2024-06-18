@@ -23,4 +23,8 @@ function msToTime(ms) {
 
 function scale(n, a, b, c, d) {
   return ((n / (b - a)) * (d - c)) + c;
-};
+}
+
+function round(n, dp) {
+  return Math.round(n * 10 ** dp) / 10 ** dp;
+}

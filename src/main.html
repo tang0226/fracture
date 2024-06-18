@@ -125,6 +125,17 @@
         <div id="gradient-alert" class="alert"></div>
       </div>
 
+      <div id="gradient-canvas-container" class="canvas-container">
+        <canvas id="gradient-main-canvas" class="double-canvas border"></canvas>
+        <canvas id="gradient-control-canvas" class="control-canvas double-canvas border"></canvas>
+      </div>
+
+      <div id="rgb-container">
+        R<input id="color-r" type="range" min="0" max="255"/><br/>
+        G<input id="color-g" type="range" min="0" max="255"/><br/>
+        B<input id="color-b" type="range" min="0" max="255"/>
+      </div>
+
       <div id="ipc-container">
         Iterations per cycle:
         <input type="text" id="iters-per-cycle"/>
@@ -173,6 +184,7 @@
     <script src="./js/ui/input/text-input.js"></script>
     <script src="./js/ui/input/dropdown.js"></script>
     <script src="./js/ui/input/checkbox.js"></script>
+    <script src="./js/ui/input/slider.js"></script>
     <script src="./js/main.js"></script>
   </body>
 </html>

@@ -1,18 +1,24 @@
 class Canvas extends Element {
   constructor(params) {
     // False because we are adding event listeners later (see element.js)
-    super(params, false);
+    super(params, false, false);
 
     this.width = params.width || this.element.width;
     this.height = params.height || this.element.height;
 
+    this.element.style.width = this.width + "px";
+    this.element.style.height = this.height + "px";
+    this.element.width = this.width;
+    this.element.height = this.height;
+
     this.ctx = this.element.getContext("2d");
+
+    this.eventCallbacks = {};
 
     // Mouse interaction?
     if (params.interactive) {
       
       if (params.eventCallbacks) {
-        this.eventCallbacks = {};
         for (let event in params.eventCallbacks) {
           this.eventCallbacks[event] = params.eventCallbacks[event].bind(this);
         }
@@ -63,6 +69,11 @@ class Canvas extends Element {
         this.state.startDragX = null;
         this.state.startDragY = null;
       }.bind(this))
+    }
+
+    if (params.init) {
+      this.init = params.init.bind(this);
+      this.init();
     }
   }
 
