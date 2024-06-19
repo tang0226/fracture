@@ -871,7 +871,7 @@ const itersPerCycleInput = new TextInput({
 
 const itersPerCycleAlert = new TextElement({
   id: "ipc-alert",
-  innerText: "Iterations per cycle must be an integer greater than 1",
+  innerText: "Iterations per cycle must be a positive integer",
   hide: true,
 });
 
@@ -927,13 +927,15 @@ const decrIpcButton = new Button({
   eventCallbacks: {
     click() {
       if (ipcIncrInput.state.isClean) {
-        let newIpc = itersPerCycleInput.state.ipc
-          - ipcIncrInput.state.ipcIncr;
-        
-        itersPerCycleInput.set(newIpc);
-        itersPerCycleInput.state.ipc = newIpc;
-        itersPerCycleInput.utils.clean();
-        itersPerCycleInput.utils.harmonize();
+        if (itersPerCycleInput.state.ipc > ipcIncrInput.state.ipcIncr) {
+          let newIpc = itersPerCycleInput.state.ipc
+            - ipcIncrInput.state.ipcIncr;
+          
+          itersPerCycleInput.set(newIpc);
+          itersPerCycleInput.state.ipc = newIpc;
+          itersPerCycleInput.utils.clean();
+          itersPerCycleInput.utils.harmonize();
+        }
       }
     },
   },
