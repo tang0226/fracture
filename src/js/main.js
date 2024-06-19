@@ -37,68 +37,6 @@ DEFAULTS.imageSettings = new ImageSettings({
 
 
 
-var currSettings = DEFAULTS.imageSettings.copy(),
-  lastSettings, queuedFrame, renderInProgress, renderWorker, renderProgress, renderTime;
-
-
-function pushSettings(newSettings) {
-  lastSettings = ImageSettings.reconstruct(currSettings);
-  currSettings = ImageSettings.reconstruct(newSettings);
-}
-
-function render(imageSettings, _pushSettings = true) {
-  if (_pushSettings) {
-    pushSettings(imageSettings);
-  }
-  renderInProgress = true;
-
-  renderWorker = new Worker("./js/render-worker.js");
-
-  renderWorker.onmessage = function(event) {
-    let data = event.data;
-    switch (data.type) {
-      case "update":
-        mainCanvas.ctx.putImageData(data.imgData, data.x, data.y);
-        break;
-
-      case "progress":
-        let percent = Math.floor(data.y / data.h * 100);
-        progressDisp.set(percent + "%");
-        progressBar.set(percent);
-        renderProgress = percent;
-
-        renderTimeDisp.set(msToTime(data.renderTime));
-        renderTime = data.renderTime;
-        break;
-
-      case "done":
-        renderInProgress = false;
-    }
-  };
-
-  renderWorker.postMessage({
-    msg: "draw",
-    settings: JSON.parse(JSON.stringify(imageSettings)),
-  });
-}
-
-function cancelRender(skipMsg) {
-  if (renderInProgress) {
-    renderWorker.terminate();
-    renderInProgress = false;
-    if (!skipMsg) {
-      progressDisp.set(renderProgress + "%" + " (cancelled)");
-    }
-  }
-}
-
-// Set frame for new redraw (when changing fractals)
-function queueDefaultFrame() {
-  queuedFrame =
-    DEFAULTS.specialSrcFrame[fractalDropdown.element.value] || DEFAULTS.srcFrame;
-}
-
-
 const toolbar = new Element({
   id: "toolbar",
   init() {
@@ -931,6 +869,70 @@ const importSettingsButton = new Button({
   },
 });
 
+
+
+var currSettings = DEFAULTS.imageSettings.copy(),
+  lastSettings, queuedFrame, renderInProgress, renderWorker, renderProgress, renderTime;
+
+function pushSettings(newSettings) {
+  lastSettings = ImageSettings.reconstruct(currSettings);
+  currSettings = ImageSettings.reconstruct(newSettings);
+}
+
+function render(imageSettings, _pushSettings = true) {
+  if (_pushSettings) {
+    pushSettings(imageSettings);
+  }
+  renderInProgress = true;
+
+  renderWorker = new Worker("./js/render-worker.js");
+
+  renderWorker.onmessage = function(event) {
+    let data = event.data;
+    switch (data.type) {
+      case "update":
+        mainCanvas.ctx.putImageData(data.imgData, data.x, data.y);
+        break;
+
+      case "progress":
+        let percent = Math.floor(data.y / data.h * 100);
+        progressDisp.set(percent + "%");
+        progressBar.set(percent);
+        renderProgress = percent;
+
+        renderTimeDisp.set(msToTime(data.renderTime));
+        renderTime = data.renderTime;
+        break;
+
+      case "done":
+        renderInProgress = false;
+    }
+  };
+
+  renderWorker.postMessage({
+    msg: "draw",
+    settings: JSON.parse(JSON.stringify(imageSettings)),
+  });
+}
+
+function cancelRender(skipMsg) {
+  if (renderInProgress) {
+    renderWorker.terminate();
+    renderInProgress = false;
+    if (!skipMsg) {
+      progressDisp.set(renderProgress + "%" + " (cancelled)");
+    }
+  }
+}
+
+// Set frame for new redraw (when changing fractals)
+function queueDefaultFrame() {
+  queuedFrame =
+    DEFAULTS.specialSrcFrame[fractalDropdown.element.value] || DEFAULTS.srcFrame;
+}
+
+
+// Set inputs to defaults
 function resetInputs() {
   itersInput.set(DEFAULTS.iters);
   itersInput.state.iters = DEFAULTS.iters;
@@ -944,6 +946,8 @@ function resetInputs() {
   itersPerCycleInput.state.ipc = DEFAULTS.itersPerCycle;
   itersPerCycleInput.utils.clean();
 }
+
+
 
 // Initial render
 renderButton.utils.render();
