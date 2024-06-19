@@ -3,42 +3,23 @@ class Gradient {
     this.string = input;
   
     let lines = input.split(";").map(l => l.trim());
-    
-    // First line is number of points
-    let range = Number(lines[0]);
-  
-    if (!Number.isInteger(range)) {
-      throw "ValueError: First line must be an integer number of points";
+
+    let numColors = lines.length;
+    if (!lines[numColors - 1]) {
+      lines.pop();
+      numColors--;
     }
-    if (range <= 0) {
-      throw "ValueError: First line must be an positive number of points";
-    }
-  
-  
+
     this.points = [];
-  
-    for (let i = 1; i < lines.length; i++) {
+    for (let i = 0; i < numColors; i++) {
       let line = lines[i];
       if (!line) {
         continue;
       }
   
-      let parts = line.split(",").map(p => p.trim());
-      if (parts.length != 2) {
-        throw "SyntaxError: Color line must have two parts, a position and a color";
-      }
-  
-      // First part is position
-      let pos = Number(parts[0]);
-      if (Number.isNaN(pos)) {
-        throw "ValueError: Color position is not a number";
-      }
-      if (pos > range || pos < 0) {
-        throw "ValueError: Color position is outside of range";
-      }
-  
       // Second part is color
-      let colorArr = parts[1].split(" ").map(c => Number(c.trim()));
+      let colorArr = line.split(" ").map(c => Number(c.trim()));
+
       if (colorArr.length != 3) {
         throw "SyntaxError: Color line must have three space-separated color parameters";
       }
@@ -57,22 +38,12 @@ class Gradient {
       }
   
       this.points.push({
-        pos: round(pos / range, 4),
-        color: color
+        pos: round(i / numColors, 4),
+        color: color,
       })
     }
   
-    this.points.sort(function(a, b) {
-      if (a.pos < b.pos) {
-        return -1;
-      }
-      if (a.pos > b.pos) {
-        return 1;
-      }
-      return 0;
-    });
-  
-    if (this.points[this.points.length - 1].pos != range) {
+    if (this.points[this.points.length - 1].pos != numColors) {
       this.points.push({
         pos: 1,
         //     Useful because of pointers (the ends are linked)
@@ -110,10 +81,11 @@ class Gradient {
   }
 
   getPrettifiedString() {
-    let str = "1;";
+    let str = "";
     for (let i = 0; i < this.points.length - 1; i++) {
       let col = this.points[i].color;
-      str += `\n${this.points[i].pos}, ${col[0]} ${col[1]} ${col[2]};`;
+      str += `${col[0]} ${col[1]} ${col[2]};`;
+      if (i != this.points.length - 1) str += "\n";
     }
     return str;
   }
