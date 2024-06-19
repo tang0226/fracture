@@ -134,10 +134,20 @@
         B<input id="color-b" type="range" min="0" max="255"/>
       </div>
 
+      <input id="increase-ipc" type="button" value="+" class="ui-block"/>
+
       <div id="ipc-container" class="ui-block">
         Iterations per cycle:
         <input type="text" id="iters-per-cycle"/>
         <div id="ipc-alert" class="alert"></div>
+      </div>
+
+      <input id="decrease-ipc" type="button" value="-" class="ui-block"/>
+
+      <div class="ui-block">
+        Increment:
+        <input id="ipc-increment" type="text" class="inline"/>
+        <div id="ipc-increment-alert" class="alert"></div>
       </div>
 
       <hr>

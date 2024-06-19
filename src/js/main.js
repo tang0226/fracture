@@ -411,9 +411,7 @@ const itersInput = new TextInput({
       else {
         this.state.iters = i;
         this.utils.clean();
-        if (i < itersPerCycleInput.state.ipc) {
-          itersPerCycleInput.utils.setClean(i);
-        }
+        this.utils.harmonize();
       }
     },
 
@@ -421,6 +419,12 @@ const itersInput = new TextInput({
     setClean(val) {
       this.element.value = val;
       this.utils.sanitize();
+    },
+
+    harmonize() {
+      if (this.state.iters < itersPerCycleInput.state.ipc) {
+        itersPerCycleInput.utils.setClean(this.state.iters);
+      }
     },
   },
 });
@@ -474,6 +478,7 @@ const incrItersButton = new Button({
         itersInput.set(newIters);
         itersInput.state.iters = newIters;
         itersInput.utils.clean();
+        itersInput.utils.harmonize();
       }
     },
   },
@@ -491,6 +496,7 @@ const decrItersButton = new Button({
           itersInput.set(newIters);
           itersInput.state.iters = newIters;
           itersInput.utils.clean();
+          itersInput.utils.harmonize();
         }
       }
     },
@@ -815,9 +821,7 @@ const itersPerCycleInput = new TextInput({
       else {
         this.state.ipc = ipc;
         this.utils.clean();
-        if (ipc > itersInput.state.iters) {
-          itersInput.utils.setClean(ipc);
-        }
+        this.utils.harmonize();
       }
     },
 
@@ -826,6 +830,12 @@ const itersPerCycleInput = new TextInput({
       this.element.value = val;
       this.utils.sanitize();
     },
+
+    harmonize() {
+      if (this.state.ipc > itersInput.state.iters) {
+        itersInput.utils.setClean(this.state.ipc);
+      }
+    }
   },
 });
 
@@ -833,6 +843,70 @@ const itersPerCycleAlert = new TextElement({
   id: "ipc-alert",
   innerText: "Iterations per cycle must be an integer greater than 1",
   hide: true,
+});
+
+const ipcIncrInput = new TextInput({
+  id: "ipc-increment",
+  dispStyle: "inline",
+  value: 100,
+  state: {
+    ipcIncr: 100,
+    isClean: true,
+  },
+  eventCallbacks: {
+    change() {
+      let val = Number(this.element.value);
+      if (isNaN(val) || val < 1 || !Number.isInteger(val)) {
+        ipcIncrAlert.show();
+        this.state.isClean = false;
+      }
+      else {
+        this.state.ipcIncr = val;
+        ipcIncrAlert.hide();
+        this.state.isClean = true;
+      }
+    },
+  },
+});
+
+const ipcIncrAlert = new TextElement({
+  id: "ipc-increment-alert",
+  innerText: "IPC increment must be a positive integer",
+  hide: true,
+});
+
+const incrIpcButton = new Button({
+  id: "increase-ipc",
+  eventCallbacks: {
+    click() {
+      if (ipcIncrInput.state.isClean) {
+        let newIpc = itersPerCycleInput.state.ipc
+          + ipcIncrInput.state.ipcIncr;
+        
+        itersPerCycleInput.set(newIpc);
+        itersPerCycleInput.state.ipc = newIpc;
+        itersPerCycleInput.utils.clean();
+        itersPerCycleInput.utils.harmonize();
+      }
+    },
+  },
+});
+
+const decrIpcButton = new Button({
+  id: "decrease-ipc",
+  eventCallbacks: {
+    click() {
+      if (ipcIncrInput.state.isClean) {
+        let newIpc = itersPerCycleInput.state.ipc
+          - ipcIncrInput.state.ipcIncr;
+        
+        itersPerCycleInput.set(newIpc);
+        itersPerCycleInput.state.ipc = newIpc;
+        itersPerCycleInput.utils.clean();
+        itersPerCycleInput.utils.harmonize();
+      }
+    },
+  },
 });
 
 const resizeButton = new Button({
