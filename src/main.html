@@ -116,22 +116,25 @@
 
       <hr>
 
-      <div id="gradient-container" class="ui-block">
-        Gradient:
-        <br/>
-        <textarea id="gradient" cols="40" rows="5"></textarea>
-        <div id="gradient-alert" class="alert"></div>
-      </div>
+      <div class="ui-block">Gradient:</div>
 
       <div id="gradient-canvas-container" class="canvas-container ui-block">
         <canvas id="gradient-main-canvas" class="double-canvas border"></canvas>
         <canvas id="gradient-control-canvas" class="control-canvas double-canvas border"></canvas>
       </div>
 
-      <div id="rgb-container" class="ui-block">
-        R<input id="color-r" type="range" min="0" max="255"/><br/>
-        G<input id="color-g" type="range" min="0" max="255"/><br/>
-        B<input id="color-b" type="range" min="0" max="255"/>
+      <div id="color-control-container" class="ui-block">
+        <div id="rgb-container">
+          R<input id="color-r" type="range" min="0" max="255"/><br/>
+          G<input id="color-g" type="range" min="0" max="255"/><br/>
+          B<input id="color-b" type="range" min="0" max="255"/>
+        </div>
+        <div id="color-preview"></div>
+      </div>
+
+      <div id="gradient-container" class="ui-block">
+        <textarea id="gradient" cols="40" rows="5"></textarea>
+        <div id="gradient-alert" class="alert"></div>
       </div>
 
       <input id="increase-ipc" type="button" value="+" class="ui-block"/>

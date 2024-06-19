@@ -4,23 +4,6 @@
   right: 0px;
 }
 
-.control-canvas {
-  z-index: 1;
-}
-
-.border {
-  border: 1px solid black;
-}
-
-.canvas-container {
-  display: grid;
-}
-
-.double-canvas {
-  grid-row: 1;
-  grid-column: 1;
-}
-
 #toolbar {
   position: absolute;
   left: 0px;
@@ -40,6 +23,22 @@
   resize: horizontal;
 }
 
+#rgb-container {
+  display: inline-block;
+}
+
+#color-preview {
+  display: inline-block;
+  border: 1px solid black;
+  width: 57px;
+  height: 57px;
+}
+
+hr {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
 div, input, select {
   font-size: 16px;
   font-family: "Arial";
@@ -49,9 +48,21 @@ div, input, select {
   margin: 5px 0px 5px 15px;
 }
 
-hr {
-  margin-top: 10px;
-  margin-bottom: 10px;
+.control-canvas {
+  z-index: 1;
+}
+
+.border {
+  border: 1px solid black;
+}
+
+.canvas-container {
+  display: grid;
+}
+
+.double-canvas {
+  grid-row: 1;
+  grid-column: 1;
 }
 
 .inline {

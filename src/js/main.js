@@ -618,7 +618,7 @@ const gradientInput = new TextInput({
 
       gradientMainCanvas.state.gradient = grad;
       gradientControlCanvas.state.selected = null;
-      rgbContainer.hide();
+      colorControlContainer.hide();
       gradientMainCanvas.utils.draw();
       gradientControlCanvas.utils.draw();
 
@@ -702,6 +702,7 @@ const gradientControlCanvas = new Canvas({
           this.ctx.strokeStyle = col[0] + col[1] + col[2] < 383 ? "#FFFFFF" : "#000000";
           this.ctx.lineWidth = 2;
           this.ctx.strokeRect(params[0] + 1, params[1] + 1, params[2] - 2, params[3] - 2);
+          colorPreview.utils.setColor(...col);
         }
 
         start = avg
@@ -731,15 +732,15 @@ const gradientControlCanvas = new Canvas({
             if (this.state.selected == i) {
               this.state.selected = null;
               this.utils.draw();
-              rgbContainer.hide();
+              colorControlContainer.hide();
             }
             else {
               this.state.selected = i;
               this.utils.draw();
-              rgbContainer.utils.setSliders(
+              colorControlContainer.utils.setSliders(
                 ...gradientMainCanvas.state.gradient.points[i].color
               );
-              rgbContainer.show();
+              colorControlContainer.show();
             }
             break;
           }
@@ -749,8 +750,8 @@ const gradientControlCanvas = new Canvas({
   },
 });
 
-const rgbContainer = new Element({
-  id: "rgb-container",
+const colorControlContainer = new Element({
+  id: "color-control-container",
   hide: true,
   utils: {
     setSliders(r, g, b) {
@@ -767,6 +768,8 @@ const rSlider = new Slider({
   eventCallbacks: {
     input() {
       gradientControlCanvas.utils.modifySelectedColor(0, Number(this.element.value));
+      colorPreview.state.r = Number(this.element.value);
+      colorPreview.utils.update();
     }
   },
 });
@@ -777,6 +780,8 @@ const gSlider = new Slider({
   eventCallbacks: {
     input() {
       gradientControlCanvas.utils.modifySelectedColor(1, Number(this.element.value));
+      colorPreview.state.g = Number(this.element.value);
+      colorPreview.utils.update();
     }
   },
 });
@@ -787,6 +792,31 @@ const bSlider = new Slider({
   eventCallbacks: {
     input() {
       gradientControlCanvas.utils.modifySelectedColor(2, Number(this.element.value));
+      colorPreview.state.b = Number(this.element.value);
+      colorPreview.utils.update();
+    }
+  },
+});
+
+const colorPreview = new Element({
+  id: "color-preview",
+  dispStyle: "inline-block",
+  state: {
+    r: null,
+    g: null,
+    b: null,
+  },
+  utils: {
+    setColor(r, g, b) {
+      colorPreview.element.style.background = `rgb(${r}, ${g}, ${b})`;
+      this.state.r = r;
+      this.state.g = g;
+      this.state.b = b;
+    },
+    update() {
+      this.utils.setColor(
+        this.state.r, this.state.g, this.state.b
+      );
     }
   },
 });
