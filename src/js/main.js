@@ -18,6 +18,7 @@ const DEFAULTS = {
     `0 0 0;150 0 0;0 0 0;200 200 0;0 0 0;50 100 50;0 0 0;
     0 175 175;0 0 0;75 75 150;0 0 0;100 50 150;`
   ),
+  itersPerCycle: 100,
 };
 
 DEFAULTS.imageSettings = new ImageSettings({
@@ -31,7 +32,7 @@ DEFAULTS.imageSettings = new ImageSettings({
   },
   srcFrame: DEFAULTS.specialSrcFrame.mandelbrot,
   gradient: DEFAULTS.gradient,
-  gradientSettings: { itersPerCycle: null},
+  gradientSettings: { itersPerCycle: DEFAULTS.itersPerCycle},
 });
 
 
@@ -218,7 +219,10 @@ const renderButton = new Button({
       }
 
       // check other inputs
-      if (!itersInput.state.isClean || !escapeRadiusInput.state.isClean || !gradientInput.state.isClean) {
+      if (
+        !itersInput.state.isClean || !escapeRadiusInput.state.isClean ||
+        !gradientInput.state.isClean || !itersPerCycleInput.state.isClean
+      ) {
         canRender = false;
       }
 
@@ -257,7 +261,7 @@ const renderButton = new Button({
           },
           srcFrame: frame,
           gradient: gradientInput.state.gradient,
-          gradientSettings: { itersPerCycle: null},
+          gradientSettings: { itersPerCycle: itersPerCycleInput.state.ipc},
         };
         render(settings);
       }
@@ -462,13 +466,16 @@ const itersInput = new TextInput({
     // Verify and accept input
     sanitize() {
       let i = Number(this.element.value);
-      if (isNaN(i) || i < 1) {
+      if (isNaN(i) || i < 1 || !Number.isInteger(i)) {
         itersAlert.show();
         this.state.isClean = false;
       }
       else {
         this.state.iters = i;
         this.utils.clean();
+        if (i < itersPerCycleInput.state.ipc) {
+          itersPerCycleInput.utils.setClean(i);
+        }
       }
     },
 
@@ -840,6 +847,55 @@ const bSlider = new Slider({
   },
 });
 
+const itersPerCycleInput = new TextInput({
+  id: "iters-per-cycle",
+  dispStyle: "inline",
+  value: DEFAULTS.itersPerCycle,
+  state: {
+    ipc: DEFAULTS.itersPerCycle,
+    isClean: true,
+  },
+  eventCallbacks: {
+    change() {
+      this.utils.sanitize();
+    },
+  },
+  utils: {
+    // Mark self as valid
+    clean() {
+      itersPerCycleAlert.hide();
+      this.state.isClean = true;
+    },
+
+    // Verify and accept input
+    sanitize() {
+      let ipc = Number(this.element.value);
+      if (isNaN(ipc) || ipc < 1 || !Number.isInteger(ipc)) {
+        itersPerCycleAlert.show();
+        this.state.isClean = false;
+      }
+      else {
+        this.state.ipc = ipc;
+        this.utils.clean();
+        if (ipc > itersInput.state.iters) {
+          itersInput.utils.setClean(ipc);
+        }
+      }
+    },
+
+    // Set to a verified clean input
+    setClean(val) {
+      this.element.value = val;
+      this.utils.sanitize();
+    },
+  },
+});
+
+const itersPerCycleAlert = new TextElement({
+  id: "ipc-alert",
+  innerText: "Iterations per cycle must be an integer greater than 1",
+  hide: true,
+});
 
 const resizeButton = new Button({
   id: "resize",

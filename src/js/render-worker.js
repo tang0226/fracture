@@ -23,6 +23,8 @@ onmessage = function(event) {
     let iterSettings = {...settings.iterSettings};
     iterSettings.smoothColoringExp = settings.fractal.params.e || 2;
 
+    let ipc = settings.gradientSettings.itersPerCycle
+
     let currChunk = [];
     let currChunkHeight = 0;
     let currChunkY = 0;
@@ -40,14 +42,16 @@ onmessage = function(event) {
             iterSettings,
             settings.fractal.params,
           );
-        if (val == settings.iterSettings.iters) {
+        if (val == iterSettings.iters) {
           currChunk[i] = 0;
           currChunk[i + 1] = 0;
           currChunk[i + 2] = 0;
           currChunk[i + 3] = 255;
         }
         else {
-          let col = settings.gradient.getColorAt(val / settings.iterSettings.iters);
+          let col = settings.gradient.getColorAt(
+            (val % ipc) / ipc
+          );
           currChunk[i] = col[0];
           currChunk[i + 1] = col[1];
           currChunk[i + 2] = col[2];
