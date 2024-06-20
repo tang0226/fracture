@@ -68,19 +68,19 @@ class Gradient {
     let max = l - 1;
     let min = 0;
     while (true) {
-      if (pos >= this.points[Math.floor((min + max) / 2)].pos) {
-        min = Math.floor((min + max) / 2);
+      let avg = (min + max) / 2;
+      if (pos >= this.points[Math.floor(avg)].pos) {
+        min = Math.floor(avg);
       }
-      else if (pos <= this.points[Math.ceil((min + max) / 2)].pos) {
-        max = Math.ceil((min + max) / 2);
+      else if (pos <= this.points[Math.ceil(avg)].pos) {
+        max = Math.ceil(avg);
       }
       if (max - min == 1) {
-        let frac =
-          (pos - this.points[min].pos) /
-          (this.points[max].pos - this.points[min].pos);
-        let maxPoint = this.points[max];
         return this.points[min].color.map((c, i) =>
-          c + (maxPoint.color[i] - c) * frac
+          c + (this.points[max].color[i] - c) * (
+            (pos - this.points[min].pos) /
+            (this.points[max].pos - this.points[min].pos)
+          )
         );
       }
     }
