@@ -52,8 +52,14 @@ class Gradient {
     }
 
     this.updateString();
-  }  
+  }
   
+
+  updatePositions() {
+    for (let i = 0; i < this.points.length; i++) {
+      this.points[i].pos = round(i / (this.points.length - 1), 4);
+    }
+  }
 
   getColorAt(pos) {
     let l = this.points.length;
@@ -85,13 +91,49 @@ class Gradient {
     for (let i = 0; i < this.points.length - 1; i++) {
       let col = this.points[i].color;
       str += `${col[0]} ${col[1]} ${col[2]};`;
-      if (i != this.points.length - 1) str += "\n";
+      if (i != this.points.length - 2) str += "\n";
     }
     return str;
   }
 
   updateString() {
     this.string = this.getPrettifiedString();
+  }
+
+  insertColorAt(color, i) {
+    this.points = [
+      ...this.points.slice(0, i),
+      {pos: 0, color: color},
+      ...this.points.slice(i)
+    ];
+    if (i == 0) {
+      // Link first and last
+      this.points[this.points.length - 1].color = this.points[0].color;
+    }
+    if (i == this.points.length - 1) {
+      // Link first and last
+      this.points[0].color = this.points[this.points.length - 1].color;
+    }
+    this.updatePositions();
+    this.updateString();
+  }
+
+  deleteColorAt(i) {
+    this.points = [
+      ...this.points.slice(0, i),
+      ...this.points.slice(i + 1)
+    ];
+    if (i == 0) {
+      // Link first and last
+      this.points[this.points.length - 1].color = this.points[0].color;
+    }
+    if (i == this.points.length) {
+      // Link first and last
+      this.points[0].color = this.points[this.points.length - 1].color;
+    }
+
+    this.updatePositions();
+    this.updateString();
   }
 
   copy() {

@@ -656,6 +656,11 @@ const gradientMainCanvas = new Canvas({
         this.ctx.fillRect(x, 0, 1, this.height - SETTINGS.gradientBarHeight);
       }
     },
+    updateGradientInput() {
+      gradientInput.set(this.state.gradient.getPrettifiedString());
+      gradientInput.state.gradient = this.state.gradient;
+      gradientInput.utils.clean();
+    },
   },
 });
 
@@ -694,52 +699,38 @@ const gradientControlCanvas = new Canvas({
 
         this.ctx.fillRect(...params);
 
-        if (
-          i == this.state.selected ||
-          (this.state.selected == 0 && i == numPoints - 1) ||
-          (this.state.selected == numPoints - 1 && i == 0)
-        ) {
+        if (i == this.state.selected) {
           this.ctx.strokeStyle = col[0] + col[1] + col[2] < 383 ? "#FFFFFF" : "#000000";
           this.ctx.lineWidth = 2;
           this.ctx.strokeRect(params[0] + 1, params[1] + 1, params[2] - 2, params[3] - 2);
-          colorPreview.utils.setColor(...col);
         }
 
         start = avg
         this.state.positions.push(avg);
       }
     },
-
-    modifySelectedColor(i, n) {
-      let grad = gradientMainCanvas.state.gradient;
-      let selected = this.state.selected;
-      grad.points[selected].color[i] = n;
-      grad.updateString();
-
-      gradientMainCanvas.utils.draw();
-      this.utils.draw();
-
-      gradientInput.state.gradient = grad;
-      gradientInput.element.value = grad.getPrettifiedString();
-    },
   },
   eventCallbacks: {
-    mouseUp() {
+    mouseDown() {
       if (this.state.mouseY > this.height - SETTINGS.gradientBarHeight) {
         for (let i = 0; i < this.state.positions.length - 1; i++) {
           let normX = this.state.mouseX / this.width
           if (this.state.positions[i] < normX && normX < this.state.positions[i + 1]) {
+
+            // deselect if already selected
             if (this.state.selected == i) {
               this.state.selected = null;
               this.utils.draw();
               colorControlContainer.hide();
             }
+
             else {
               this.state.selected = i;
               this.utils.draw();
-              colorControlContainer.utils.setSliders(
-                ...gradientMainCanvas.state.gradient.points[i].color
-              );
+
+              let col = gradientMainCanvas.state.gradient.points[i].color;
+              colorPreview.utils.setColor(col)
+              colorControlContainer.utils.setSliders(col);
               colorControlContainer.show();
             }
             break;
@@ -754,47 +745,26 @@ const colorControlContainer = new Element({
   id: "color-control-container",
   hide: true,
   utils: {
-    setSliders(r, g, b) {
-      rSlider.element.value = r;
-      gSlider.element.value = g;
-      bSlider.element.value = b;
+    setSliders(col) {
+      rSlider.element.value = col[0];
+      gSlider.element.value = col[1];
+      bSlider.element.value = col[2];
     },
-  },
-});
+    modifySelectedColor(i, n) {
+      let grad = gradientMainCanvas.state.gradient;
+      let selected = gradientControlCanvas.state.selected;
 
-const rSlider = new Slider({
-  id: "color-r",
-  dispStyle: "inline",
-  eventCallbacks: {
-    input() {
-      gradientControlCanvas.utils.modifySelectedColor(0, Number(this.element.value));
-      colorPreview.state.r = Number(this.element.value);
-      colorPreview.utils.update();
-    }
-  },
-});
+      let col = grad.points[selected].color;
+      col[i] = n;
+      grad.updateString();
+      gradientMainCanvas.utils.draw();
+      gradientControlCanvas.utils.draw();
 
-const gSlider = new Slider({
-  id: "color-g",
-  dispStyle: "inline",
-  eventCallbacks: {
-    input() {
-      gradientControlCanvas.utils.modifySelectedColor(1, Number(this.element.value));
-      colorPreview.state.g = Number(this.element.value);
-      colorPreview.utils.update();
-    }
-  },
-});
+      colorPreview.utils.setColor(col);
+      this.utils.setSliders(col);
 
-const bSlider = new Slider({
-  id: "color-b",
-  dispStyle: "inline",
-  eventCallbacks: {
-    input() {
-      gradientControlCanvas.utils.modifySelectedColor(2, Number(this.element.value));
-      colorPreview.state.b = Number(this.element.value);
-      colorPreview.utils.update();
-    }
+      gradientMainCanvas.utils.updateGradientInput();
+    },
   },
 });
 
@@ -807,19 +777,129 @@ const colorPreview = new Element({
     b: null,
   },
   utils: {
-    setColor(r, g, b) {
-      colorPreview.element.style.background = `rgb(${r}, ${g}, ${b})`;
-      this.state.r = r;
-      this.state.g = g;
-      this.state.b = b;
+    setColor(col) {
+      colorPreview.element.style.background = `rgb(${col[0]}, ${col[1]}, ${col[2]})`;
+      this.state.r = col[0];
+      this.state.g = col[1];
+      this.state.b = col[2];
     },
     update() {
-      this.utils.setColor(
-        this.state.r, this.state.g, this.state.b
-      );
+      this.utils.setColor([this.state.r, this.state.g, this.state.b]);
     }
   },
 });
+
+const rSlider = new Slider({
+  id: "color-r",
+  dispStyle: "inline",
+  eventCallbacks: {
+    input() {
+      colorControlContainer.utils.modifySelectedColor(0, Number(this.element.value));
+      colorPreview.state.r = Number(this.element.value);
+      colorPreview.utils.update();
+    }
+  },
+});
+
+const gSlider = new Slider({
+  id: "color-g",
+  dispStyle: "inline",
+  eventCallbacks: {
+    input() {
+      colorControlContainer.utils.modifySelectedColor(1, Number(this.element.value));
+      colorPreview.state.g = Number(this.element.value);
+      colorPreview.utils.update();
+    }
+  },
+});
+
+const bSlider = new Slider({
+  id: "color-b",
+  dispStyle: "inline",
+  eventCallbacks: {
+    input() {
+      colorControlContainer.utils.modifySelectedColor(2, Number(this.element.value));
+      colorPreview.state.b = Number(this.element.value);
+      colorPreview.utils.update();
+    }
+  },
+});
+
+const insertColorLeftButton = new Button({
+  id: "insert-color-left",
+  dispStyle: "inline-block",
+  eventCallbacks: {
+    click() {
+      let mainCanvas = gradientMainCanvas;
+      let controlCanvas = gradientControlCanvas;
+
+      let i = controlCanvas.state.selected;
+      let col = [Math.floor(Math.random() * 256), Math.floor(Math.random() * 256), Math.floor(Math.random() * 256)];
+      mainCanvas.state.gradient.insertColorAt(col, i);
+      mainCanvas.utils.draw();
+      controlCanvas.utils.draw();
+      colorControlContainer.utils.setSliders(col);
+      colorPreview.utils.setColor(col);
+      mainCanvas.utils.updateGradientInput();
+    }
+  },
+});
+
+const insertColorRightButton = new Button({
+  id: "insert-color-right",
+  dispStyle: "inline-block",
+  eventCallbacks: {
+    click() {
+      let mainCanvas = gradientMainCanvas;
+      let controlCanvas = gradientControlCanvas;
+
+      let i = controlCanvas.state.selected;
+      let col = [Math.floor(Math.random() * 256), Math.floor(Math.random() * 256), Math.floor(Math.random() * 256)];
+      mainCanvas.state.gradient.insertColorAt(col, i + 1);
+      controlCanvas.state.selected++;
+      mainCanvas.utils.draw();
+      controlCanvas.utils.draw();
+      colorControlContainer.utils.setSliders(col);
+      colorPreview.utils.setColor(col);
+      mainCanvas.utils.updateGradientInput();
+    }
+  },
+});
+// TODO: UPDATE ALL GRADIENT INPUT SETTING AND STATE UPDATES
+const deleteColorButton = new Button({
+  id: "delete-color",
+  dispStyle: "inline-block",
+  eventCallbacks: {
+    click() {
+      let mainCanvas = gradientMainCanvas;
+      let controlCanvas = gradientControlCanvas;
+
+      let numPoints = mainCanvas.state.gradient.points.length;
+      if (numPoints < 4) {
+        return;
+      }
+
+      let i = controlCanvas.state.selected;
+      let grad = mainCanvas.state.gradient;
+      
+      grad.deleteColorAt(i);
+      mainCanvas.utils.draw();
+
+      if (i == numPoints - 1) {
+        controlCanvas.state.selected--;
+        i--;
+      }
+
+      let col = grad.points[i].color;
+      colorControlContainer.utils.setSliders(col);
+      colorPreview.utils.setColor(col);
+
+      controlCanvas.utils.draw();
+
+      mainCanvas.utils.updateGradientInput();
+    },
+  },
+})
 
 const itersPerCycleInput = new TextInput({
   id: "iters-per-cycle",
