@@ -23,103 +23,164 @@ setCanvasDim(canvasWidth, canvasHeight);
 const defaultView = new Frame(Complex(0, 0), 4, 4);
 
 
-// Palette
+// Gradient
 
-const defaultPalette = new Palette(
-    "2;\n0, 0 0 0;\n1, 255 255 255;"
+const defaultGradient = new Gradient(
+    "12;\
+    0, 0 0 0;\
+    1, 255 0 0;\
+    2, 0 0 0;\
+    3, 255 255 0;\
+    4, 0 0 0;\
+    5, 0 255 0;\
+    6, 0 0 0;\
+    7, 0 255 255;\
+    8, 0 0 0;\
+    9, 0 0 255;\
+    10, 0 0 0;\
+    11, 255 0 255;",
+    "linear"
 );
 
 
 
 // Images
 const defaultImages = {
-    Mandelbrot: new Image(
-        new Fractal("Mandelbrot"),
-        1000, 256, true,
-        new Frame(Complex(-0.5, 0), 4, 4),
-        defaultPalette, 200,
-        canvasWidth, canvasHeight
-    ),
-    Julia: new Image(
-        new Fractal("Julia", {c: Complex(0, 1)}),
-        1000, 256, true,
-        defaultView,
-        defaultPalette, 200,
-        canvasWidth, canvasHeight
-    ),
-    Multibrot: new Image(
-        new Fractal("Multibrot", {e: 3}),
-        1000, 256, true,
-        defaultView,
-        defaultPalette, 200,
-        canvasWidth, canvasHeight
-    ),
-    Multijulia: new Image(
-        new Fractal("Multijulia", {e: 3, c: Complex(-0.12, -0.8)}),
-        1000, 256, true,
-        defaultView,
-        defaultPalette, 200,
-        canvasWidth, canvasHeight
-    ),
-    Tricorn: new Image(
-        new Fractal("Tricorn"),
-        1000, 256, true,
-        new Frame(
+    Mandelbrot: new Image({
+        fractal: new Fractal("Mandelbrot"),
+        iterations: 1000,
+        escapeRadius: 256,
+        smoothColoring: true,
+        srcFrame: new Frame(Complex(-0.5, 0), 4, 4),
+        gradient: defaultGradient,
+        itersPerCycle: 200,
+        width: canvasWidth,
+        height: canvasHeight
+    }),
+    Julia: new Image({
+        fractal: new Fractal("Julia", {c: Complex(0, 1)}),
+        iterations: 1000,
+        escapeRadius: 256,
+        smoothColoring: true,
+        srcFrame: defaultView,
+        gradient: defaultGradient,
+        itersPerCycle: 200,
+        width: canvasWidth,
+        height: canvasHeight
+    }),
+    Multibrot: new Image({
+        fractal: new Fractal("Multibrot", {e: 3}),
+        iterations: 1000,
+        escapeRadius: 256,
+        smoothColoring: true,
+        srcFrame: defaultView,
+        gradient: defaultGradient,
+        itersPerCycle: 200,
+        width: canvasWidth,
+        height: canvasHeight
+    }),
+    Multijulia: new Image({
+        fractal: new Fractal("Multijulia", {e: 3, c: Complex(-0.12, -0.8)}),
+        iterations: 1000,
+        escapeRadius: 256,
+        smoothColoring: true,
+        srcFrame: defaultView,
+        gradient: defaultGradient,
+        itersPerCycle: 200,
+        width: canvasWidth,
+        height: canvasHeight
+    }),
+    Tricorn: new Image({
+        fractal: new Fractal("Tricorn"),
+        iterations: 1000,
+        escapeRadius: 256,
+        smoothColoring: true,
+        srcFrame: new Frame(
             Complex(-0.25, 0),
             4, 4
         ),
-        defaultPalette, 200,
-        canvasWidth, canvasHeight
-    ),
-    TricornJulia: new Image(
-        new Fractal("TricornJulia", {c: Complex(-1, 0)}),
-        1000, 256, true,
-        defaultView,
-        defaultPalette, 200,
-        canvasWidth, canvasHeight
-    ),
-    Multicorn: new Image(
-        new Fractal("Multicorn", {e: 3}),
-        1000, 256, true,
-        defaultView,
-        defaultPalette, 200,
-        canvasWidth, canvasHeight
-    ),
-    MulticornJulia: new Image(
-        new Fractal("MulticornJulia", {e: 3, c: Complex(-1, -1)}),
-        1000, 256, true,
-        defaultView,
-        defaultPalette, 200,
-        canvasWidth, canvasHeight
-    ),
-    BurningShip: new Image(
-        new Fractal("BurningShip"),
-        1000, 256, true,
-        new Frame(Complex(0, -0.5), 4, 4),
-        defaultPalette, 200,
-        canvasWidth, canvasHeight
-    ),
-    BurningShipJulia: new Image(
-        new Fractal("BurningShipJulia", {c: Complex(-1.5, 0)}),
-        1000, 256, true,
-        defaultView,
-        defaultPalette, 200,
-        canvasWidth, canvasHeight
-    ),
-    Multiship: new Image(
-        new Fractal("Multiship", {e: 3}),
-        1000, 256, true,
-        defaultView,
-        defaultPalette, 200,
-        canvasWidth, canvasHeight
-    ),
-    MultishipJulia: new Image(
-        new Fractal("MultishipJulia", {e: 3, c: Complex(-1.326667, 0)}),
-        1000, 256, true,
-        defaultView,
-        defaultPalette, 200,
-        canvasWidth, canvasHeight
-    )
+        gradient: defaultGradient,
+        itersPerCycle: 200,
+        width: canvasWidth,
+        height: canvasHeight
+    }),
+    TricornJulia: new Image({
+        fractal: new Fractal("TricornJulia", {c: Complex(-1, 0)}),
+        iterations: 1000,
+        escapeRadius: 256,
+        smoothColoring: true,
+        srcFrame: defaultView,
+        gradient: defaultGradient,
+        itersPerCycle: 200,
+        width: canvasWidth,
+        height: canvasHeight
+    }),
+    Multicorn: new Image({
+        fractal: new Fractal("Multicorn", {e: 3}),
+        iterations: 1000,
+        escapeRadius: 256,
+        smoothColoring: true,
+        srcFrame: defaultView,
+        gradient: defaultGradient,
+        itersPerCycle: 200,
+        width: canvasWidth,
+        height: canvasHeight
+    }),
+    MulticornJulia: new Image({
+        fractal: new Fractal("MulticornJulia", {e: 3, c: Complex(-1, -1)}),
+        iterations: 1000,
+        escapeRadius: 256,
+        smoothColoring: true,
+        srcFrame: defaultView,
+        gradient: defaultGradient,
+        itersPerCycle: 200,
+        width: canvasWidth,
+        height: canvasHeight
+    }),
+    BurningShip: new Image({
+        fractal: new Fractal("BurningShip"),
+        iterations: 1000,
+        escapeRadius: 256,
+        smoothColoring: true,
+        srcFrame: defaultView,
+        gradient: defaultGradient,
+        itersPerCycle: 200,
+        width: canvasWidth,
+        height: canvasHeight
+    }),
+    BurningShipJulia: new Image({
+        fractal: new Fractal("BurningShipJulia", {c: Complex(-1.5, 0)}),
+        iterations: 1000,
+        escapeRadius: 256,
+        smoothColoring: true,
+        srcFrame: defaultView,
+        gradient: defaultGradient,
+        itersPerCycle: 200,
+        width: canvasWidth,
+        height: canvasHeight
+    }),
+    Multiship: new Image({
+        fractal: new Fractal("Multiship", {e: 3}),
+        iterations: 1000,
+        escapeRadius: 256,
+        smoothColoring: true,
+        srcFrame: defaultView,
+        gradient: defaultGradient,
+        itersPerCycle: 200,
+        width: canvasWidth,
+        height: canvasHeight
+    }),
+    MultishipJulia: new Image({
+        fractal: new Fractal("MultishipJulia", {e: 3, c: Complex(-1.326667, 0)}),
+        iterations: 1000,
+        escapeRadius: 256,
+        smoothColoring: true,
+        srcFrame: defaultView,
+        gradient: defaultGradient,
+        itersPerCycle: 200,
+        width: canvasWidth,
+        height: canvasHeight
+    })
 };
 
 
@@ -179,10 +240,6 @@ function resetDrag() {
 // Mouse Events
 
 controlsCanvas.onmousedown = function(event) {
-    if(renderInProgress) {
-        return;
-    }
-
     if(event.buttons == 1) {
         if(!mouseDown) {
             startDragX = mouseX;
@@ -197,11 +254,9 @@ controlsCanvas.onmousedown = function(event) {
 // and keyboard events, draw the new image
 controlsCanvas.onmouseup = function() {
     // Glitch-proofing
-    if(!mouseDown) {
-        return;
-    }
-
-    if(renderInProgress) {
+    if(!mouseDown || renderInProgress || !toolbar.inputStatus.gradient) {
+        // Reset drag
+        resetDrag();
         return;
     }
 
@@ -236,6 +291,10 @@ controlsCanvas.onmouseup = function() {
                         currImg.fractal.params.e = storedImg.fractal.params.e;
                     }
                 }
+
+                else {
+                    return;
+                }
             }
 
             else {
@@ -244,9 +303,6 @@ controlsCanvas.onmouseup = function() {
                 currImg = storedImg.copy();
                 storedImg = null;
             }
-            toolbar.syncFractal();
-            toolbar.syncImageParams();
-            toolbar.setImgPalette();
         }
 
         // Center the frame
@@ -316,8 +372,12 @@ controlsCanvas.onmouseup = function() {
     }
     
     currImg.fitToCanvas(canvasWidth, canvasHeight);
-    toolbar.updateZoom();
-    toolbar.redraw();
+    toolbar.matchFractal();
+    toolbar.matchImageParams();
+    toolbar.setImgGradient();
+    toolbar.clearErrors();
+    
+    draw();
 
     // Reset drag
     resetDrag();
@@ -365,6 +425,8 @@ window.onkeydown = function(event) {
     if(event.key == "Escape") {
         resetDrag();
     }
+
+    // <Enter> redraws image, except when editing the gradient
     if(event.key == "Enter" && document.activeElement.nodeName != "TEXTAREA") {
         document.activeElement.blur();
         toolbar.redraw();

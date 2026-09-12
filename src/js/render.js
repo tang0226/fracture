@@ -1,4 +1,4 @@
-importScripts("./complex.js", "./fractal.js", "./palette.js");
+importScripts("./complex.js", "./fractal.js", "./gradient.js");
 
 function scale(n, minFrom, maxFrom, minTo, maxTo) {
     return ((n / (maxFrom - minFrom)) * (maxTo - minTo)) + minTo;
@@ -37,11 +37,11 @@ onmessage = function(event) {
                 }
                 else {
 
-                    // Format for palette
+                    // Format for gradient
                     val %= ipc;
 
                     // Color scale
-                    let color = Palette.getColorAt(img.palette, val / ipc);
+                    let color = Gradient.getColorAt(img.gradient, val / ipc);
                     imgData.data[i] = color[0];
                     imgData.data[i + 1] = color[1];
                     imgData.data[i + 2] = color[2];

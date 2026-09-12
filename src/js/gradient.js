@@ -1,6 +1,6 @@
-class Palette {
-    constructor(input) {
-        this.string = input;
+class Gradient {
+    constructor(input, interpolationType) {
+        this.string = Gradient.prettify(input);
     
         let lines = input.split(";").map(l => l.trim());
         
@@ -78,10 +78,16 @@ class Palette {
                 color: this.points[0].color
             });
         }
-    }        
+
+        this.interpolationType = interpolationType;
+    }
 }
 
-Palette.getColorAt = function(p, pos) {
+Gradient.prettify = function(string) {
+    return string.split(";").map(l => l.trim()).join(";\n");
+};
+
+Gradient.getColorAt = function(p, pos) {
     let l = p.points.length;
 
     // Binary search
@@ -94,10 +100,16 @@ Palette.getColorAt = function(p, pos) {
         else if(pos <= p.points[Math.ceil((min + max) / 2)].pos) {
             max = Math.ceil((min + max) / 2);
         }
+
         if(max - min == 1) {
             let frac =
                 (pos - p.points[min].pos) /
                 (p.points[max].pos - p.points[min].pos);
+
+            if(p.interpolationType == "sine") {
+                frac = (Math.sin(Math.PI * (frac - 0.5)) + 1) / 2;
+            }
+            
             let maxPoint = p.points[max];
             return p.points[min].color.map((c, i) =>
                 c + (maxPoint.color[i] - c) * frac

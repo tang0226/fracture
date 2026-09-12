@@ -28,7 +28,8 @@ const toolbar = {
         escapeRadius: document.getElementById("escape-radius"),
         clickZoomFactor: document.getElementById("click-zoom-factor"),
         smoothColoring: document.getElementById("smooth-coloring"),
-        palette: document.getElementById("palette"),
+        gradient: document.getElementById("gradient"),
+        interpolationType: document.getElementById("interpolation-type"),
         itersPerCycle: document.getElementById("iters-per-cycle"),
         canvasWidth: document.getElementById("canvas-width"),
         canvasHeight: document.getElementById("canvas-height"),
@@ -42,16 +43,18 @@ const toolbar = {
         download: document.getElementById("download"),
 
         // Alerts
-        exponentAlert: document.getElementById("exponent-alert"),
-        juliaConstantAlert: document.getElementById("julia-constant-alert"),
-        iterationsAlert: document.getElementById("iterations-alert"),
-        iterationIncrementAlert: document.getElementById("iteration-increment-alert"),
-        escapeRadiusAlert: document.getElementById("escape-radius-alert"),
-        clickZoomFactorAlert: document.getElementById("click-zoom-factor-alert"),
-        paletteAlert: document.getElementById("palette-alert"),
-        ipcAlert: document.getElementById("ipc-alert"),
-        canvasWidthAlert: document.getElementById("canvas-width-alert"),
-        canvasHeightAlert: document.getElementById("canvas-height-alert"),
+        alerts: {
+            exponent: document.getElementById("exponent-alert"),
+            juliaConstant: document.getElementById("julia-constant-alert"),
+            iterations: document.getElementById("iterations-alert"),
+            iterationIncrement: document.getElementById("iteration-increment-alert"),
+            escapeRadius: document.getElementById("escape-radius-alert"),
+            clickZoomFactor: document.getElementById("click-zoom-factor-alert"),
+            gradient: document.getElementById("gradient-alert"),
+            itersPerCycle: document.getElementById("ipc-alert"),
+            canvasWidth: document.getElementById("canvas-width-alert"),
+            canvasHeight: document.getElementById("canvas-height-alert")
+        },
 
         // Display
         renderTime: document.getElementById("render-time"),
@@ -59,6 +62,7 @@ const toolbar = {
         progressBar: document.getElementById("progress-bar"),
         mouseComplexCoords: document.getElementById("mouse-complex-coords"),
         zoom: document.getElementById("zoom"),
+        gradientCanvas: document.getElementById("gradient-canvas"),
 
         // Containers
         exponentContainer: document.getElementById("exponent-container"),
@@ -71,7 +75,7 @@ const toolbar = {
         exponent: 3,
         juliaConstant: Complex(0, 1),
         iterations: 100,
-        iterationIncrement: 100,
+        iterationIncrement: 1000,
         escapeRadius: 2,
         clickZoomFactor: 4,
     },
@@ -84,7 +88,7 @@ const toolbar = {
         iterationIncrement: true,
         escapeRadius: true,
         clickZoomFactor: true,
-        palette: true,
+        gradient: true,
         itersPerCycle: true,
         canvasWidth: true,
         canvasHeight: true
@@ -124,8 +128,11 @@ const toolbar = {
         this.smoothColoring = currImg.smoothColoring;
         this.elements.smoothColoring.checked = currImg.smoothColoring;
 
-        this.palette = currImg.palette;
-        this.elements.palette.value = currImg.palette.string;
+        this.gradient = currImg.gradient;
+        this.elements.gradient.value = currImg.gradient.string;
+
+        this.gradientCanvasCtx = this.elements.gradientCanvas.getContext("2d");
+        this.drawGradient();
 
         this.itersPerCycle = currImg.itersPerCycle;
         this.elements.itersPerCycle.value = currImg.itersPerCycle;
@@ -171,7 +178,24 @@ const toolbar = {
 
     // Render time
     displayRenderTime(time) {
-        this.elements.renderTime.innerHTML = time + " ms";
+        let t = time;
+        let s = (t % 1000) + " ms";
+
+        if(t >= 1000) {
+            t = Math.floor(t / 1000);
+            s = (t % 60) + " s " + s;
+
+            if(t >= 60) {
+                t = Math.floor(t / 60);
+                s = (t % 60) + " min " + s;
+
+                if(t >= 60) {
+                    s = Math.floor(t / 60) + " h " + s;
+                }
+            }
+        }
+        
+        this.elements.renderTime.innerHTML = s;
     },
 
 
@@ -237,23 +261,23 @@ const toolbar = {
         // Sanitize
         let newStatus = true;
         if(Number.isNaN(toSet)) {
-            this.elements.exponentAlert.innerHTML =
+            this.elements.alerts.exponent.innerHTML =
                 "Exponent must be a number";
             newStatus = false;
         }
         else if(toSet <= 1) {
-            this.elements.exponentAlert.innerHTML =
+            this.elements.alerts.exponent.innerHTML =
                 "Exponent must be greater than 1";
             newStatus = false;
         }
         else if(!Number.isInteger(toSet)) {
-            this.elements.exponentAlert.innerHTML =
+            this.elements.alerts.exponent.innerHTML =
                 "Exponent must be an integer";
             newStatus = false;
         }
         else {
             this.exponent = toSet;
-            this.elements.exponentAlert.innerHTML = "";
+            this.elements.alerts.exponent.innerHTML = "";
         }
         this.inputStatus.exponent = newStatus;
     },
@@ -264,13 +288,13 @@ const toolbar = {
 
         // Sanitize
         if(toSet == undefined) {
-            this.elements.juliaConstantAlert.innerHTML =
+            this.elements.alerts.juliaConstant.innerHTML =
                 "Julia constant must be of the form a+bi";
             this.inputStatus.juliaConstant = false;
         }
         else {
             this.juliaConstant = toSet;
-            this.elements.juliaConstantAlert.innerHTML = "";
+            this.elements.alerts.juliaConstant.innerHTML = "";
             this.inputStatus.juliaConstant = true;
         }
     },
@@ -292,23 +316,23 @@ const toolbar = {
         let newStatus = true;
         
         if(Number.isNaN(toSet)) {
-            this.elements.iterationsAlert.innerHTML =
+            this.elements.alerts.iterations.innerHTML =
                 "Iterations must be a number";
             newStatus = false;
         }
         else if(toSet < 1) {
-            this.elements.iterationsAlert.innerHTML =
+            this.elements.alerts.iterations.innerHTML =
                 "Iterations must be greater than 1";
             newStatus = false;
         }
         else if(!Number.isInteger(toSet)) {
-            this.elements.iterationsAlert.innerHTML =
+            this.elements.alerts.iterations.innerHTML =
                 "Iterations must be an integer";
             newStatus = true;
         }
         else {
             this.iterations = toSet;
-            this.elements.iterationsAlert.innerHTML = "";
+            this.elements.alerts.iterations.innerHTML = "";
             this.harmonizeItersAndIPC("iterations");
         }
         this.inputStatus.iterations = newStatus;
@@ -327,18 +351,18 @@ const toolbar = {
         // Sanitize
         let newStatus = true;
         if(Number.isNaN(toSet)) {
-            this.elements.iterationIncrementAlert.innerHTML =
+            this.elements.alerts.iterationIncrement.innerHTML =
                 "Iteration increment must be a number";
             newStatus = false;
         }
         else if(!Number.isInteger(toSet)) {
-            this.elements.iterationIncrementAlert.innerHTML =
+            this.elements.alerts.iterationIncrement.innerHTML =
                 "Iteration increment must be an integer";
             newStatus = false;
         }
         else {
             this.iterationIncrement = toSet;
-            this.elements.iterationIncrementAlert.innerHTML = "";
+            this.elements.alerts.iterationIncrement.innerHTML = "";
         }
         this.inputStatus.iterationIncrement = newStatus;
     },
@@ -363,18 +387,18 @@ const toolbar = {
         // Sanitize
         let newStatus = true;
         if(Number.isNaN(toSet)) {
-            this.elements.escapeRadiusAlert.innerHTML =
+            this.elements.alerts.escapeRadius.innerHTML =
                 "Escape radius must be a number";
                 newStatus = false;
         }
         else if(toSet < 2) {
-            this.elements.escapeRadiusAlert.innerHTML =
+            this.elements.alerts.escapeRadius.innerHTML =
                 "Escape radius must be at least 2";
             newStatus = false;
         }
         else {
             this.escapeRadius = toSet;
-            this.elements.escapeRadiusAlert.innerHTML = "";
+            this.elements.alerts.escapeRadius.innerHTML = "";
         }
         this.inputStatus.escapeRadius = newStatus;
     },
@@ -383,7 +407,7 @@ const toolbar = {
 
     // Zoom
 
-    // Sync internal and external zoom with current image
+    // Match internal and external zoom with current image
     updateZoom() {
         this.elements.zoom.innerHTML = currImg.frame.toZoom();
     },
@@ -400,8 +424,8 @@ const toolbar = {
         currImg.escapeRadius = def.escapeRadius;
         currImg.itersPerCycle = def.itersPerCycle;
 
-        // Sync external toolbar input elements
-        this.syncImageParams();
+        // Match external toolbar input elements
+        this.matchImageParams();
 
         // Redraw the image
         this.redraw();
@@ -417,18 +441,18 @@ const toolbar = {
         // Sanitize
         let newStatus = true;
         if(Number.isNaN(toSet)) {
-            this.elements.clickZoomFactorAlert.innerHTML =
+            this.elements.alerts.clickZoomFactor.innerHTML =
                 "Click zoom factor must be a number";
             newStatus = false;
         }
         else if(toSet <= 0) {
-            this.elements.clickZoomFactorAlert.innerHTML =
+            this.elements.alerts.clickZoomFactor.innerHTML =
                 "Click zoom factor must be positive";
             newStatus = false;
         }
         else {
             this.clickZoomFactor = toSet;
-            this.elements.clickZoomFactorAlert.innerHTML = "";
+            this.elements.alerts.clickZoomFactor.innerHTML = "";
             this.inputStatus.clickZoomFactor = true;
         }
         this.inputStatus.clickZoomFactor = newStatus;
@@ -440,23 +464,42 @@ const toolbar = {
         this.smoothColoring = this.elements.smoothColoring.checked;
     },
 
-    // Palette
-    updatePalette() {
+    // Gradient
+    updateGradient() {
         let toSet;
 
         try {
-            toSet = new Palette(this.elements.palette.value);
+            toSet = new Gradient(
+                this.elements.gradient.value,
+                this.elements.interpolationType.value
+            );
         }
         catch(e) {
-            this.elements.paletteAlert.innerHTML =
-                "There is an error in the palette";
-            this.inputStatus.palette = false;
+            this.elements.alerts.gradient.innerHTML =
+                "There is an error in the gradient";
+            this.inputStatus.gradient = false;
             return;
         }
 
-        this.elements.paletteAlert.innerHTML = "";
-        this.palette = toSet;
-        this.inputStatus.palette = true;
+        this.elements.alerts.gradient.innerHTML = "";
+        this.gradient = toSet;
+        this.drawGradient();
+        this.inputStatus.gradient = true;
+    },
+
+    drawGradient() {
+        let w = this.elements.gradientCanvas.width;
+        for(let x = 0; x < w; x++) {
+            let color = Gradient.getColorAt(this.gradient, x / w);
+            this.gradientCanvasCtx.fillStyle = 
+                `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+            this.gradientCanvasCtx.fillRect(x, 0, 1, this.elements.gradientCanvas.width);
+        }
+    },
+
+    updateInterpolationType() {
+        this.gradient.interpolationType = this.elements.interpolationType.value;
+        this.drawGradient();
     },
 
     // When iterations per cycle input is changed
@@ -466,24 +509,24 @@ const toolbar = {
         // Sanitize
         let newStatus = true;
         if(Number.isNaN(toSet)) {
-            this.elements.ipcAlert.innerHTML =
+            this.elements.alerts.itersPerCycle.innerHTML =
                 "Iterations per cycle must be a number";
             newStatus = false;
         }
         else if(toSet < 2) {
-            this.elements.ipcAlert.innerHTML =
+            this.elements.alerts.itersPerCycle.innerHTML =
                 "Iterations per cycle must be at least 2";
             newStatus = false;
         }
         else if(!Number.isInteger(toSet)) {
-            this.elements.ipcAlert.innerHTML =
+            this.elements.alerts.itersPerCycle.innerHTML =
                 "Iterations per cycle must be an integer";
             newStatus = false;
         }
         else {
             this.itersPerCycle = toSet;
             this.harmonizeItersAndIPC("itersPerCycle");
-            this.elements.ipcAlert.innerHTML = "";
+            this.elements.alerts.itersPerCycle.innerHTML = "";
         }
         this.inputStatus.itersPerCycle = newStatus;
     },
@@ -493,8 +536,8 @@ const toolbar = {
         this.elements.itersPerCycle.value = itersPerCycle;
     },
 
-    setImgPalette() {
-        currImg.palette = this.palette;
+    setImgGradient() {
+        currImg.gradient = this.gradient;
         currImg.itersPerCycle = this.itersPerCycle;
     },
 
@@ -518,23 +561,23 @@ const toolbar = {
         // Sanitize
         let newStatus = true;
         if(Number.isNaN(toSet)) {
-            this.elements.canvasWidthAlert.innerHTML =
+            this.elements.alerts.canvasWidth.innerHTML =
                 "Canvas width must be a number";
             newStatus = false;
         }
         else if(toSet < 1) {
-            this.elements.canvasWidthAlert.innerHTML =
+            this.elements.alerts.canvasWidth.innerHTML =
                 "Canvas width must be positive";
             newStatus = false;
         }
         else if(!Number.isInteger(toSet)) {
-            this.elements.canvasWidthAlert.innerHTML =
+            this.elements.alerts.canvasWidth.innerHTML =
                 "Canvas width must be an integer";
             newStatus = false;
         }
         else {
             this.canvasWidth = toSet;
-            this.elements.canvasWidthAlert.innerHTML = "";
+            this.elements.alerts.canvasWidth.innerHTML = "";
         }
         this.inputStatus.canvasWidth = newStatus;
     },
@@ -545,23 +588,23 @@ const toolbar = {
         // Sanitize
         let newStatus = true;
         if(Number.isNaN(toSet)) {
-            this.elements.canvasHeightAlert.innerHTML =
+            this.elements.alerts.canvasHeight.innerHTML =
                 "Canvas height must be a number";
             newStatus = false;
         }
         else if(toSet < 1) {
-            this.elements.canvasHeightAlert.innerHTML =
+            this.elements.alerts.canvasHeight.innerHTML =
                 "Canvas height must be positive";
             newStatus = false;
         }
         else if(!Number.isInteger(toSet)) {
-            this.elements.canvasHeightAlert.innerHTML =
+            this.elements.alerts.canvasHeight.innerHTML =
                 "Canvas height must be an integer";
             newStatus = false;
         }
         else {
             this.canvasHeight = toSet;
-            this.elements.canvasHeightAlert.innerHTML = "";
+            this.elements.alerts.canvasHeight.innerHTML = "";
         }
         this.inputStatus.canvasHeight = newStatus;
     },
@@ -619,7 +662,7 @@ const toolbar = {
 
         if(fractalChanged) {
             // New image takes priority for parameters
-            this.syncImageParams();
+            this.matchImageParams();
 
             if(currMode == "julia") {
                 currMode = "default";
@@ -642,8 +685,8 @@ const toolbar = {
         this.lastExponent = this.exponent;
         this.lastJuliaConstant = this.juliaConstant;
 
-        // Update palette and ipc
-        this.setImgPalette();
+        // Update gradient and ipc
+        this.setImgGradient();
 
         // Prepare the image to be redrawn
         currImg.fitToCanvas(canvasWidth, canvasHeight);
@@ -667,9 +710,9 @@ const toolbar = {
 
 
 
-    // Syncing - changing internals to match the current image
-    syncFractal() {
-        // Sync fractal type
+    // Matching - changing internals to match the current image
+    matchFractal() {
+        // Match fractal type
 
         // Manually set fractal type input and update
         // internals accordingly, a little dirty...
@@ -680,37 +723,46 @@ const toolbar = {
         this.fractalType = currFractal;
         this.lastFractalType = currFractal;
 
-        // Sync Exponent
+        // Match Exponent
         if(currFractal.params.e) {
             this.elements.exponent.value = currFractal.params.e;
             this.exponent = this.lastExponent = currFractal.params.e;
         }
 
-        // Sync Julia constant
+        // Match Julia constant
         if(currFractal.params.c) {
             this.elements.juliaConstant.value = Complex.toString(currImg.fractal.params.c);
             this.juliaConstant = this.lastJuliaConstant = currFractal.params.c;
         }
     },
 
-    syncImageParams() {
-        // Sync iterations
+    matchImageParams() {
+        // Match iterations
         this.elements.iterations.value = currImg.iterations;
         this.iterations = currImg.iterations;
 
-        // Sync escape radius
+        // Match escape radius
         this.elements.escapeRadius.value = currImg.escapeRadius;
         this.escapeRadius = currImg.escapeRadius;
 
-        // Sync smooth coloring
+        // Match smooth coloring
         this.elements.smoothColoring.checked = currImg.smoothColoring;
         this.smoothcoloring = currImg.smoothColoring;
 
-        // Sync IPC
+        // Match IPC
         this.elements.itersPerCycle.value = currImg.itersPerCycle;
         this.itersPerCycle = currImg.itersPerCycle;
         
-        // Sync zoom
+        // Match zoom
         this.updateZoom();
+    },
+
+    clearErrors() {
+        for(let key in this.elements.alerts) {
+            this.elements.alerts[key].innerHTML = "";
+        }
+        for(let key in this.inputStatus) {
+            this.inputStatus[key] = true;
+        }
     }
 };
